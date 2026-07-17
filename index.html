@@ -815,13 +815,13 @@ blockquote.quote-large {
 .table-scroll > table.simple-table th:nth-child(1),
 .table-scroll > table.simple-table td:nth-child(1) { width: 20% !important; }
 .table-scroll > table.simple-table th:nth-child(2),
-.table-scroll > table.simple-table td:nth-child(2) { width: 18% !important; }
+.table-scroll > table.simple-table td:nth-child(2) { width: 20% !important; }
 .table-scroll > table.simple-table th:nth-child(3),
 .table-scroll > table.simple-table td:nth-child(3) { width: 50% !important; }
 .table-scroll > table.simple-table th:nth-child(4),
-.table-scroll > table.simple-table td:nth-child(4) { width: 6% !important; }
+.table-scroll > table.simple-table td:nth-child(4) { width: 5% !important; }
 .table-scroll > table.simple-table th:nth-child(5),
-.table-scroll > table.simple-table td:nth-child(5) { width: 6% !important; }
+.table-scroll > table.simple-table td:nth-child(5) { width: 5% !important; }
 
 @media (max-width: 720px) {
   .table-scroll > table.simple-table {
@@ -839,15 +839,15 @@ blockquote.quote-large {
     word-break: break-word;
   }
   .table-scroll > table.simple-table th:nth-child(1),
-  .table-scroll > table.simple-table td:nth-child(1) { width: 18% !important; }
+  .table-scroll > table.simple-table td:nth-child(1) { width: 14% !important; }
   .table-scroll > table.simple-table th:nth-child(2),
-  .table-scroll > table.simple-table td:nth-child(2) { width: 20% !important; }
+  .table-scroll > table.simple-table td:nth-child(2) { width: 26% !important; }
   .table-scroll > table.simple-table th:nth-child(3),
   .table-scroll > table.simple-table td:nth-child(3) { width: 44% !important; }
   .table-scroll > table.simple-table th:nth-child(4),
-  .table-scroll > table.simple-table td:nth-child(4) { width: 9% !important; }
+  .table-scroll > table.simple-table td:nth-child(4) { width: 8% !important; }
   .table-scroll > table.simple-table th:nth-child(5),
-  .table-scroll > table.simple-table td:nth-child(5) { width: 9% !important; }
+  .table-scroll > table.simple-table td:nth-child(5) { width: 8% !important; }
 }
 </style>
 </head>
@@ -864,6 +864,7 @@ const gun=Gun(['https://gun-manhattan.herokuapp.com/gun']),store=gun.get('shared
 function layoutCards(){let bottom=0;[...list.querySelectorAll('.annotation-card')].sort((a,b)=>{let am=article.querySelector('[data-note-id="'+CSS.escape(a.dataset.noteId)+'"]'),bm=article.querySelector('[data-note-id="'+CSS.escape(b.dataset.noteId)+'"]');return(am?.getBoundingClientRect().top||0)-(bm?.getBoundingClientRect().top||0)}).forEach(c=>{let m=article.querySelector('[data-note-id="'+CSS.escape(c.dataset.noteId)+'"]');if(!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}function paint(){article.querySelectorAll('.annotation-mark').forEach(m=>m.replaceWith(...m.childNodes));article.normalize();[...notes.entries()].sort((a,b)=>b[1].start-a[1].start).forEach(([id,n])=>{try{let[sn,so]=locate(n.start),[en,eo]=locate(n.end),r=document.createRange();r.setStart(sn,so);r.setEnd(en,eo);let m=document.createElement('mark');m.className='annotation-mark';m.dataset.noteId=id;m.style.backgroundColor=n.color||'#ffe58f';m.title=(n.author||'匿名')+'：'+n.text;r.surroundContents(m)}catch(e){}})}
 
 function render(){let a=[...notes.entries()].filter(([,n])=>n&&n.text).sort((x,y)=>x[1].start-y[1].start);count.textContent=a.length;list.innerHTML='';a.forEach(([id,n])=>{let c=document.createElement('div')
+
 ;c.className='annotation-card is-collapsed'
 ;c.dataset.noteId=id;c.style.borderLeftColor=n.color||'#e5bd45';c.innerHTML='<div class="annotation-quote"></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="回复…"><button>回复</button></form>'
 
@@ -874,7 +875,8 @@ function render(){let a=[...notes.entries()].filter(([,n])=>n&&n.text).sort((x,y
 ;list.append(c)}
 );paint();let bottom=0;a.forEach(([id])=>{let c=list.querySelector('[data-note-id="'+CSS.escape(id)+'"]'),m=article.querySelector('[data-note-id="'+CSS.escape(id)+'"]');if(!c||!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}
 
-store.map().on((d,id)=>{d&&d.text?notes.set(id,d):notes.delete(id);render()});replyStore.map().on((d,id)=>{d&&d.text?replies.set(id,d):replies.delete(id);render()});article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let c=list.querySelector('[data-note-id="'+CSS.escape(m.dataset.noteId)+'"]');if(c){c.classList.remove('is-collapsed');requestAnimationFrame(layoutCards)}});
+store.map().on((d,id)=>{d&&d.text?notes.set(id,d):notes.delete(id);render()});replyStore.map().on((d,id)=>{d&&d.text?replies.set(id,d):replies.delete(id);render()})
+;article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let c=list.querySelector('[data-note-id="'+CSS.escape(m.dataset.noteId)+'"]');if(c){c.classList.remove('is-collapsed');requestAnimationFrame(layoutCards)}});
 
 document.addEventListener('selectionchange',()=>{let s=getSelection();if(!s.rangeCount||s.isCollapsed||!article.contains(s.anchorNode)||!article.contains(s.focusNode)){add.style.display='none';return}let r=s.getRangeAt(0),q=s.toString().trim();if(!q)return;pending={start:offset(r.startContainer,r.startOffset),end:offset(r.endContainer,r.endOffset),quote:q};let b=r.getBoundingClientRect();add.style.left=Math.max(8,b.left+b.width/2-55)+'px';add.style.top=Math.max(8,b.top-46)+'px';add.style.display='block'});
 
@@ -883,20 +885,27 @@ add.onclick=()=>{selected.textContent='“'+pending.quote+'”';dialog.showModal
 form.onsubmit=e=>{e.preventDefault();let n={...pending,author:author.value.trim()||'匿名',owner:me,color:color.value,text:text.value.trim(),created:Date.now()};if(!n.text)return;if(n.author!=='匿名')localStorage.setItem('annotation-author',n.author);store.get(n.created.toString(36)+Math.random().toString(36).slice(2,7)).put(n);dialog.close();text.value='';getSelection().removeAllRanges()};addEventListener('resize',render)})();
 </script>
 <script>
-(()=>{const article=document.querySelector('article'),add=document.querySelector('#annotationAdd'),dialog=document.querySelector('#annotationDialog'),form=document.querySelector('#annotationForm'),list=document.querySelector('#annotationList'),count=document.querySelector('#annotationCount'),author=document.querySelector('#annotationAuthor'),color=document.querySelector('#annotationColor'),text=document.querySelector('#annotationText'),selected=document.querySelector('#annotationSelection'),sb=window.supabase.createClient('https://nsgiklzuwvfquobkqqsy.supabase.co','sb_publishable_4qHXQE8ZQiMAv7hkod8eIw_AFEvjZjH');let pending,me,isAdmin=false,notes=new Map(),replies=new Map();const admin=document.createElement('button');admin.type='button';admin.textContent='管理员登录';admin.className='annotation-add';admin.style.display='block';admin.style.right='18px';admin.style.left='auto';admin.style.top='18px';document.body.append(admin);
+(()=>{const article=document.querySelector('article'),add=document.querySelector('#annotationAdd'),dialog=document.querySelector('#annotationDialog'),form=document.querySelector('#annotationForm'),list=document.querySelector('#annotationList'),count=document.querySelector('#annotationCount'),author=document.querySelector('#annotationAuthor'),color=document.querySelector('#annotationColor'),text=document.querySelector('#annotationText'),selected=document.querySelector('#annotationSelection'),sb=window.supabase.createClient('https://nsgiklzuwvfquobkqqsy.supabase.co','sb_publishable_4qHXQE8ZQiMAv7hkod8eIw_AFEvjZjH');let pending,me,isAdmin=false,notes=new Map(),replies=new Map(),expanded=new Set();const admin=document.createElement('button');admin.type='button';admin.textContent='管理员登录';admin.className='annotation-add';admin.style.display='block';admin.style.right='18px';admin.style.left='auto';admin.style.top='18px';document.body.append(admin);
 function offset(node,pos){let r=document.createRange();r.selectNodeContents(article);r.setEnd(node,pos);return r.toString().length}function locate(n){let w=document.createTreeWalker(article,NodeFilter.SHOW_TEXT),x,s=0;while(x=w.nextNode()){let e=s+x.data.length;if(n<=e)return[x,n-s];s=e}}
 function layout(){let bottom=0;[...list.querySelectorAll('.annotation-card')].sort((a,b)=>Number(a.dataset.start)-Number(b.dataset.start)).forEach(c=>{let m=article.querySelector('[data-note-id="'+CSS.escape(c.dataset.noteId)+'"]');if(!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}
 function paint(){article.querySelectorAll('.annotation-mark').forEach(m=>m.replaceWith(...m.childNodes));article.normalize();[...notes.entries()].sort((a,b)=>b[1].start_offset-a[1].start_offset).forEach(([id,n])=>{try{let[sn,so]=locate(n.start_offset),[en,eo]=locate(n.end_offset),r=document.createRange();r.setStart(sn,so);r.setEnd(en,eo);let m=document.createElement('mark');m.className='annotation-mark';m.dataset.noteId=id;m.style.backgroundColor=n.color||'#ffe58f';m.title=(n.author_name||'匿名')+'：'+n.quote;r.surroundContents(m)}catch(e){}})}
-function render(){let a=[...notes.entries()].sort((x,y)=>x[1].start_offset-y[1].start_offset);count.textContent=a.length;list.innerHTML='';a.forEach(([id,n])=>{let rs=[...replies.values()].filter(r=>r.comment_id===id),c=document.createElement('div');c.className='annotation-card is-collapsed';c.dataset.noteId=id;c.dataset.start=n.start_offset;c.style.borderLeftColor=n.color||'#e5bd45';c.innerHTML='<div class="annotation-quote"></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="回复…"><button>回复</button></form>'
-;c.children[0].textContent='💬 '+rs.length+' · '+(n.body||'（旧批注未保存内容）').slice(0,14);c.children[0].onclick=()=>{c.classList.toggle('is-collapsed');requestAnimationFrame(layout)}
+function render(){let a=[...notes.entries()].sort((x,y)=>x[1].start_offset-y[1].start_offset);count.textContent=a.length;list.innerHTML='';a.forEach(([id,n])=>{let rs=[...replies.values()].filter(r=>r.comment_id===id),c=document.createElement('div')
+;c.className='annotation-card'+(expanded.has(id)?'':' is-collapsed');c.dataset.noteId=id;c.dataset.start=n.start_offset;c.style.borderLeftColor=n.color||'#e5bd45';c.innerHTML='<div class="annotation-quote"><span class="annotation-selected"></span><span class="annotation-preview"></span></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="回复…"><button>回复</button></form>'
+;c.children[0].dataset.replyCount=rs.length;c.children[0].querySelector('.annotation-selected').textContent=n.quote;c.children[0].querySelector('.annotation-preview').textContent=n.body||'（旧批注未保存内容）';c.children[0].onclick=()=>{c.classList.toggle('is-collapsed');c.classList.contains('is-collapsed')?expanded.delete(id):expanded.add(id);requestAnimationFrame(layout)}
 ;c.children[1].textContent=n.body||'（旧批注未保存内容）';c.children[2].textContent=(n.author_name||'匿名')+' · '+new Date(n.created_at).toLocaleString();rs.sort((x,y)=>new Date(x.created_at)-new Date(y.created_at)).forEach(r=>{let x=document.createElement('div');x.className='annotation-reply-item';x.textContent=(r.author_name||'匿名')+'：'+r.text;c.children[3].append(x)});if(isAdmin){let h=document.createElement('button');h.type='button';h.textContent=n.status==='hidden'?'恢复':'隐藏';h.onclick=async()=>{await sb.from('comments').update({status:n.status==='hidden'?'visible':'hidden'}).eq('id',id);load()};let d=document.createElement('button');d.type='button';d.textContent='删除';d.onclick=async()=>{if(confirm('确定永久删除这条批注及其回复？')){await sb.from('comments').delete().eq('id',id);load()}};c.children[2].append(' · ',h,' · ',d)}c.querySelector('form').onsubmit=async e=>{e.preventDefault();let input=e.currentTarget.querySelector('input'),v=input.value.trim();if(!v)return;await sb.from('replies').insert({comment_id:id,author_name:author.value.trim()||'匿名',text:v});input.value='';load()};list.append(c)});paint();layout()}
 async function load(){let q=sb.from('comments').select('*').eq('article_id',article.id).order('created_at');if(!isAdmin)q=q.eq('status','visible');let cr=await q;if(cr.error){console.error(cr.error);return}notes=new Map(cr.data.map(n=>[n.id,n]));let rr=await sb.from('replies').select('*').order('created_at');replies=new Map((rr.data||[]).filter(r=>notes.has(r.comment_id)&&(isAdmin||r.status==='visible')).map(r=>[r.id,r]));render()}
 async function session(){let s=(await sb.auth.getSession()).data.session;if(!s){let r=await sb.auth.signInAnonymously();s=r.data.session}me=s?.user?.id;let p=me?await sb.from('profiles').select('role').eq('id',me).maybeSingle():null;isAdmin=p?.data?.role==='admin';admin.textContent=isAdmin?'管理员已登录':'管理员登录';load()}
 document.addEventListener('selectionchange',()=>{let s=getSelection();if(!s.rangeCount||s.isCollapsed||!article.contains(s.anchorNode)||!article.contains(s.focusNode)){add.style.display='none';return}let r=s.getRangeAt(0),q=s.toString().trim();if(!q)return;pending={start:offset(r.startContainer,r.startOffset),end:offset(r.endContainer,r.endOffset),quote:q};let b=r.getBoundingClientRect();add.style.left=Math.max(8,b.left+b.width/2-55)+'px';add.style.top=Math.max(8,b.top-46)+'px';add.style.display='block'});add.onclick=()=>{selected.textContent='“'+pending.quote+'”';dialog.showModal();add.style.display='none'};form.onsubmit=async e=>{e.preventDefault();if(!pending)return;let v=text.value.trim();if(!v)return
-;let r=await sb.from('comments').insert({article_id:article.id,block_id:article.id,start_offset:pending.start,end_offset:pending.end,quote:pending.quote,body:v,prefix:'',suffix:'',color:color.value,author_name:author.value.trim()||'匿名'});if(r.error){alert('发布失败：'+r.error.message);return}dialog.close();text.value='';getSelection().removeAllRanges();load()};article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let c=list.querySelector('[data-note-id="'+CSS.escape(m.dataset.noteId)+'"]');if(c){c.classList.remove('is-collapsed');requestAnimationFrame(layout)}});admin.onclick=async()=>{let email=prompt('输入管理员邮箱，系统将发送登录链接：');if(!email)return;let r=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});alert(r.error?'发送失败：'+r.error.message:'登录链接已发送到邮箱')};addEventListener('resize',layout);session();setInterval(load,10000)})();
+;let r=await sb.from('comments').insert({article_id:article.id,block_id:article.id,start_offset:pending.start,end_offset:pending.end,quote:pending.quote,body:v,prefix:'',suffix:'',color:color.value,author_name:author.value.trim()||'匿名'});if(r.error){alert('发布失败：'+r.error.message);return}dialog.close();text.value='';getSelection().removeAllRanges();load()}
+;article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let id=m.dataset.noteId,c=list.querySelector('[data-note-id="'+CSS.escape(id)+'"]');if(c){expanded.add(id);c.classList.remove('is-collapsed');requestAnimationFrame(layout)}});admin.onclick=async()=>{let email=prompt('输入管理员邮箱，系统将发送登录链接：');if(!email)return;let r=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});alert(r.error?'发送失败：'+r.error.message:'登录链接已发送到邮箱')};
+document.addEventListener('click',e=>{if(e.target.closest('.annotation-card,.annotation-mark,#annotationAdd,#annotationDialog')||e.target===admin)return;if(!expanded.size)return;expanded.clear();list.querySelectorAll('.annotation-card').forEach(c=>c.classList.add('is-collapsed'));requestAnimationFrame(layout)});
+addEventListener('resize',layout);session();setInterval(load,10000)})();
+</script>
+<script>
+(()=>{if(new URLSearchParams(location.search).get('admin')==='1')return;const buttons=[...document.querySelectorAll('button')];const adminButton=buttons.find(button=>button.textContent.trim()==='管理员登录'||button.textContent.trim()==='管理员已登录');if(adminButton)adminButton.style.display='none'})();
 </script>
 <style>.annotation-dialog select{width:100%;margin-top:5px;padding:8px;border:1px solid #ccc;border-radius:8px}.annotation-replies{margin-top:8px;border-top:1px solid #eee;padding-top:5px}.annotation-reply-item{font-size:12px;padding:3px 0}.annotation-reply{display:flex;gap:5px;margin-top:8px}.annotation-reply input{min-width:0;flex:1;padding:5px;border:1px solid #ccc;border-radius:5px}.annotation-reply button,.annotation-delete{border:0;background:none;color:#666;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px}</style>
-<style>.annotation-card.is-collapsed{width:auto;max-width:170px;padding:4px 8px;border-radius:999px;box-shadow:0 2px 7px #0002}.annotation-card.is-collapsed .annotation-quote{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.annotation-card.is-collapsed>div:not(.annotation-quote),.annotation-card.is-collapsed .annotation-reply{display:none}.annotation-card:not(.is-collapsed) .annotation-quote{cursor:pointer;font-size:12px;margin-bottom:5px}.annotation-card:not(.is-collapsed) .annotation-quote::before{content:'💬 ';}</style>
+<style>.annotation-card.is-collapsed{width:auto;max-width:170px;padding:4px 8px;border-radius:999px;box-shadow:0 2px 7px #0002}.annotation-card.is-collapsed .annotation-quote{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.annotation-card.is-collapsed>div:not(.annotation-quote),.annotation-card.is-collapsed .annotation-reply{display:none}.annotation-card:not(.is-collapsed) .annotation-quote{cursor:pointer;font-size:12px;margin-bottom:5px}.annotation-card:not(.is-collapsed) .annotation-quote::before{content:'💬 ';}.annotation-card.is-collapsed .annotation-selected{display:none}.annotation-card:not(.is-collapsed) .annotation-preview{display:none}.annotation-preview{color:#555}.annotation-selected{color:#777}</style>
 <script>
 document.querySelectorAll('.page-body > table.simple-table').forEach((table) => {
   const wrapper = document.createElement('div');
@@ -905,5 +914,39 @@ document.querySelectorAll('.page-body > table.simple-table').forEach((table) => 
   wrapper.appendChild(table);
 });
 </script>
+<style id="annotation-mobile-behavior">
+.annotation-card .annotation-quote::before {
+  content: '💬 ' attr(data-reply-count) ' · ' !important;
+}
+@media (max-width: 720px) {
+  .annotation-panel { pointer-events: none; }
+  .annotation-card { pointer-events: auto; }
+  .annotation-card.is-collapsed {
+    width: 54px !important;
+    max-width: 54px !important;
+    min-height: 34px;
+    padding: 5px 7px;
+    opacity: .35;
+    border-radius: 999px;
+  }
+  .annotation-card.is-collapsed .annotation-quote {
+    width: 40px;
+    max-width: 40px;
+    font-size: 0;
+    overflow: visible;
+    text-align: center;
+  }
+  .annotation-card.is-collapsed .annotation-quote::before {
+    content: '💬 ' attr(data-reply-count) !important;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .annotation-card:not(.is-collapsed) {
+    width: min(260px, calc(100vw - 28px));
+    max-width: min(260px, calc(100vw - 28px));
+    opacity: 1;
+  }
+}
+</style>
 </body>
 </html>
