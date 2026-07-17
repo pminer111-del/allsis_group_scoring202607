@@ -1,0 +1,813 @@
+﻿<html>
+<head>
+<style>.annotation-mark{background:#ffe58f;border-bottom:2px solid #d4a017;cursor:pointer}.annotation-add{position:fixed;z-index:10002;display:none;border:0;border-radius:99px;background:#222;color:#fff;padding:9px 14px}.annotation-panel{position:absolute;z-index:10000;left:calc(50% + 470px);top:0;width:280px;height:100%;overflow:visible;border:0;background:transparent;font:14px/1.5 sans-serif;white-space:normal}.annotation-panel summary{display:none}.annotation-list{position:relative;width:280px;height:100%}.annotation-card{position:absolute;left:0;width:280px;padding:11px 12px;background:#fff;border:1px solid #ddd;border-left:3px solid #e5bd45;border-radius:8px;box-shadow:0 3px 12px #0002;transition:top .18s ease}.annotation-quote,.annotation-meta{color:#777;font-size:12px}.annotation-dialog{border:0;border-radius:14px;width:min(440px,calc(100vw - 32px));padding:20px;box-shadow:0 18px 60px #0004;font:14px sans-serif}.annotation-dialog::backdrop{background:#0005}.annotation-dialog label{display:block;margin-top:10px}.annotation-dialog input,.annotation-dialog textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccc;border-radius:8px}.annotation-dialog textarea{min-height:100px}.annotation-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.annotation-actions button{padding:8px 13px}.annotation-actions .primary{background:#222;color:#fff}@media(max-width:1250px){.annotation-panel{position:absolute;left:auto;right:12px}.annotation-card{width:260px;background:#fffffff2}.annotation-list{width:260px}}@media print{.annotation-panel,.annotation-add,.annotation-dialog{display:none!important}}</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>细则1.1</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure,
+aside,
+details {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head>
+<body>
+<article id="39f74ef2-df17-803f-9e38-eee75c4c29b6" class="page serif"><header><h1 class="page-title" dir="auto">细则1.1</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><h1 id="39f74ef2-df17-8040-a18b-dedf574b29c4" class="" dir="auto">定义</h1><p id="39f74ef2-df17-80ab-9687-e6a9b9cdfc89" class="block-color-default" data-notion-highlight="default" dir="auto"><strong>女性定义：</strong>生理为女、自我认知为女。女穿男、男穿女、女有男性器官的、男有女性器官皆不为女性。 </p><p id="39f74ef2-df17-8062-a002-e931a1258f7d" class="" dir="auto"><strong>AS文</strong></p><p id="39f74ef2-df17-809d-b289-ec31b4c0ce7f" class="block-color-default" data-notion-highlight="default" dir="auto">初始10分。故事剧情围绕女展开且无性缘观念，世界观不含男、不含拟男（如男机器人）、不含无性别人和拟人，其它物种的无性别和雄性个体不参与积极叙事。 </p><p id="39f74ef2-df17-8042-a815-e737484f837f" class="" dir="auto"><strong>半AS文</strong></p><p id="39f74ef2-df17-8045-8137-efd836b23a2b" class="" dir="auto">初始10分。主角团全体为女且无性缘，世界观不存在正面男性角色。 </p><p id="39f74ef2-df17-80c1-b9ce-c6260fe88826" class="" dir="auto"><strong>非AS文</strong></p><p id="39f74ef2-df17-8020-8c67-e77e8c5ab464" class="" dir="auto">初始0分。主角团内存在男性，或主角团有性缘，或世界观存在正面男性角色。反派为重要配角且为男时按作者情感倾向判断，倾向积极多高光则判定主角团含男，批判为主则判定主角团不含男。</p><h1 id="39f74ef2-df17-80bb-8918-f1405f178358" class="" dir="auto">总则</h1><h2 id="39f74ef2-df17-80df-979d-f57bc2371dad" class="" dir="auto">⭕️革旧 </h2><h4 id="39f74ef2-df17-8007-bb6a-eefdc821480b" class="block-color-teal" data-notion-highlight="teal" dir="auto"><mark class="highlight-red" data-notion-highlight="red">（提及且批判态度+1分；未提及0分；提及且非批判态度-1分 ）</mark></h4><table id="39f74ef2-df17-8028-bb1f-d0afc36fa448" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-809d-a64b-c3d2339906f3" dir="ltr"><th id="U^kC" class="simple-table-header-color simple-table-header" style="width:119.75px">核心维度</th><th id="S&lt;VM" class="simple-table-header-color simple-table-header">细分二级标签</th><th id="^rGK" class="simple-table-header-color simple-table-header">具体表现 / 设定释义</th><th id="MtC[" class="simple-table-header-color simple-table-header" style="width:48.98011016845703px">分数</th><th id="cfFh" class="simple-table-header-color simple-table-header" style="width:51.014198303222656px">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80c2-b25f-ecce9d72da6f" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px">🔻 阶级和物化</td><td id="S&lt;VM" class="">▪️ 社会阶级设定</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-8023-bea7-c309c9a25b71" dir="ltr"><td id="S&lt;VM" class="">▪️ 角色不平等关系</td><td id="^rGK" class="">塑造不平等关系且强调上位者权威，如师生、工作上下级、不平等友缘</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80b8-92a6-c989fd4f2a89" dir="ltr"><td id="S&lt;VM" class="">▪️ 物化/非人化</td><td id="^rGK" class="">有意加强角色与物品的联系，如“xx塑”，削弱人物本身个性，突出与某一塑的联系。</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80a1-bf82-e3e0ae8bfd7a" dir="ltr"><td id="S&lt;VM" class="">▪️ 养宠</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80a7-a2fd-f57bdc90f41d" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px">🔻 偶像和宗教</td><td id="S&lt;VM" class="">▪️ 角色互动中的明显偶像化行为</td><td id="^rGK" class="">如个人伟力的夸张化塑造；被普遍崇拜的角色；</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-804d-ac46-d90a4344f204" dir="ltr"><td id="S&lt;VM" class="">▪️ 世界观含有关于真人偶像或虚拟偶像的流行文化</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80e0-84b6-eef8e5f1bb5f" dir="ltr"><td id="S&lt;VM" class="">▪️ 有关宗教的背景设定或剧情</td><td id="^rGK" class="">包括造母神；繁育能力神化。</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-809e-94b7-c719ba5e10f1" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px">🔻 弱役和束身衣</td><td id="S&lt;VM" class="">▪️ 性缘和昏因设定</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80be-a6df-e6513c70f17c" dir="ltr"><td id="S&lt;VM" class="">▪️ 美/帅/弱役描写</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-8094-a693-e7aaa6da813c" dir="ltr"><td id="S&lt;VM" class="">▪️ 刻板弱役偏好</td><td id="^rGK" class="">明显甜食远大于肉蛋乳的饮食偏好，装饰性大于实用性的物品偏好等</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80c8-9784-d9469f7d67d7" dir="ltr"><td id="S&lt;VM" class="">▪️ 精神弱役</td><td id="^rGK" class="">角色对人或物的强依赖；强绑定的双向关系</td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80a0-9336-d76791da6129" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px">🔻 宏大叙事、虏社道德和慕死情结</td><td id="S&lt;VM" class="">▪️ 单纯争夺资源或权力、无改善社会模式的组织争霸主题</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-8053-abfb-eeda5fdedd76" dir="ltr"><td id="S&lt;VM" class="">▪️ 将种族、阶级等立场置于性别立场之上</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-800f-98b4-fb0f441d9fb8" dir="ltr"><td id="S&lt;VM" class="">▪️ 带有无私奉献、舍己为人等特质的角色</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-8025-ad31-ccc36d10a8ce" dir="ltr"><td id="S&lt;VM" class="">▪️ 为某事献出生命的正面叙述</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80c0-af3e-c3157e3f01c4" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px">🔻 孝道和血缘</td><td id="S&lt;VM" class="">▪️ 母子等亲属之间的不平等关系</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-80a8-832f-cb811ec701bc" dir="ltr"><td id="S&lt;VM" class="">▪️ 宗族正面形象展现</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr><tr id="39f74ef2-df17-8007-8c13-faa2d8c8e908" dir="ltr"><td id="S&lt;VM" class="">▪️ （针对AS）强调姓氏存在和作用<br/>（针对半AS）无随母姓意识</td><td id="^rGK" class=""></td><td id="MtC[" class="" style="width:48.98011016845703px"></td><td id="cfFh" class="" style="width:51.014198303222656px"></td></tr></tbody></table><h2 id="39f74ef2-df17-802d-b508-cf910870807b" class="" dir="auto">⭕️立新 </h2><h4 id="39f74ef2-df17-804f-99f9-f33561e109e8" class="block-color-red" data-notion-highlight="red" dir="auto">（提及且有创新+1分；未提及0分；明显不加批判沿用旧制度-1分）</h4><table id="39f74ef2-df17-8096-9d84-cc3d15355274" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-80c8-a159-ecc54cbb2ae4" dir="ltr"><th id="}QqQ" class="simple-table-header-color simple-table-header">核心维度</th><th id="twXV" class="simple-table-header-color simple-table-header" style="width:116.390625px">细分二级标签</th><th id="|aY^" class="simple-table-header-color simple-table-header" style="width:308.99998474121094px">具体表现 / 设定释义</th><th id="Ig~O" class="simple-table-header-color simple-table-header" style="width:49.98863220214844px">分数</th><th id="\d{]" class="simple-table-header-color simple-table-header" style="width:51.01988220214844px">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8058-b3ac-f6cbff325abc" dir="ltr"><td id="}QqQ" rowspan="2" class="">🔺 政治和经济设定</td><td id="twXV" class="" style="width:116.390625px">▪️ 政治</td><td id="|aY^" class="" style="width:308.99998474121094px">执政方式如何？政府形式如何，或有无政府？是否削弱或尽可能消除阶级？</td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-809d-860a-eaa4a9173f67" dir="ltr"><td id="twXV" class="" style="width:116.390625px">▪️ 经济</td><td id="|aY^" class="" style="width:308.99998474121094px">货币形式如何，或有无货币？劳动模式、消费模式如何？</td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-80c1-845e-e40d86219e03" dir="ltr"><td id="}QqQ" rowspan="2" class="">🔺 文化和教育设定</td><td id="twXV" class="" style="width:116.390625px">▪️ 文化</td><td id="|aY^" class="" style="width:308.99998474121094px">关于死亡、离别、交友、节庆等话题，是否有不同于现社的认识和模式？</td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-80fe-b245-d3af4dd9ea5b" dir="ltr"><td id="twXV" class="" style="width:116.390625px">▪️ 教育</td><td id="|aY^" class="" style="width:308.99998474121094px">是否革新教育形式？</td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-800a-81c3-e7b134de7369" dir="ltr"><td id="}QqQ" rowspan="2" class="">🔺 生殖和抚养设定</td><td id="twXV" class="" style="width:116.390625px">▪️ 生殖</td><td id="|aY^" class="" style="width:308.99998474121094px">生殖方式如何？<br/>如为双雌生殖，应仅承认分娩方为母。<mark class="highlight-red" data-notion-highlight="red">如承认非分娩方与子的亲缘关系，扣1分。<br/>如由人之外的物体分娩，且叙述态度为积极，如树木、石头、人造子宫等，扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-8045-9c2c-cc484e149e4c" dir="ltr"><td id="twXV" class="" style="width:116.390625px">▪️ 抚养</td><td id="|aY^" class="" style="width:308.99998474121094px">抚养模式如何？</td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-80e6-88c7-f51581ed2bfc" dir="ltr"><td id="}QqQ" class="">🔺 健康和医疗设定</td><td id="twXV" class="" style="width:116.390625px">▪️ 医学健康知识和医疗设定</td><td id="|aY^" class="" style="width:308.99998474121094px">是否提及破除现社伪共识的女本位生理知识，如平均睡眠时长、健康体脂率范围、月经周期和月经用品等？<br/><mark class="highlight-red" data-notion-highlight="red">长篇作品（10万字及以上）完全不提及月经相关扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr><tr id="39f74ef2-df17-80e8-a2ad-ca368ae52aca" dir="ltr"><td id="}QqQ" class="">🔺 衣食住行及其它</td><td id="twXV" class="" style="width:116.390625px">▪️ 衣食住行及其它思考</td><td id="|aY^" class="" style="width:308.99998474121094px">在衣食住行等生活方面有无不同于现社的思考？<br/>饮食习惯：是否认识到长期大量摄入重油脂调味、感官刺激的食物是在压力模式下的不健康行为？<br/>衣物模式：是否摒弃针对非人生理结构制造的衣物形式？是否减少只具有装饰性的设计，如领带、皮鞋？<br/><mark class="highlight-red" data-notion-highlight="red">非批判态度提及裙装扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px"></td><td id="\d{]" class="" style="width:51.01988220214844px"></td></tr></tbody></table><h2 id="39f74ef2-df17-8034-a8b0-c65000ee45dd" class="" dir="auto">⭕️创作者、作品载体、作品传播 </h2><table id="39f74ef2-df17-808e-9995-c607f70ca9f7" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802a-a375-ca5d1490885d" dir="ltr"><th id="rye&lt;" class="simple-table-header-color simple-table-header" style="width:182.64488220214844px">核心维度</th><th id="&gt;U&lt;E" class="simple-table-header-color simple-table-header" style="width:118.46875px">细分二级标签</th><th id="XiP&lt;" class="simple-table-header-color simple-table-header" style="width:276.0113525390625px">具体表现 / 设定释义 / 评分规则</th><th id="\&gt;b~" class="simple-table-header-color simple-table-header" style="width:49.99714660644531px">分数</th><th id="ZLsQ" class="simple-table-header-color simple-table-header" style="width:51.0113525390625px">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80de-b262-d9dc084ca7b9" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 女义和忤女字词</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">褒义使用女义字词（婋、嫖、英雌等）、使用辱男词（骟、劁等）加1分。<br/>褒义使用英雄等词扣1分，使用忤女词扣2分。<br/>在未使用忤女脏话前提下，作者及时听取意见改进文本可不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="39f74ef2-df17-8066-aab0-cef14788b42e" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 中性代词使用</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">使用少年、学长等包含男性扣1分；专指男性扣2分。<br/>使用以上词汇专指女性，男性只使用少男、学哥等不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="39f74ef2-df17-8036-9375-c6c7bfa6c6c6" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 创作态度和立场</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">女性角色取名ABB，含柔、软、甜等字扣1分。<br/>塑造脸谱化、扁平化女性角色或个人英雌主义的角色扣1分</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="39f74ef2-df17-80d5-b0a4-fe072a0fd2ae" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px">🔻 评论区氛围</td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 评论区氛围状况</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">氛围落体，如爱男自由、嗑cp自由、爱美自由等，扣1分。<br/> 氛围较好：作者及读者不包容以上落体行为，且观点碰撞和剧情讨论居多可加1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="39f74ef2-df17-8081-bc1a-de7f22d3b94e" dir="ltr"><td id="rye&lt;" rowspan="2" class="" style="width:182.64488220214844px">🔻 作者作品外态度和作品传播</td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 作者专栏</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">前作含美化和肯定男、含正面性缘剧情，扣1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="39f74ef2-df17-805d-b9b2-d487aa8ac49d" dir="ltr"><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 作者态度及宣传方式</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">作品衍生周边落体、作者明确鼓励支持落体二创和传播环境，扣1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr><tr id="3a074ef2-df17-804f-a183-d542685663f0" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px"></td><td id="&gt;U&lt;E" class="" style="width:118.46875px">▪️ 作品质量问题</td><td id="XiP&lt;" class="" style="width:276.0113525390625px">▪️ 文笔、人物塑造，更文频率等。（此类有问题可备注，不参与评分）</td><td id="\&gt;b~" class="" style="width:49.99714660644531px"></td><td id="ZLsQ" class="" style="width:51.0113525390625px"></td></tr></tbody></table><h1 id="39f74ef2-df17-806f-b73c-d87929bf6a18" class="" dir="auto">加则：性别战争 </h1><p id="39f74ef2-df17-80ca-899d-d9fbcb09d2d6" class="" dir="auto">虏定义：粘男、生男，帮助和美化男；仇女、害女，阻止女伤害男。</p><table id="39f74ef2-df17-806e-8a18-eced8c4fb0b5" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802e-8ddb-c2a049933a75" dir="ltr"><th id="EABJ" class="simple-table-header-color simple-table-header" style="width:139.25851440429688px">核心维度</th><th id="R\_c" class="simple-table-header-color simple-table-header">细分二级标签</th><th id="hoRM" class="simple-table-header-color simple-table-header" style="width:216.21022033691406px">具体表现 / 设定释义 / 评分规则</th><th id="s__}" class="simple-table-header-color simple-table-header" style="width:49.98295593261719px">分数</th><th id="oQ=J" class="simple-table-header-color simple-table-header" style="width:51.09089660644531px">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8032-b6a2-c73428498d66" dir="ltr"><td id="EABJ" class="" style="width:139.25851440429688px">性别战争</td><td id="R\_c" class=""></td><td id="hoRM" class="" style="width:216.21022033691406px">加2分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-80bd-a3fe-fac4a5f5efba" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px">🔻 自我认知和行为立场</td><td id="R\_c" class="">▪️ 自我认知不为女权</td><td id="hoRM" class="" style="width:216.21022033691406px">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8019-a5b3-fc9a55c4c66f" dir="ltr"><td id="R\_c" class="">▪️ 女扮男</td><td id="hoRM" class="" style="width:216.21022033691406px">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-804a-8ede-c962f284cc02" dir="ltr"><td id="R\_c" class="">▪️ 虏/男掌权环境下生育</td><td id="hoRM" class="" style="width:216.21022033691406px">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8052-80c8-f14bde4fcb71" dir="ltr"><td id="R\_c" class="">▪️ 违背女权同盟</td><td id="hoRM" class="" style="width:216.21022033691406px">扶持和帮助虏，与虏合作扣1分；未体现同立场正面角色合作互助扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8053-995b-f01bc57bb8d3" dir="ltr"><td id="EABJ" rowspan="5" class="" style="width:139.25851440429688px">🔻 关注和美化虏</td><td id="R\_c" class="">▪️ 女虏比低于2:1（由虏变女的可视为女，但需评估虏中心条例）</td><td id="hoRM" class="" style="width:216.21022033691406px">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8095-9093-c4814cd4ceaa" dir="ltr"><td id="R\_c" class="">▪️ 承认与虏的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px">正面角色不与虏亲/虏友断绝关系，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-801e-b936-d011c71773a1" dir="ltr"><td id="R\_c" class="">▪️ 强虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px">参与重要剧情，有重大迫害主角团行为却无相应惩罚，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8030-8c7b-e6c3a767c014" dir="ltr"><td id="R\_c" class="">▪️ 弱虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px">美化虏的沾男、助男行为，大篇幅描写虏身不由己剧情、哭丧卖惨，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-8063-b9f9-fa64cf134c05" dir="ltr"><td id="R\_c" class="">▪️ 以虏为中心的的丑恶情节多于惩罚/反抗情节（或没有）</td><td id="hoRM" class="" style="width:216.21022033691406px">扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-80ea-badb-e396e0e1e794" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px">🔻 关注和美化男</td><td id="R\_c" class="">▪️ 女男比低于2:1</td><td id="hoRM" class="" style="width:216.21022033691406px">扣2分</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-80c8-af29-c9cbe09d1426" dir="ltr"><td id="R\_c" class="">▪️ 承认与男性的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px">承认亲情，如随父姓，扣2分；承认其它正向关系，如朋友、师生、同事间正向感情，扣2分。<br/>扶持和帮助男性扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-808b-8dae-dd62f2e5f783" dir="ltr"><td id="R\_c" class="">▪️ 美化和观赏男性</td><td id="hoRM" class="" style="width:216.21022033691406px">赋予男性才华、能力、品德等，扣2分。<br/> 女凝男、小糯夫等非批判描写，扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr><tr id="39f74ef2-df17-80f7-aa0d-d4a0c463f50c" dir="ltr"><td id="R\_c" class="">▪️ 男性高光</td><td id="hoRM" class="" style="width:216.21022033691406px">取名用心/完整成长线、立体性格、参与重要剧情等，酌情扣2-3分。</td><td id="s__}" class="" style="width:49.98295593261719px"></td><td id="oQ=J" class="" style="width:51.09089660644531px"></td></tr></tbody></table><h1 id="39f74ef2-df17-806e-8bb0-c1697fceeeb6" class="" dir="auto">禁红不禁黑（只能负分排雷）:</h1><p id="39f74ef2-df17-805c-b6d3-fa7256d7bec2" class="block-color-default" data-notion-highlight="default" dir="auto">有以下行为禁止组内自荐</p><h3 id="39f74ef2-df17-8047-b425-e20e1167f6cd" class="" dir="auto">1.作品忤女和反女权行为</h3><p id="39f74ef2-df17-8024-a245-c413610c1092" class="" dir="auto">自我认知不为女性、女身厌恶等忤女行为</p><p id="39f74ef2-df17-80d3-ab64-fa60dd20072a" class="" dir="auto">代孕、以性惩罚女性等严重物化情节</p><p id="39f74ef2-df17-8053-ab00-c6cbba039868" class="" dir="auto">忽视或美化女性困境</p><p id="39f74ef2-df17-8034-93dc-daf337f88365" class="" dir="auto">模糊和剽窃女性能力，如男生子</p><p id="39f74ef2-df17-80a3-a7fa-e48d0d62284f" class="block-color-default" data-notion-highlight="default" dir="auto">主角团参与性缘/参与昏因（as世界观存在性缘）</p><p id="39f74ef2-df17-80c8-ae0b-fe07a00f4c75" class="block-color-default" data-notion-highlight="default" dir="auto">打男拳，如生男宝/呼吁男性权益</p><h3 id="39f74ef2-df17-80b7-a373-d9bc02c80208" class="" dir="auto">2.作品外作者问题</h3><p id="39f74ef2-df17-80bd-8632-fa49e75e0be2" class="" dir="auto">作者沾男/生男/自我认知不为女性</p><p id="39f74ef2-df17-807e-a61a-d096dc2802b9" class="" dir="auto">连载同时阅读/写作/预收（准备写作）主角团含男/主角团含性缘文</p><p id="39f74ef2-df17-8070-a826-d2f0655f118e" class="block-color-default" data-notion-highlight="default" dir="auto">支持反爱女/反女权观点、宣扬女男无差、平权论（文中同理）</p><p id="39f74ef2-df17-80ce-ac47-fb99f37a1d65" class="" dir="auto">男性作者</p><p id="39f74ef2-df17-80db-962f-e43697671da6" class="" dir="auto">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span>
+<button id="annotationAdd" class="annotation-add">＋ 添加批注</button><details class="annotation-panel" open><summary>共享批注 <span id="annotationCount">0</span></summary><div id="annotationList" class="annotation-list"></div></details><dialog id="annotationDialog" class="annotation-dialog"><form id="annotationForm"><h3>添加共享批注</h3><div id="annotationSelection" class="annotation-quote"></div>
+<label>你的昵称（可选）<input id="annotationAuthor" maxlength="30" placeholder="留空则显示为匿名"></label><label>批注颜色<select id="annotationColor"><option value="#ffe58f">黄色</option><option value="#b7eb8f">绿色</option><option value="#91d5ff">蓝色</option><option value="#d3adf7">紫色</option><option value="#ffadd2">粉色</option></select></label>
+<label>批注内容<textarea id="annotationText" maxlength="1000" required></textarea></label><div class="annotation-actions"><button type="button" onclick="this.closest('dialog').close()">取消</button><button class="primary" type="submit">发布批注</button></div></form></dialog><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+(()=>{
+const article=document.querySelector('article'),add=document.querySelector('#annotationAdd'),dialog=document.querySelector('#annotationDialog'),form=document.querySelector('#annotationForm'),list=document.querySelector('#annotationList'),count=document.querySelector('#annotationCount'),author=document.querySelector('#annotationAuthor'),color=document.querySelector('#annotationColor'),text=document.querySelector('#annotationText'),selected=document.querySelector('#annotationSelection');let pending,notes=new Map(),replies=new Map(),me=localStorage.getItem('annotation-user-id');if(!me){me=crypto.randomUUID();localStorage.setItem('annotation-user-id',me)}author.value=localStorage.getItem('annotation-author')||'';
+const gun=Gun(['https://gun-manhattan.herokuapp.com/gun']),store=gun.get('shared-annotations-'+article.id),replyStore=gun.get('shared-annotation-replies-'+article.id);function offset(node,pos){let r=document.createRange();r.selectNodeContents(article);r.setEnd(node,pos);return r.toString().length}function locate(n){let w=document.createTreeWalker(article,NodeFilter.SHOW_TEXT),x,s=0;while(x=w.nextNode()){let e=s+x.data.length;if(n<=e)return[x,n-s];s=e}}
+
+function layoutCards(){let bottom=0;[...list.querySelectorAll('.annotation-card')].sort((a,b)=>{let am=article.querySelector('[data-note-id="'+CSS.escape(a.dataset.noteId)+'"]'),bm=article.querySelector('[data-note-id="'+CSS.escape(b.dataset.noteId)+'"]');return(am?.getBoundingClientRect().top||0)-(bm?.getBoundingClientRect().top||0)}).forEach(c=>{let m=article.querySelector('[data-note-id="'+CSS.escape(c.dataset.noteId)+'"]');if(!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}function paint(){article.querySelectorAll('.annotation-mark').forEach(m=>m.replaceWith(...m.childNodes));article.normalize();[...notes.entries()].sort((a,b)=>b[1].start-a[1].start).forEach(([id,n])=>{try{let[sn,so]=locate(n.start),[en,eo]=locate(n.end),r=document.createRange();r.setStart(sn,so);r.setEnd(en,eo);let m=document.createElement('mark');m.className='annotation-mark';m.dataset.noteId=id;m.style.backgroundColor=n.color||'#ffe58f';m.title=(n.author||'匿名')+'：'+n.text;r.surroundContents(m)}catch(e){}})}
+
+function render(){let a=[...notes.entries()].filter(([,n])=>n&&n.text).sort((x,y)=>x[1].start-y[1].start);count.textContent=a.length;list.innerHTML='';a.forEach(([id,n])=>{let c=document.createElement('div')
+;c.className='annotation-card is-collapsed'
+;c.dataset.noteId=id;c.style.borderLeftColor=n.color||'#e5bd45';c.innerHTML='<div class="annotation-quote"></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="回复…"><button>回复</button></form>'
+;c.children[0].textContent='💬 '+[...replies.values()].filter(r=>r.noteId===id).length+' · '+n.text.slice(0,14)
+;c.children[0].onclick=()=>{c.classList.toggle('is-collapsed');requestAnimationFrame(layoutCards)};c.children[1].textContent=n.text;c.children[2].textContent=(n.author||'匿名')+' · '+new Date(n.created).toLocaleString();if(n.owner===me){let d=document.createElement('button');d.type='button';d.textContent='删除';d.onclick=()=>store.get(id).put(null);c.children[2].append(' · ',d)}[...replies.values()].filter(r=>r.noteId===id).sort((x,y)=>x.created-y.created).forEach(r=>{let x=document.createElement('div');x.className='annotation-reply-item';x.textContent=(r.author||'匿名')+'：'+r.text;c.children[3].append(x)});c.querySelector('form').onsubmit=e=>{e.preventDefault();let input=e.currentTarget.querySelector('input'),v=input.value.trim();if(!v)return;replyStore.get(Date.now().toString(36)+Math.random().toString(36).slice(2,7)).put({noteId:id,author:author.value.trim()||'匿名',text:v,created:Date.now()});input.value=''}
+
+;list.append(c)}
+);paint();let bottom=0;a.forEach(([id])=>{let c=list.querySelector('[data-note-id="'+CSS.escape(id)+'"]'),m=article.querySelector('[data-note-id="'+CSS.escape(id)+'"]');if(!c||!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}
+
+store.map().on((d,id)=>{d&&d.text?notes.set(id,d):notes.delete(id);render()});replyStore.map().on((d,id)=>{d&&d.text?replies.set(id,d):replies.delete(id);render()});article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let c=list.querySelector('[data-note-id="'+CSS.escape(m.dataset.noteId)+'"]');if(c){c.classList.remove('is-collapsed');requestAnimationFrame(layoutCards)}});
+
+document.addEventListener('selectionchange',()=>{let s=getSelection();if(!s.rangeCount||s.isCollapsed||!article.contains(s.anchorNode)||!article.contains(s.focusNode)){add.style.display='none';return}let r=s.getRangeAt(0),q=s.toString().trim();if(!q)return;pending={start:offset(r.startContainer,r.startOffset),end:offset(r.endContainer,r.endOffset),quote:q};let b=r.getBoundingClientRect();add.style.left=Math.max(8,b.left+b.width/2-55)+'px';add.style.top=Math.max(8,b.top-46)+'px';add.style.display='block'});
+
+add.onclick=()=>{selected.textContent='“'+pending.quote+'”';dialog.showModal();add.style.display='none'};
+
+form.onsubmit=e=>{e.preventDefault();let n={...pending,author:author.value.trim()||'匿名',owner:me,color:color.value,text:text.value.trim(),created:Date.now()};if(!n.text)return;if(n.author!=='匿名')localStorage.setItem('annotation-author',n.author);store.get(n.created.toString(36)+Math.random().toString(36).slice(2,7)).put(n);dialog.close();text.value='';getSelection().removeAllRanges()};addEventListener('resize',render)})();
+</script>
+<script>
+(()=>{const article=document.querySelector('article'),add=document.querySelector('#annotationAdd'),dialog=document.querySelector('#annotationDialog'),form=document.querySelector('#annotationForm'),list=document.querySelector('#annotationList'),count=document.querySelector('#annotationCount'),author=document.querySelector('#annotationAuthor'),color=document.querySelector('#annotationColor'),text=document.querySelector('#annotationText'),selected=document.querySelector('#annotationSelection'),sb=window.supabase.createClient('https://nsgiklzuwvfquobkqqsy.supabase.co','sb_publishable_4qHXQE8ZQiMAv7hkod8eIw_AFEvjZjH');let pending,me,isAdmin=false,notes=new Map(),replies=new Map();const admin=document.createElement('button');admin.type='button';admin.textContent='管理员登录';admin.className='annotation-add';admin.style.display='block';admin.style.right='18px';admin.style.left='auto';admin.style.top='18px';document.body.append(admin);
+function offset(node,pos){let r=document.createRange();r.selectNodeContents(article);r.setEnd(node,pos);return r.toString().length}function locate(n){let w=document.createTreeWalker(article,NodeFilter.SHOW_TEXT),x,s=0;while(x=w.nextNode()){let e=s+x.data.length;if(n<=e)return[x,n-s];s=e}}
+function layout(){let bottom=0;[...list.querySelectorAll('.annotation-card')].sort((a,b)=>Number(a.dataset.start)-Number(b.dataset.start)).forEach(c=>{let m=article.querySelector('[data-note-id="'+CSS.escape(c.dataset.noteId)+'"]');if(!m)return;let top=Math.max(m.getBoundingClientRect().top+scrollY,bottom);c.style.top=top+'px';bottom=top+c.offsetHeight+10})}
+function paint(){article.querySelectorAll('.annotation-mark').forEach(m=>m.replaceWith(...m.childNodes));article.normalize();[...notes.entries()].sort((a,b)=>b[1].start_offset-a[1].start_offset).forEach(([id,n])=>{try{let[sn,so]=locate(n.start_offset),[en,eo]=locate(n.end_offset),r=document.createRange();r.setStart(sn,so);r.setEnd(en,eo);let m=document.createElement('mark');m.className='annotation-mark';m.dataset.noteId=id;m.style.backgroundColor=n.color||'#ffe58f';m.title=(n.author_name||'匿名')+'：'+n.quote;r.surroundContents(m)}catch(e){}})}
+function render(){let a=[...notes.entries()].sort((x,y)=>x[1].start_offset-y[1].start_offset);count.textContent=a.length;list.innerHTML='';a.forEach(([id,n])=>{let rs=[...replies.values()].filter(r=>r.comment_id===id),c=document.createElement('div');c.className='annotation-card is-collapsed';c.dataset.noteId=id;c.dataset.start=n.start_offset;c.style.borderLeftColor=n.color||'#e5bd45';c.innerHTML='<div class="annotation-quote"></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="回复…"><button>回复</button></form>';c.children[0].textContent='💬 '+rs.length+' · '+n.quote.slice(0,14);c.children[0].onclick=()=>{c.classList.toggle('is-collapsed');requestAnimationFrame(layout)};c.children[1].textContent=n.quote;c.children[2].textContent=(n.author_name||'匿名')+' · '+new Date(n.created_at).toLocaleString();rs.sort((x,y)=>new Date(x.created_at)-new Date(y.created_at)).forEach(r=>{let x=document.createElement('div');x.className='annotation-reply-item';x.textContent=(r.author_name||'匿名')+'：'+r.text;c.children[3].append(x)});if(isAdmin){let h=document.createElement('button');h.type='button';h.textContent=n.status==='hidden'?'恢复':'隐藏';h.onclick=async()=>{await sb.from('comments').update({status:n.status==='hidden'?'visible':'hidden'}).eq('id',id);load()};let d=document.createElement('button');d.type='button';d.textContent='删除';d.onclick=async()=>{if(confirm('确定永久删除这条批注及其回复？')){await sb.from('comments').delete().eq('id',id);load()}};c.children[2].append(' · ',h,' · ',d)}c.querySelector('form').onsubmit=async e=>{e.preventDefault();let input=e.currentTarget.querySelector('input'),v=input.value.trim();if(!v)return;await sb.from('replies').insert({comment_id:id,author_name:author.value.trim()||'匿名',text:v});input.value='';load()};list.append(c)});paint();layout()}
+async function load(){let q=sb.from('comments').select('*').eq('article_id',article.id).order('created_at');if(!isAdmin)q=q.eq('status','visible');let cr=await q;if(cr.error){console.error(cr.error);return}notes=new Map(cr.data.map(n=>[n.id,n]));let rr=await sb.from('replies').select('*').order('created_at');replies=new Map((rr.data||[]).filter(r=>notes.has(r.comment_id)&&(isAdmin||r.status==='visible')).map(r=>[r.id,r]));render()}
+async function session(){let s=(await sb.auth.getSession()).data.session;if(!s){let r=await sb.auth.signInAnonymously();s=r.data.session}me=s?.user?.id;let p=me?await sb.from('profiles').select('role').eq('id',me).maybeSingle():null;isAdmin=p?.data?.role==='admin';admin.textContent=isAdmin?'管理员已登录':'管理员登录';load()}
+document.addEventListener('selectionchange',()=>{let s=getSelection();if(!s.rangeCount||s.isCollapsed||!article.contains(s.anchorNode)||!article.contains(s.focusNode)){add.style.display='none';return}let r=s.getRangeAt(0),q=s.toString().trim();if(!q)return;pending={start:offset(r.startContainer,r.startOffset),end:offset(r.endContainer,r.endOffset),quote:q};let b=r.getBoundingClientRect();add.style.left=Math.max(8,b.left+b.width/2-55)+'px';add.style.top=Math.max(8,b.top-46)+'px';add.style.display='block'});add.onclick=()=>{selected.textContent='“'+pending.quote+'”';dialog.showModal();add.style.display='none'};form.onsubmit=async e=>{e.preventDefault();if(!pending)return;let v=text.value.trim();if(!v)return;let r=await sb.from('comments').insert({article_id:article.id,block_id:article.id,start_offset:pending.start,end_offset:pending.end,quote:pending.quote,prefix:'',suffix:'',color:color.value,author_name:author.value.trim()||'匿名'});if(r.error){alert('发布失败：'+r.error.message);return}dialog.close();text.value='';getSelection().removeAllRanges();load()};article.addEventListener('click',e=>{let m=e.target.closest('.annotation-mark');if(!m)return;let c=list.querySelector('[data-note-id="'+CSS.escape(m.dataset.noteId)+'"]');if(c){c.classList.remove('is-collapsed');requestAnimationFrame(layout)}});admin.onclick=async()=>{let email=prompt('输入管理员邮箱，系统将发送登录链接：');if(!email)return;let r=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});alert(r.error?'发送失败：'+r.error.message:'登录链接已发送到邮箱')};addEventListener('resize',layout);session();setInterval(load,10000)})();
+</script>
+<style>.annotation-dialog select{width:100%;margin-top:5px;padding:8px;border:1px solid #ccc;border-radius:8px}.annotation-replies{margin-top:8px;border-top:1px solid #eee;padding-top:5px}.annotation-reply-item{font-size:12px;padding:3px 0}.annotation-reply{display:flex;gap:5px;margin-top:8px}.annotation-reply input{min-width:0;flex:1;padding:5px;border:1px solid #ccc;border-radius:5px}.annotation-reply button,.annotation-delete{border:0;background:none;color:#666;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px}</style>
+<style>.annotation-card.is-collapsed{width:auto;max-width:170px;padding:4px 8px;border-radius:999px;box-shadow:0 2px 7px #0002}.annotation-card.is-collapsed .annotation-quote{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.annotation-card.is-collapsed>div:not(.annotation-quote),.annotation-card.is-collapsed .annotation-reply{display:none}.annotation-card:not(.is-collapsed) .annotation-quote{cursor:pointer;font-size:12px;margin-bottom:5px}.annotation-card:not(.is-collapsed) .annotation-quote::before{content:'💬 ';}</style>
+</body>
+</html>
