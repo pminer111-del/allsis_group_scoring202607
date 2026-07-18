@@ -986,6 +986,61 @@ blockquote.quote-large {
     return best;
   }
 
+  function contextBoundaries(value,context,after){
+    if(!context)return[];
+    const result=[];
+    let from=0;
+    while(from<=value.length&&result.length<100){
+      const index=value.indexOf(context,from);
+      if(index<0)break;
+      result.push(index+(after?context.length:0));
+      from=index+Math.max(1,context.length);
+    }
+    return result;
+  }
+
+  function recoverEditedRange(value,note){
+    const rawStart=Number(note.start_offset),rawEnd=Number(note.end_offset);
+    const savedStart=Math.max(0,Math.min(value.length,Number.isFinite(rawStart)?rawStart:0));
+    const savedEnd=Math.max(savedStart,Math.min(value.length,Number.isFinite(rawEnd)?rawEnd:savedStart));
+    const oldLength=Math.max(1,Number.isFinite(rawEnd-rawStart)?rawEnd-rawStart:0,(note.quote||'').length);
+    const prefix=note.prefix||'',suffix=note.suffix||'';
+    let starts=contextBoundaries(value,prefix,true);
+    let ends=contextBoundaries(value,suffix,false);
+    let prefixMatched=starts.length>0,suffixMatched=ends.length>0;
+
+    // An empty context means that side originally touched the block boundary.
+    if(!prefix){starts=[0];prefixMatched=savedStart===0}
+    if(!suffix){ends=[value.length];suffixMatched=true}
+    if(!starts.length&&!ends.length)return null;
+
+    const candidates=[];
+    if(starts.length&&ends.length){
+      for(const start of starts)for(const end of ends)if(end>start)candidates.push({start,end});
+    }else if(starts.length){
+      for(const start of starts){
+        const end=Math.min(value.length,start+oldLength);
+        if(end>start)candidates.push({start,end});
+      }
+    }else{
+      for(const end of ends){
+        const start=Math.max(0,end-oldLength);
+        if(end>start)candidates.push({start,end});
+      }
+    }
+    if(!candidates.length)return null;
+
+    const confidence=Number(prefixMatched)+Number(suffixMatched);
+    let best=null;
+    for(const candidate of candidates){
+      const length=candidate.end-candidate.start;
+      const penalty=Math.abs(candidate.start-savedStart)*2+Math.abs(candidate.end-savedEnd)+Math.abs(length-oldLength)/4;
+      const score=confidence*100000-penalty;
+      if(!best||score>best.score)best={...candidate,score,confidence};
+    }
+    return best;
+  }
+
   function boundaryFromContext(value,saved,prefix,suffix,isStart){
     const numeric=Math.max(0,Math.min(value.length,Number(saved)||0));
     if(isStart){
@@ -1026,7 +1081,8 @@ blockquote.quote-large {
       start:index===0?start:0,
       end:index===selectedBlocks.length-1?end:(block.textContent||'').length
     })).filter(part=>part.end>part.start);
-    return parts.length?{parts}:null;
+    const currentQuote=parts.map(part=>(part.root.textContent||'').slice(part.start,part.end)).join('');
+    return parts.length?{parts,currentQuote,recovered:currentQuote!==(note.quote||'')}:null;
   }
 
   function resolveAnchor(note){
@@ -1034,14 +1090,29 @@ blockquote.quote-large {
     if(Number(note.anchor_version)>=2&&note.block_id){
       const selector='[data-comment-block-id="'+CSS.escape(note.block_id)+'"]';
       const original=article.querySelector(selector);
-      const candidates=original?[original]:[];
-      for(const block of article.querySelectorAll('[data-comment-block-id]'))if(block!==original)candidates.push(block);
+      if(original){
+        const value=original.textContent||'';
+        const exact=bestMatch(value,note.quote||'',note.start_offset,note.prefix||'',note.suffix||'');
+        if(exact?.score>=100000){
+          const end=exact.index+(note.quote||'').length;
+          return{root:original,start:exact.index,end,score:exact.score+1000,currentQuote:value.slice(exact.index,end),recovered:false};
+        }
+        const recovered=recoverEditedRange(value,note);
+        if(recovered){
+          const currentQuote=value.slice(recovered.start,recovered.end);
+          return{root:original,start:recovered.start,end:recovered.end,score:recovered.score+1000,currentQuote,recovered:currentQuote!==(note.quote||'')};
+        }
+      }
+      const candidates=[];
+      for(const block of article.querySelectorAll('[data-comment-block-id]'))candidates.push(block);
       let best=null;
       for(const block of candidates){
-        const match=bestMatch(block.textContent||'',note.quote||'',note.start_offset,note.prefix||'',note.suffix||'');
+        const value=block.textContent||'';
+        const match=bestMatch(value,note.quote||'',note.start_offset,note.prefix||'',note.suffix||'');
         if(!match)continue;
         const score=match.score+(block===original?1000:0);
-        if(!best||score>best.score)best={root:block,start:match.index,end:match.index+(note.quote||'').length,score};
+        const end=match.index+(note.quote||'').length;
+        if(!best||score>best.score)best={root:block,start:match.index,end,score,currentQuote:value.slice(match.index,end),recovered:false};
         if(score>=101000)break;
       }
       return best;
@@ -1087,6 +1158,8 @@ blockquote.quote-large {
     for(const[id,note]of ordered){
       try{
         const anchor=resolveAnchor(note);
+        const label=list.querySelector('.annotation-card[data-note-id="'+CSS.escape(id)+'"] .annotation-selected');
+        if(label&&anchor?.currentQuote)label.textContent=anchor.currentQuote;
         if(anchor?.parts){
           for(const part of anchor.parts)wrapOffsets(part.root,part.start,part.end,id,note);
         }else if(anchor){
