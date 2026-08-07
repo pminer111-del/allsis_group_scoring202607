@@ -1,0 +1,1023 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* 统一所有评分表的列比例，覆盖导出文件中的零散内联宽度。 */
+.page-body > table.simple-table {
+  width: 100% !important;
+  table-layout: fixed;
+}
+.page-body > table.simple-table th:nth-child(1),
+.page-body > table.simple-table td:nth-child(1) { width: 20% !important; }
+.page-body > table.simple-table th:nth-child(2),
+.page-body > table.simple-table td:nth-child(2) { width: 18% !important; }
+.page-body > table.simple-table th:nth-child(3),
+.page-body > table.simple-table td:nth-child(3) { width: 50% !important; }
+.page-body > table.simple-table th:nth-child(4),
+.page-body > table.simple-table td:nth-child(4) { width: 6% !important; }
+.page-body > table.simple-table th:nth-child(5),
+.page-body > table.simple-table td:nth-child(5) { width: 6% !important; }
+.page-body > table.simple-table th,
+.page-body > table.simple-table td { overflow-wrap: anywhere; }
+.table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1rem 0; }
+.table-scroll > table { margin: 0; }
+@media (max-width: 720px) {
+  body { margin: 0; max-width: none; font-size: 16px; line-height: 1.65; }
+  article.page { padding: 20px 16px 72px; }
+  .page-title { font-size: 2rem; }
+  h1 { font-size: 1.55rem; } h2 { font-size: 1.25rem; } h3 { font-size: 1.1rem; }
+  .page-body > .table-scroll > table.simple-table { min-width: 720px; font-size: 14px; }
+  .page-body > .table-scroll > table.simple-table th,
+  .page-body > .table-scroll > table.simple-table td { padding: .55em .65em; }
+  .annotation-panel { left: auto; right: 8px; width: min(270px, calc(100vw - 24px)); }
+  .annotation-list, .annotation-card { width: 260px; }
+}
+</style>
+
+<style>.annotation-mark{background:#ffe58f;border-bottom:2px solid #d4a017;cursor:pointer}.annotation-add{position:fixed;z-index:10002;display:none;border:0;border-radius:99px;background:#222;color:#fff;padding:9px 14px}.annotation-panel{position:absolute;z-index:10000;left:calc(50% + 470px);top:0;width:280px;height:100%;overflow:visible;border:0;background:transparent;font:14px/1.5 sans-serif;white-space:normal}.annotation-panel summary{display:none}.annotation-list{position:relative;width:280px;height:100%}.annotation-card{position:absolute;left:0;width:280px;padding:11px 12px;background:#fff;border:1px solid #ddd;border-left:3px solid #e5bd45;border-radius:8px;box-shadow:0 3px 12px #0002;transition:top .18s ease}.annotation-quote,.annotation-meta{color:#777;font-size:12px}.annotation-dialog{border:0;border-radius:14px;width:min(440px,calc(100vw - 32px));padding:20px;box-shadow:0 18px 60px #0004;font:14px sans-serif}.annotation-dialog::backdrop{background:#0005}.annotation-dialog label{display:block;margin-top:10px}.annotation-dialog input,.annotation-dialog textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccc;border-radius:8px}.annotation-dialog textarea{min-height:100px}.annotation-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.annotation-actions button{padding:8px 13px}.annotation-actions .primary{background:#222;color:#fff}@media(max-width:1250px){.annotation-panel{position:absolute;left:auto;right:12px}.annotation-card{width:260px;background:#fffffff2}.annotation-list{width:260px}}@media print{.annotation-panel,.annotation-add,.annotation-dialog{display:none!important}}</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>AS打分细则1.1</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure,
+aside,
+details {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style>
+<style id="responsive-table-widths">
+.table-scroll {
+  width: 100%;
+  overflow: hidden;
+}
+.table-scroll > table.simple-table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed;
+}
+.table-scroll > table.simple-table th:nth-child(1),
+.table-scroll > table.simple-table td:nth-child(1) { width: 20% !important; }
+.table-scroll > table.simple-table th:nth-child(2),
+.table-scroll > table.simple-table td:nth-child(2) { width: 20% !important; }
+.table-scroll > table.simple-table th:nth-child(3),
+.table-scroll > table.simple-table td:nth-child(3) { width: 50% !important; }
+.table-scroll > table.simple-table th:nth-child(4),
+.table-scroll > table.simple-table td:nth-child(4) { width: 5% !important; }
+.table-scroll > table.simple-table th:nth-child(5),
+.table-scroll > table.simple-table td:nth-child(5) { width: 5% !important; }
+
+@media (max-width: 720px) {
+  .table-scroll > table.simple-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 10.5px;
+  }
+  .table-scroll > table.simple-table th,
+  .table-scroll > table.simple-table td {
+    min-width: 0 !important;
+    padding: 4px 3px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .table-scroll > table.simple-table th:nth-child(1),
+  .table-scroll > table.simple-table td:nth-child(1) { width: 14% !important; }
+  .table-scroll > table.simple-table th:nth-child(2),
+  .table-scroll > table.simple-table td:nth-child(2) { width: 26% !important; }
+  .table-scroll > table.simple-table th:nth-child(3),
+  .table-scroll > table.simple-table td:nth-child(3) { width: 44% !important; }
+  .table-scroll > table.simple-table th:nth-child(4),
+  .table-scroll > table.simple-table td:nth-child(4) { width: 8% !important; }
+  .table-scroll > table.simple-table th:nth-child(5),
+  .table-scroll > table.simple-table td:nth-child(5) { width: 8% !important; }
+}
+<style id="revision-styles">
+.revision-delete {
+  color: #777777;
+  background-color: #f1f1f1;
+  text-decoration-line: line-through;
+  text-decoration-color: #555555;
+  text-decoration-thickness: 1.5px;
+}
+
+.revision-add {
+  color: #5F5EC2;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  text-decoration: none;
+  border: none;
+}
+
+/* 被批注高亮后仍保留修订颜色 */
+.revision-delete .annotation-mark {
+  color: #777777 !important;
+}
+
+.revision-add .annotation-mark {
+  color: #5F5EC2 !important;
+}
+</style>
+</head>
+<body>
+<article id="39f74ef2-df17-803f-9e38-eee75c4c29b6" class="page serif"><header><h1 class="page-title" dir="auto" data-comment-block-id="body-0001">世界开妬者联盟 <mark class="annotation-mark" data-note-id="90b8fbb2-2fca-43ca-aec6-001ea9fdd367" title="匿名：选中文字添加批注" style="background-color: rgb(183, 235, 143);">打分细则1.1</mark></h1><p class="page-description" dir="auto" data-comment-block-id="body-0002"></p></header><div class="page-body"><h1 id="39f74ef2-df17-8040-a18b-dedf574b29c4" class="" dir="auto" data-comment-block-id="body-0003"><mark class="annotation-mark" data-note-id="92e9707b-f11e-4aa3-99c9-b87e44a410b6" title="匿名：我觉得还需要定义统一一下“女本位”概念" style="background-color: rgb(255, 229, 143);">定义</mark></h1><p id="39f74ef2-df17-80ab-9687-e6a9b9cdfc89" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0004"><strong>女性定义：</strong>生理为女、自我认知为女。女穿男、男穿女、女有男性器官的、男有女性器官皆不为女性。 </p><p id="39f74ef2-df17-8062-a002-e931a1258f7d" class="" dir="auto" data-comment-block-id="body-0005"><strong>AS文</strong></p><p id="39f74ef2-df17-809d-b289-ec31b4c0ce7f" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0006">初始10分。故事剧情围绕女展开且<mark class="annotation-mark" data-note-id="088e62d8-288b-4022-a5a5-1ff9dc0b1678" title="匿名：世界观全女，主角团不沾xy，但背景里有女女xy关系的 是不是就不算as" style="background-color: rgb(255, 229, 143);">无性缘观念</mark>，世界观不含男、不含拟男（如男机器人）、不含无性别人和拟人，其它物种的无性别和雄性个体不参与积极叙事。 </p><p id="39f74ef2-df17-8042-a815-e737484f837f" class="" dir="auto" data-comment-block-id="body-0007"><strong>半AS文</strong></p><p id="39f74ef2-df17-8045-8137-efd836b23a2b" class="" dir="auto" data-comment-block-id="body-0008">初始10分。主角团全体为女且<mark class="annotation-mark" data-note-id="7b0a40d7-7790-4082-96ec-2ec4fc5984a7" title="匿名：建议增加“非主角性缘在文中呈批判态度”" style="background-color: rgb(255, 229, 143);">无性缘</mark>，世界观不存在正面男性角色。 </p><p id="39f74ef2-df17-80c1-b9ce-c6260fe88826" class="" dir="auto" data-comment-block-id="body-0009"><strong><mark class="annotation-mark" data-note-id="9606ee6c-b9c8-405c-8442-6a34ae35362f" title="匿名：非全女文只能排雷的规则可以保留吧" style="background-color: rgb(255, 229, 143);">非AS文</mark></strong></p><p id="39f74ef2-df17-8020-8c67-e77e8c5ab464" class="" dir="auto" data-comment-block-id="body-0010">初始0分。主角团内存在男性，或主角团有性缘，或世界观存在正面男性角色。反派为重要配角且为男时按作者情感倾向判断，倾向积极多高光则判定主角团含男，批判为主则判定主角团不含男。</p><h1 id="39f74ef2-df17-80bb-8918-f1405f178358" class="" dir="auto" data-comment-block-id="body-0011">总则</h1><h2 id="39f74ef2-df17-80df-979d-f57bc2371dad" class="" dir="auto" data-comment-block-id="body-0012">⭕️革旧 </h2><h4 id="39f74ef2-df17-8007-bb6a-eefdc821480b" class="block-color-teal" data-notion-highlight="teal" dir="auto" data-comment-block-id="body-0013"><mark class="highlight-red" data-notion-highlight="red">（提及且批判态度+1分；未提及0分；提及且非批判态度-1分 ）</mark></h4><div class="table-scroll"><table id="39f74ef2-df17-8028-bb1f-d0afc36fa448" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-809d-a64b-c3d2339906f3" dir="ltr"><th id="U^kC" class="simple-table-header-color simple-table-header" style="width:119.75px" data-comment-block-id="body-0014">核心维度</th><th id="S&lt;VM" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0015">细分二级标签</th><th id="^rGK" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0016">具体表现 / 设定释义</th><th id="MtC[" class="simple-table-header-color simple-table-header" style="width:48.98011016845703px" data-comment-block-id="body-0017">分数</th><th id="cfFh" class="simple-table-header-color simple-table-header" style="width:51.014198303222656px" data-comment-block-id="body-0018">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80c2-b25f-ecce9d72da6f" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0019">🔻 阶级和物化</td><td id="S&lt;VM" class="" data-comment-block-id="body-0020">▪️ 社会阶级设定</td><td id="^rGK" class="" data-comment-block-id="body-0021"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0022"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0023"></td></tr><tr id="39f74ef2-df17-8023-bea7-c309c9a25b71" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0024">▪️ 角色不平等关系</td><td id="^rGK" class="" data-comment-block-id="body-0025">塑造不平等关系且强调上位者权威，如师生、工作上下级、不平等友缘</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0026"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0027"></td></tr><tr id="39f74ef2-df17-80b8-92a6-c989fd4f2a89" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0028">▪️ 物化/非人化</td><td id="^rGK" class="" data-comment-block-id="body-0029">有意加强角色与物品的联系，如“xx塑”，削弱人物本身个性，突出与某一塑的联系。</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0030"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0031"></td></tr><tr id="39f74ef2-df17-80a1-bf82-e3e0ae8bfd7a" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0032">▪️ 养宠</td><td id="^rGK" class="" data-comment-block-id="body-0033">人与动物的不平等关系；角色耗费精力照顾宠物</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0034"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0035"></td></tr><tr id="39f74ef2-df17-80a7-a2fd-f57bdc90f41d" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px" data-comment-block-id="body-0036">🔻 偶像和宗教</td><td id="S&lt;VM" class="" data-comment-block-id="body-0037">▪️ 角色互动中的明显偶像化行为</td><td id="^rGK" class="" data-comment-block-id="body-0038">如个人伟力的夸张化塑造；被普遍崇拜的角色；</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0039"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0040"></td></tr><tr id="39f74ef2-df17-804d-ac46-d90a4344f204" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0041">▪️ 世界观含有关于真人偶像或虚拟偶像的流行文化</td><td id="^rGK" class="" data-comment-block-id="body-0042"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0043"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0044"></td></tr><tr id="39f74ef2-df17-80e0-84b6-eef8e5f1bb5f" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0045">▪️ <mark class="annotation-mark" data-note-id="d1f44ee0-3ca1-4599-a5db-d658524d35cd" title="匿名：题外话，中文里有很多佛教词汇，如“因果”“原因”“业报”“刹那”“须臾”“弹指”“一瞬”等等，如果能清除并用别的词替代就好了" style="background-color: rgb(145, 213, 255);">有关宗教的背景设定或剧情</mark></td><td id="^rGK" class="" data-comment-block-id="body-0046">包括造母神；繁育能力神化<del class="revision-delete">。</del><ins class="revision-add">；宗教相关词汇的正面宣传</ins></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0047"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0048"></td></tr><tr id="39f74ef2-df17-809e-94b7-c719ba5e10f1" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0049">🔻 弱役和束身衣</td><td id="S&lt;VM" class="" data-comment-block-id="body-0050">▪️ <mark class="annotation-mark" data-note-id="df3c72fb-0c04-45ea-be31-76d8d58510ef" title="匿名：看错了，这里是提到就要减分。半As文，但是路人有性缘减分已经包含进去了" style="background-color: rgb(255, 229, 143);">性缘</mark>和<mark class="annotation-mark" data-note-id="2d385cc9-8a2d-4b91-9106-6cb3a711ba01" title="匿名：全AS文里是必须不能含性缘。半AS文要求主角团不能有性缘。那世界观全女，配角或者路人有性缘就应该放在半AS文里面。既然全AS和半AS出始分一致，半AS文配角/路人有性缘应该减分，要不然不是没区别了" style="background-color: rgb(255, 229, 143);">昏</mark>因设定</td><td id="^rGK" class="" data-comment-block-id="body-0051"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0052"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0053"></td></tr><tr id="39f74ef2-df17-80be-a6df-e6513c70f17c" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0054">▪️ <mark class="annotation-mark" data-note-id="7d98c777-f1a4-46d1-aa10-580b62dc6440" title="匿名：书封面和内容有长发、化粧等美役描写应该扣分" style="background-color: rgb(255, 229, 143);">美/帅/弱役描写</mark></td><td id="^rGK" class="" data-comment-block-id="body-0055"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0056"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0057"></td></tr><tr id="39f74ef2-df17-8094-a693-e7aaa6da813c" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0058">▪️ 刻板弱役偏好</td><td id="^rGK" class="" data-comment-block-id="body-0059">明显甜食远大于肉蛋乳的饮食偏好，装饰性大于实用性的物品偏好等</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0060"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0061"></td></tr><tr id="39f74ef2-df17-80c8-9784-d9469f7d67d7" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0062">▪️ <mark class="annotation-mark" data-note-id="4d26126b-9226-475e-901e-030e7ee7555d" title="匿名：比如宠物塑，已经在好几篇里看到人物性格塑造时，把主角比做小狗了" style="background-color: rgb(255, 229, 143);">精神弱役</mark></td><td id="^rGK" class="" data-comment-block-id="body-0063">角色对人或物的强依赖；强绑定的双向关系</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0064"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0065"></td></tr><tr id="39f74ef2-df17-80a0-9336-d76791da6129" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0066">🔻 宏大叙事、虏社道德和慕死情结</td><td id="S&lt;VM" class="" data-comment-block-id="body-0067">▪️ 单纯争夺资源或权力、无改善社会模式的组织争霸主题</td><td id="^rGK" class="" data-comment-block-id="body-0068"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0069"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0070"></td></tr><tr id="39f74ef2-df17-8053-abfb-eeda5fdedd76" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0071">▪️ 将种族、阶级等立场置于性别立场之上</td><td id="^rGK" class="" data-comment-block-id="body-0072"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0073"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0074"></td></tr><tr id="39f74ef2-df17-800f-98b4-fb0f441d9fb8" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0075">▪️ 带有无私奉献、舍己为人等特质的角色</td><td id="^rGK" class="" data-comment-block-id="body-0076"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0077"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0078"></td></tr><tr id="39f74ef2-df17-8025-ad31-ccc36d10a8ce" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0079">▪️ <del class="revision-delete"><mark class="annotation-mark" data-note-id="87e77c61-9ef9-4d4e-a9bf-9025618827fe" title="匿名：特别是在性别战争中，对于死去角色的叙述很值得斟酌，看过为了煽情而悲壮化女人的死亡的性战文。" style="background-color: rgb(255, 229, 143);">为某事献出生命的正面叙述</mark></del><ins class="revision-add">慕死情节</ins></td><td id="^rGK" class="" data-comment-block-id="body-0080"><ins class="revision-add">详描角色死亡场面；煽情、浪漫化死亡叙述</ins></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0081"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0082"></td></tr><tr id="39f74ef2-df17-80c0-af3e-c3157e3f01c4" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px" data-comment-block-id="body-0083">🔻 孝道和血缘</td><td id="S&lt;VM" class="" data-comment-block-id="body-0084">▪️ 母子等亲属之间的不平等关系</td><td id="^rGK" class="" data-comment-block-id="body-0085"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0086"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0087"></td></tr><tr id="39f74ef2-df17-80a8-832f-cb811ec701bc" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0088">▪️ <mark class="annotation-mark" data-note-id="1d849cc0-3ff8-4751-aa60-81d86f47b933" title="匿名：什么表/堂姐妹、女亲戚等互助算吗" style="background-color: rgb(211, 173, 247);">宗族正面形象展现</mark></td><td id="^rGK" class="" data-comment-block-id="body-0089"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0090"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0091"></td></tr><tr id="39f74ef2-df17-8007-8c13-faa2d8c8e908" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0092">▪️ （<mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">针对AS）</mark><del class="revision-delete"><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">强调姓氏存在和作用</mark></del><ins class="revision-add"><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">有姓氏存在</mark></ins><br><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">（针对半AS）</mark><del class="revision-delete"><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">无随母姓意识</mark></del><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);"> </mark><ins class="revision-add"><mark class="annotation-mark" data-note-id="f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351" title="匿名：半AS不随男姓吧，半AS也可以无姓" style="background-color: rgb(145, 213, 255);">随男姓</mark></ins></td><td id="^rGK" class="" data-comment-block-id="body-0093"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0094"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0095"></td></tr></tbody></table></div><h2 id="39f74ef2-df17-802d-b508-cf910870807b" class="" dir="auto" data-comment-block-id="body-0096">⭕️<mark class="annotation-mark" data-note-id="ee11d2b9-ca8f-4f93-bab9-3d034d933c89" title="匿名：关于这一块，理应由女权内部讨论出统一范本，指望一群写网文的体现出来，未免强人所难" style="background-color: rgb(255, 229, 143);">立新</mark> </h2><h4 id="39f74ef2-df17-804f-99f9-f33561e109e8" class="block-color-red" data-notion-highlight="red" dir="auto" data-comment-block-id="body-0097">（提及且有创新+1分；未提及0分；明显不加批判沿用旧制度-1分）</h4><div class="table-scroll"><table id="39f74ef2-df17-8096-9d84-cc3d15355274" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-80c8-a159-ecc54cbb2ae4" dir="ltr"><th id="}QqQ" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0098">核心维度</th><th id="twXV" class="simple-table-header-color simple-table-header" style="width:116.390625px" data-comment-block-id="body-0099">细分二级标签</th><th id="|aY^" class="simple-table-header-color simple-table-header" style="width:308.99998474121094px" data-comment-block-id="body-0100">具体表现 / 设定释义</th><th id="Ig~O" class="simple-table-header-color simple-table-header" style="width:49.98863220214844px" data-comment-block-id="body-0101">分数</th><th id="\d{]" class="simple-table-header-color simple-table-header" style="width:51.01988220214844px" data-comment-block-id="body-0102">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8058-b3ac-f6cbff325abc" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0103">🔺 政治和经济设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0104">▪️ <mark class="annotation-mark" data-note-id="e7cd663e-9b10-42fd-a11f-1e0054e2d593" title="匿名：副本是宗教世界，主角进入后拯救路人，宣传马lie或者社（）（）（），怎么算呢？比如🍅《惊悚游戏：七十正是奋斗的年纪》第321章（手机版p5479）和第322章（p5481）
+我对自由平等（）等概念本身是没有异议，但作者偏正向的描述，有种只讲好的不讲坏的感觉，避重就轻。推崇马算是偶像崇拜，还在正面描述厷，应该作为一个排雷点，但直白的写进打分表也有点危险。
+也是希望如果有zz方面，不要停留在空喊口号上，更多的在实践中体现。写自由平等（）这方面，如果能体现和现在的又有什么区别，是在革新。如果只是套个概念，那还在守旧" style="background-color: rgb(255, 229, 143);">政治</mark></td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0105">执政方式如何？政府形式如何，或有无政府？是否削弱或尽可能消除阶级？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0106"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0107"></td></tr><tr id="39f74ef2-df17-809d-860a-eaa4a9173f67" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0108">▪️ 经济</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0109">货币形式如何，或有无货币？劳动模式、消费模式如何？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0110"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0111"></td></tr><tr id="39f74ef2-df17-80c1-845e-e40d86219e03" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0112">🔺 文化和教育设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0113">▪️ 文化</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0114">关于死亡、离别、交友、节庆等话题，是否有不同于现社的认识和模式？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0115"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0116"></td></tr><tr id="39f74ef2-df17-80fe-b245-d3af4dd9ea5b" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0117">▪️ <mark class="annotation-mark" data-note-id="73f4f897-f4b8-4ae9-bf11-9c5b76089ee4" title="匿名：关于教育是体现了什么人/组织的意识形态应该也有区分吧，是高度一致的思想还是鼓励独立思考" style="background-color: rgb(145, 213, 255);">教育</mark></td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0118">是否革新教育形式？<del class="revision-delete">是否有限制<mark class="annotation-mark" data-note-id="2291c033-0c85-4450-8498-9cef49aef328" title="匿名：感觉与其是教权，不如说是，是否破除了教和学的上下等级阶层，教权听着像某种power。已知教和学只是短暂状态，知识没有壁垒，不应该有服从和被服从关系。具体来说，就是教的人是否被赋予支配权，其地位是否被推崇；学的人是否盲从有无自主思考。
+我想象中是全社会都会投入到教和学的环节中来，每个人教和学的状态不断流转，学校是一个流动机构，不再涉及管理教和学的人。学习像游戏里的任务模式一样，有技能的人根据自我意愿提供教的服务，想学的人向这些人学。" style="background-color: rgb(211, 173, 247);">教权</mark>的意识？</del><ins class="revision-add">是否有消除或限制教导方权力的意识？</ins></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0119"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0120"></td></tr><tr id="39f74ef2-df17-800a-81c3-e7b134de7369" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0121">🔺 <mark class="annotation-mark" data-note-id="497caa0d-aba7-4114-9d38-09d706781f9e" title="匿名：赡养，有必要单列一项吗？" style="background-color: rgb(255, 229, 143);">生殖和抚养设定</mark></td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0122">▪️ 生<mark class="annotation-mark" data-note-id="e0843bdb-96b5-4f3f-8b8b-2e4251c8dd6d" title="匿名：有基于科学依据（论文）的双雌/单雌生殖详细描写是否可以加分。因为目前对于这方面大多数作者好像一笔带过，看论文确实不容易。" style="background-color: rgb(255, 229, 143);">殖</mark></td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0123">生殖方式如何？<del class="revision-delete"><mark class="annotation-mark" data-note-id="92da4477-8326-4bd7-a26c-1d241a644e36" title="匿名：这条感觉和亲缘关系那条是不是表示的是重复的意思，母权可否更改为母的概念？" style="background-color: rgb(211, 173, 247);">是否有限制母权的意识</mark>？</del><ins class="revision-add">是否有淡化母存在的意识？</ins><br>如为双雌生殖，应<mark class="annotation-mark" data-note-id="fbf30344-bc2c-41f7-8184-13480ab61293" title="匿名：这里有不理解的地方，为什么需要“承认xx是母”呢，是否过于强调母权。可以理解for the record的那种承认，但as社会是否需要强调/知晓母是何人，是否代表一种子是母的附属意味，所有人都由女分娩而来，家庭单位消除，我认为as社会中，母也是会被消解的。" style="background-color: rgb(211, 173, 247);">仅承认分娩方为母</mark>。<ins class="revision-add">有详细探讨单雌或双雌生殖，起到科普宣扬作用加1分</ins><br><mark class="highlight-red" data-notion-highlight="red">如承认非分娩方与子的亲缘关系，扣1分。<br>如由人之外的物体分娩，且叙述态度为积极，如树木、石头、人造子宫等，扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0124"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0125"></td></tr><tr id="39f74ef2-df17-8045-9c2c-cc484e149e4c" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0126">▪️ <mark class="annotation-mark" data-note-id="369361b0-615a-4be4-b582-f6cc6f667574" title="匿名：抚养方式是否有单女出钱/力/情感支持，社会抚养还是家庭抚养，个人责任还是集体分担" style="background-color: rgb(145, 213, 255);">抚养</mark></td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0127"><del class="revision-delete">抚养模式如何？</del><ins class="revision-add">抚养、赡养模式如何？是否有一味强调个体对长幼养育责任，而忽略社会机构责任？或反之？</ins></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0128"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0129"></td></tr><tr id="39f74ef2-df17-80e6-88c7-f51581ed2bfc" dir="ltr"><td id="}QqQ" class="" data-comment-block-id="body-0130">🔺 健康和医疗设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0131">▪️ 医学健康知识和医疗设定</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0132">是否提及破除现社伪共识的女本位生理知识，如平均睡眠时长、健康体脂率范围、月经周期和月经用品等？<br><mark class="highlight-red" data-notion-highlight="red">长篇作品（10万字及以上）完全不提及月经相关扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0133"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0134"></td></tr><tr id="39f74ef2-df17-80e8-a2ad-ca368ae52aca" dir="ltr"><td id="}QqQ" class="" data-comment-block-id="body-0135">🔺 衣食住行及其它</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0136">▪️ 衣食住行及其它思考</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0137">在衣食住行等生活方面有无不同于现社的思考？<br><mark class="annotation-mark" data-note-id="f0f493e7-95b6-4efc-a03b-b0fe47173962" title="匿名：高压环境会导致饮食偏好重油重盐重辣是对的，但是这点反推还成立吗？角色爱吃重油重盐重辣的东西就要扣分吗？" style="background-color: rgb(255, 229, 143);">饮食习惯：是否认识到长期大量摄入重油脂调味、感官刺激的食物是在压力模式下的不健康行为？</mark><br>衣物模式：是否摒弃针对非人生理结构制造的衣物形式？是否减少只具有装饰性的设计，如领带、皮鞋？<br><mark class="highlight-red" data-notion-highlight="red">非批判态度提及裙装扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0138"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0139"></td></tr></tbody></table></div><h2 id="39f74ef2-df17-8034-a8b0-c65000ee45dd" class="" dir="auto" data-comment-block-id="body-0140">⭕️创作者、<mark class="annotation-mark" data-note-id="c8981210-1285-4ac3-9d66-8609eabd2efb" title="匿名：作品的发布平台是不是应该也纳入扣分范围。虽然现在没有完美的平台，但是像晋江这样的必须得扣分吧。" style="background-color: rgb(255, 229, 143);">作品载体</mark>、作品传播 </h2><div class="table-scroll"><table id="39f74ef2-df17-808e-9995-c607f70ca9f7" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802a-a375-ca5d1490885d" dir="ltr"><th id="rye&lt;" class="simple-table-header-color simple-table-header" style="width:182.64488220214844px" data-comment-block-id="body-0141">核心维度</th><th id="&gt;U&lt;E" class="simple-table-header-color simple-table-header" style="width:118.46875px" data-comment-block-id="body-0142">细分二级标签</th><th id="XiP&lt;" class="simple-table-header-color simple-table-header" style="width:276.0113525390625px" data-comment-block-id="body-0143">具体表现 / 设定释义 / 评分规则</th><th id="\&gt;b~" class="simple-table-header-color simple-table-header" style="width:49.99714660644531px" data-comment-block-id="body-0144">分数</th><th id="ZLsQ" class="simple-table-header-color simple-table-header" style="width:51.0113525390625px" data-comment-block-id="body-0145">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80de-b262-d9dc084ca7b9" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0146">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0147">▪️ 女义和忤女字词</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0148">褒义使用女义字词（婋、嫖、英雌等）、使用辱男词（骟、劁等）加1分。<br>褒义使用<mark class="annotation-mark" data-note-id="d0bc4d63-89f5-46ea-9b70-7db28c25da4a" title="匿名：非批判地引用/化用y➗作品如文章、语录用是否可以扣分" style="background-color: rgb(145, 213, 255);">英雄</mark>等词<ins class="revision-add">或非批判性化用男诗词、典故等</ins>扣1分，使用忤女词扣2分。<br>在未使用忤女脏话前提下，作者及时听取意见改进文本可不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0149"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0150"></td></tr><tr id="39f74ef2-df17-8066-aab0-cef14788b42e" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0151">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0152">▪️ 中性代词使用</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0153"><del class="revision-delete"><mark class="annotation-mark" data-note-id="fbba8557-b87c-4fbc-9ac4-25a34cb15918" title="匿名：还有身份职位称号类词汇，律师，画家，也不能包含或专指男" style="background-color: rgb(255, 229, 143);">使用少年、学长等</mark></del><ins class="revision-add"><mark class="annotation-mark" data-note-id="fbba8557-b87c-4fbc-9ac4-25a34cb15918" title="匿名：还有身份职位称号类词汇，律师，画家，也不能包含或专指男" style="background-color: rgb(255, 229, 143);">使用中性代词如少年、学长等或身份职位如司机、领导等称呼</mark></ins><mark class="annotation-mark" data-note-id="fbba8557-b87c-4fbc-9ac4-25a34cb15918" title="匿名：还有身份职位称号类词汇，律师，画家，也不能包含或专指男" style="background-color: rgb(255, 229, 143);">包含男性扣1分；专指男性扣2分。</mark><br>使用以上词汇专指女性，男性只使用少男、学哥等不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0154"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0155"></td></tr><tr id="39f74ef2-df17-8036-9375-c6c7bfa6c6c6" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0156">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0157">▪️ 创作态度和立场</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0158"><mark class="annotation-mark" data-note-id="857b6480-24b6-4212-b3d4-517b96c83a52" title="匿名：取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分" style="background-color: rgb(255, 229, 143);">女性角色取名ABB</mark><ins class="revision-add"><mark class="annotation-mark" data-note-id="857b6480-24b6-4212-b3d4-517b96c83a52" title="匿名：取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分" style="background-color: rgb(255, 229, 143);">扣1分</mark></ins><mark class="annotation-mark" data-note-id="857b6480-24b6-4212-b3d4-517b96c83a52" title="匿名：取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分" style="background-color: rgb(255, 229, 143);">，含柔、软、甜等</mark><ins class="revision-add"><mark class="annotation-mark" data-note-id="857b6480-24b6-4212-b3d4-517b96c83a52" title="匿名：取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分" style="background-color: rgb(255, 229, 143);">弱役</mark></ins><mark class="annotation-mark" data-note-id="857b6480-24b6-4212-b3d4-517b96c83a52" title="匿名：取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分" style="background-color: rgb(255, 229, 143);">字扣1分。</mark><br>塑造脸谱化、扁平化女性角色或个人英雌主义的角色扣1分</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0159"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0160"></td></tr><tr id="39f74ef2-df17-80d5-b0a4-fe072a0fd2ae" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0161">🔻 评论区氛围</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0162">▪️ <mark class="annotation-mark" data-note-id="03303e67-2ef9-4f57-b41f-dfa9f347f5d2" title="匿名：评论区有大量反串这种可以扣分吗，比如🍅mlxb的评论区里很多人反串小懦夫，虽然是在贬低男的，但我现在觉得这种反串和小懦夫本身没区别了" style="background-color: rgb(211, 173, 247);">评论区氛围状况</mark></td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0163"><mark class="annotation-mark" data-note-id="42d4612b-2795-4eed-a93c-45da2c4feb7c" title="匿名：🍅评论区读者还会有“哇塞”、“牛逼”的用词，读者催更时会舞夫人少爷的梗，作者没有制止。但作者受到改词的建议，自己会及时修文。" style="background-color: rgb(255, 229, 143);">氛围落体，如爱男自由、嗑cp自由、爱美自由等，扣1分。</mark><br> 氛围较好：作者及读者不包容以上落体行为，且观点碰撞和剧情讨论居多可加1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0164"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0165"></td></tr><tr id="39f74ef2-df17-8081-bc1a-de7f22d3b94e" dir="ltr"><td id="rye&lt;" rowspan="2" class="" style="width:182.64488220214844px" data-comment-block-id="body-0166">🔻 作者作品外态度和作品传播</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0167">▪️ <mark class="annotation-mark" data-note-id="b1d89e61-3c3c-4eb1-9322-99cd097ce877" title="匿名：是否应当关注一下作者的书架以及评论书评，我看到过作者本身的文还可以，但是评论时发表了不合适的评论，尤其是近期的，以及书架内有不合适的小说书籍，比如 yxrq ，比较极端的我看到过的例子作者书架只有自己写的书以及一本yxrq，这似乎并不符合平台可能的塞书行为，评价过多看多少条的评论或者其它这点有待商榷，书架的书怎么划定范围哪种可以接受也有待商量" style="background-color: rgb(255, 229, 143);">作者专栏</mark></td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0168">前作含美化和肯定男、含正面性缘剧情，扣1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0169"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0170"></td></tr><tr id="39f74ef2-df17-805d-b9b2-d487aa8ac49d" dir="ltr"><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0171">▪️ 作者态度及<mark class="annotation-mark" data-note-id="560367b3-87b2-4d14-8c03-8eea1c8b8f31" title="匿名：晋江作者但在腐蟑螂举报女无事件中没有表明态度的直接禁推或者扣分" style="background-color: rgb(255, 229, 143);">宣传方式</mark></td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0172"><del class="revision-delete">作品<mark class="annotation-mark" data-note-id="efa72112-1197-46e9-bf19-0387f4360513" title="匿名：音乐剧等各种衍生演出存在大量美役演员也要扣分" style="background-color: rgb(211, 173, 247);">衍生周边</mark>落体</del><ins class="revision-add">围绕作品衍生出来的所有产物如封面图、音乐剧，人设图等有落体傔疑</ins>、作者<del class="revision-delete">明确鼓励支持</del><ins class="revision-add">不明牌反对</ins>落体二创和<mark class="annotation-mark" data-note-id="622405d7-37fb-476c-b291-4387e6277390" title="匿名：是否要强调下包含漫展" style="background-color: rgb(255, 229, 143);">传播环境</mark><ins class="revision-add">如漫展等</ins>，扣<del class="revision-delete">1</del><ins class="revision-add">2</ins>分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0173"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0174"></td></tr><tr id="3a074ef2-df17-804f-a183-d542685663f0" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0175"></td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0176">▪️ 作品质量问题</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0177">▪️ <del class="revision-delete">文笔、人物塑造，更文频率等</del><ins class="revision-add">文笔差、<mark class="annotation-mark" data-note-id="39ed1354-1267-4f3e-9c87-c58f842b1910" title="匿名：关于AI这一块，建议禁止AI生文，即仅写大纲由AI细化，使得AI味明显、句式固定的文" style="background-color: rgb(255, 229, 143);">使用ai</mark>、人物塑造扁平，更文频率拖等</ins>。（此类有问题可备注，不参与评分）</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0178"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0179"></td></tr></tbody></table></div><h1 id="39f74ef2-df17-806f-b73c-d87929bf6a18" class="" dir="auto" data-comment-block-id="body-0180">加则：性别战争 </h1><p id="39f74ef2-df17-80ca-899d-d9fbcb09d2d6" class="" dir="auto" data-comment-block-id="body-0181">虏定义：沾男、生男，帮助和美化男；仇女、害女，阻止女伤害男。</p><div class="table-scroll"><table id="39f74ef2-df17-806e-8a18-eced8c4fb0b5" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802e-8ddb-c2a049933a75" dir="ltr"><th id="EABJ" class="simple-table-header-color simple-table-header" style="width:139.25851440429688px" data-comment-block-id="body-0182">核心维度</th><th id="R\_c" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0183">细分二级标签</th><th id="hoRM" class="simple-table-header-color simple-table-header" style="width:216.21022033691406px" data-comment-block-id="body-0184">具体表现 / 设定释义 / 评分规则</th><th id="s__}" class="simple-table-header-color simple-table-header" style="width:49.98295593261719px" data-comment-block-id="body-0185">分数</th><th id="oQ=J" class="simple-table-header-color simple-table-header" style="width:51.09089660644531px" data-comment-block-id="body-0186">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8032-b6a2-c73428498d66" dir="ltr"><td id="EABJ" class="" style="width:139.25851440429688px" data-comment-block-id="body-0187">性别<mark class="annotation-mark" data-note-id="8ee99462-c9e0-4780-aa81-6384da65f462" title="匿名：我想到了性别战争存在有无灭点思想，发展双雌/单雌灭点，是否达成AS。有些虽然性战了但是其实只是女性掌权了颠倒地位，并没有认为点子该全灭，可能并没有具体提小懦夫，但如果没提灭点只写到女性掌权就没了，其实基本上搞的地位调转。世界不会发展到as，或者说这算性战吗，感觉两类可以进行区分？" style="background-color: rgb(255, 229, 143);">战争</mark></td><td id="R\_c" class="" data-comment-block-id="body-0188"></td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0189">加2分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0190"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0191"></td></tr><tr id="39f74ef2-df17-80bd-a3fe-fac4a5f5efba" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px" data-comment-block-id="body-0192">🔻 自我认知和行为立场</td><td id="R\_c" class="" data-comment-block-id="body-0193">▪️ 自我认知不为女权</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0194">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0195"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0196"></td></tr><tr id="39f74ef2-df17-8019-a5b3-fc9a55c4c66f" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0197">▪️ 女扮男</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0198">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0199"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0200"></td></tr><tr id="39f74ef2-df17-804a-8ede-c962f284cc02" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0201">▪️ 虏/男掌权环境下生育</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0202">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0203"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0204"></td></tr><tr id="39f74ef2-df17-8052-80c8-f14bde4fcb71" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0205">▪️ 违背女权同盟</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0206">扶持和帮助虏，与虏合作扣1分；未体现同立场正面角色合作互助扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0207"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0208"></td></tr><tr id="39f74ef2-df17-8053-995b-f01bc57bb8d3" dir="ltr"><td id="EABJ" rowspan="5" class="" style="width:139.25851440429688px" data-comment-block-id="body-0209">🔻 关注和美化虏</td><td id="R\_c" class="" data-comment-block-id="body-0210">▪️ 女虏比低于2:1（由虏变女的可视为女，但需评估虏中心条例）</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0211">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0212"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0213"></td></tr><tr id="39f74ef2-df17-8095-9093-c4814cd4ceaa" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0214">▪️ 承认与虏的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0215">正面角色不与虏亲/虏友断绝关系，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0216"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0217"></td></tr><tr id="39f74ef2-df17-801e-b936-d011c71773a1" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0218">▪️ 强虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0219">参与重要剧情，有重大迫害主角团行为却无相应惩罚，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0220"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0221"></td></tr><tr id="39f74ef2-df17-8030-8c7b-e6c3a767c014" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0222">▪️ 弱虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0223">美化虏的沾男、助男行为，大篇幅描写虏身不由己剧情、哭丧卖惨，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0224"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0225"></td></tr><tr id="39f74ef2-df17-8063-b9f9-fa64cf134c05" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0226">▪️ 以虏为中心的的丑恶情节多于惩罚/反抗情节（或没有）</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0227">扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0228"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0229"></td></tr><tr id="39f74ef2-df17-80ea-badb-e396e0e1e794" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px" data-comment-block-id="body-0230">🔻 关注和美化男</td><td id="R\_c" class="" data-comment-block-id="body-0231"><mark class="annotation-mark" data-note-id="861322ec-12df-4759-9d0a-4ac7f259d6e4" title="匿名：这个女男比会不会太宽松了" style="background-color: rgb(255, 229, 143);">▪️ 女男比低于</mark><del class="revision-delete"><mark class="annotation-mark" data-note-id="861322ec-12df-4759-9d0a-4ac7f259d6e4" title="匿名：这个女男比会不会太宽松了" style="background-color: rgb(255, 229, 143);">2:1</mark></del><ins class="revision-add">9:1</ins></td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0232"><ins class="revision-add">感官上男性角色存在感过强的都可</ins>扣2分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0233"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0234"></td></tr><tr id="39f74ef2-df17-80c8-af29-c9cbe09d1426" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0235">▪️ 承认与男性的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0236">承认亲情，如随父姓，扣2分；承认其它正向关系，如朋友、师生、同事间正向感情，扣2分。<br>扶持和帮助男性扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0237"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0238"></td></tr><tr id="39f74ef2-df17-808b-8dae-dd62f2e5f783" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0239">▪️ 美化和观赏男性</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0240">赋予男性才华、能力、品德等，扣2分。<br> 女凝男、小糯夫等非批判描写，扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0241"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0242"></td></tr><tr id="39f74ef2-df17-80f7-aa0d-d4a0c463f50c" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0243">▪️ 男性高光</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0244">取名用心/完整成长线、立体性格、参与重要剧情等，酌情扣2-3分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0245"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0246"></td></tr></tbody></table></div><h1 id="39f74ef2-df17-806e-8bb0-c1697fceeeb6" class="" dir="auto" data-comment-block-id="body-0247">禁红不禁黑（只能负分排雷）:</h1><p id="39f74ef2-df17-805c-b6d3-fa7256d7bec2" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0248">有以下行为禁止组内<mark class="annotation-mark" data-note-id="d1270fef-497d-4e50-8b87-ed060c2fe406" title="匿名：读者也不能推荐或者读者推荐后（不知道的情况下）需要删除推荐帖子" style="background-color: rgb(255, 229, 143);">自荐</mark><ins class="revision-add">，读者打评需改排雷或删除</ins></p><h3 id="39f74ef2-df17-8047-b425-e20e1167f6cd" class="" dir="auto" data-comment-block-id="body-0249">1.作品忤女和反女权行为</h3><p id="39f74ef2-df17-8024-a245-c413610c1092" class="" dir="auto" data-comment-block-id="body-0250">自我认知不为女性、女身厌恶等忤女行为</p><p id="39f74ef2-df17-80d3-ab64-fa60dd20072a" class="" dir="auto" data-comment-block-id="body-0251"><mark class="annotation-mark" data-note-id="f12031b8-a78e-4300-985a-b0a412407945" title="匿名：防止有人钻空子，A卵B生，也叫代孕。" style="background-color: rgb(255, 229, 143);">代孕</mark>、以性惩罚女性等严重物化情节</p><p id="39f74ef2-df17-8053-ab00-c6cbba039868" class="" dir="auto" data-comment-block-id="body-0252">忽视或美化女性困境</p><p id="39f74ef2-df17-8034-93dc-daf337f88365" class="" dir="auto" data-comment-block-id="body-0253">模糊和剽窃女性能力，如<mark class="annotation-mark" data-note-id="d9054554-de9e-4833-8546-af5a92af38ef" title="匿名：有些作品的设定是女生子，但男代为承担痛苦，这种是否可划为男生子一类直接避雷，我觉得本质还是在给男的找存在理由" style="background-color: rgb(211, 173, 247);">男生子</mark></p><p id="39f74ef2-df17-80a3-a7fa-e48d0d62284f" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0254">主角团参与性缘/参与昏因（as世界观存在性缘<ins class="revision-add">，半as对性缘关系的非批判性描述</ins>）</p><p id="39f74ef2-df17-80c8-ae0b-fe07a00f4c75" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0255">打男拳，如生男宝/<mark class="annotation-mark" data-note-id="78048906-64ac-4b6e-8386-a8e765cda330" title="匿名：反串的要不要也扣一点分，比如♂要美美的，争取男服弱役权利，♂的或者太危险了要保护之类的话
+看着很恶心啊为啥不直接全杀了" style="background-color: rgb(255, 229, 143);">呼吁男性权益</mark></p><p data-comment-block-id="body-0262"><ins class="revision-add">性战结局不排男</ins></p><h3 id="39f74ef2-df17-80b7-a373-d9bc02c80208" class="" dir="auto" data-comment-block-id="body-0256">2.作品外作者问题</h3><p id="39f74ef2-df17-80bd-8632-fa49e75e0be2" class="" dir="auto" data-comment-block-id="body-0257">作者沾男/生男/自我认知不为女性</p><p id="39f74ef2-df17-807e-a61a-d096dc2802b9" class="" dir="auto" data-comment-block-id="body-0258">连载同时阅读/写作/预收（准备写作）<ins class="revision-add">忤女文、</ins>主角团含男/主角团含性缘文</p><p id="39f74ef2-df17-8070-a826-d2f0655f118e" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0259">支持反爱女/反<mark class="annotation-mark" data-note-id="94b7bbcd-5936-41d8-8c72-f333ca04bb21" title="匿名：有人认为有很多女权流派，这里要不要注明是RF" style="background-color: rgb(255, 229, 143);">女权观点</mark><ins class="revision-add">（反rf反14bt）</ins>、宣扬女男无差、平权论（文中同理）</p><p id="39f74ef2-df17-80ce-ac47-fb99f37a1d65" class="" dir="auto" data-comment-block-id="body-0260">男性作者</p><p id="39f74ef2-df17-80db-962f-e43697671da6" class="" dir="auto" data-comment-block-id="body-0261">
+</p><h1 id="recommendation-rules" class="" dir="auto" data-comment-block-id="body-0263">推荐规则</h1><p class="" dir="auto" data-comment-block-id="body-0264">1，组内自荐需要作者自评分，如评论区提出扣分建议，需及时修正评分。</p><p class="" dir="auto" data-comment-block-id="body-0265">2，有禁红不禁黑内行为的文禁止组内推荐，读者打评需改为排雷或删除帖子。</p><p class="" dir="auto" data-comment-block-id="body-0266">3，推荐楼发帖者和评论者禁止自行删评，禁止带节奏。</p><p class="" dir="auto" data-comment-block-id="body-0267">4，鼓励多人多帖对同一作品打分，鼓励用新细则对旧推文重新评估。</p><p class="" dir="auto" data-comment-block-id="body-0268">5，推荐者所推文章或作者后面出现问题，推荐者需及时修改原帖。如原推荐者无法及时修正，可由她人发新帖重评，旧贴禁回。</p><p class="" dir="auto" data-comment-block-id="body-0269"></p></div></article>
+<span class="sans" style="font-size:14px;padding-top:2em"></span>
+<details class="annotation-panel" open><summary>共享批注 <span id="annotationCount">0</span></summary><div id="annotationList" class="annotation-list"></div></details>
+<style>.annotation-dialog select{width:100%;margin-top:5px;padding:8px;border:1px solid #ccc;border-radius:8px}.annotation-replies{margin-top:8px;border-top:1px solid #eee;padding-top:5px}.annotation-reply-item{font-size:12px;padding:5px 0;border-bottom:1px solid #eee}.annotation-reply-item.is-hidden{color:#999;background:#f5f5f5;border-radius:5px;padding:4px 6px}.annotation-reply-admin{display:flex!important;align-items:center;gap:8px;margin-top:3px}.annotation-reply-admin button{display:inline-block!important;border:0!important;background:none!important;color:#666!important;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px 0!important}.annotation-reply{display:flex;gap:5px;margin-top:8px}.annotation-reply input{min-width:0;flex:1;padding:5px;border:1px solid #ccc;border-radius:5px}.annotation-reply button,.annotation-delete{border:0;background:none;color:#666;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px}</style>
+<style>.annotation-card.is-collapsed{width:auto;max-width:170px;padding:4px 8px;border-radius:999px;box-shadow:0 2px 7px #0002}.annotation-card.is-collapsed .annotation-quote{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.annotation-card.is-collapsed>div:not(.annotation-quote),.annotation-card.is-collapsed .annotation-reply{display:none}.annotation-card:not(.is-collapsed) .annotation-quote{cursor:pointer;font-size:12px;margin-bottom:5px}.annotation-card:not(.is-collapsed) .annotation-quote::before{content:'💬 ';}.annotation-card.is-collapsed .annotation-selected{display:none}.annotation-card:not(.is-collapsed) .annotation-preview{display:none}.annotation-preview{color:#555}.annotation-selected{color:#777}</style>
+<style id="annotation-mobile-behavior">
+.annotation-card .annotation-quote::before {
+  content: '💬 ' attr(data-reply-count) ' · ' !important;
+}
+@media (max-width: 720px) {
+  .annotation-panel { pointer-events: none; }
+  .annotation-card { pointer-events: auto; }
+  .annotation-card.is-collapsed {
+    width: 54px !important;
+    max-width: 54px !important;
+    min-height: 34px;
+    padding: 5px 7px;
+    opacity: .35;
+    border-radius: 999px;
+  }
+  .annotation-card.is-collapsed .annotation-quote {
+    width: 40px;
+    max-width: 40px;
+    font-size: 0;
+    overflow: visible;
+    text-align: center;
+  }
+  .annotation-card.is-collapsed .annotation-quote::before {
+    content: '💬 ' attr(data-reply-count) !important;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .annotation-card:not(.is-collapsed) {
+    width: min(260px, calc(100vw - 28px));
+    max-width: min(260px, calc(100vw - 28px));
+    opacity: 1;
+  }
+}
+</style>
+<script>
+(() => {
+  const annotations = [{"body":"选中文字添加批注","color":"rgb(183, 235, 143)","id":"90b8fbb2-2fca-43ca-aec6-001ea9fdd367","meta":"匿名 · 2026/7/18 14:22:26","orphan":false,"quote":"打分细则1.1","replies":[]},{"body":"副本是宗教世界，主角进入后拯救路人，宣传马lie或者社（）（）（），怎么算呢？比如🍅《惊悚游戏：七十正是奋斗的年纪》第321章（手机版p5479）和第322章（p5481）\n我对自由平等（）等概念本身是没有异议，但作者偏正向的描述，有种只讲好的不讲坏的感觉，避重就轻。推崇马算是偶像崇拜，还在正面描述厷，应该作为一个排雷点，但直白的写进打分表也有点危险。\n也是希望如果有zz方面，不要停留在空喊口号上，更多的在实践中体现。写自由平等（）这方面，如果能体现和现在的又有什么区别，是在革新。如果只是套个概念，那还在守旧","color":"rgb(255, 229, 143)","id":"e7cd663e-9b10-42fd-a11f-1e0054e2d593","meta":"匿名 · 2026/7/18 18:17:30","orphan":false,"quote":"政治","replies":["匿名：宣扬马/社就是明显不加批判且沿用旧制度吧？就算是从封建到资本，两个都是旧制度，文中算立新但不能算表里的立新，此类加分的只有女社创新制度会加，此文如此算扣分。","匿名：推崇马和社xxx的不可能是AS或半AS文吧……写这两种类别的作者应该不太可能还在信这套东西。","匿名：这小说主角是长发吧","匿名：太像了也该扣分，不要整那么像好吗，太恶心了，我一看到从未倒下就晕，即使有一定批评，就算是全女文这点也忍不了","匿名：btw《七十正是奋斗的年纪》有坑，文中多次写到男同（非批判）","匿名：不会说话就不要说话，我是被简介最后一段膈应到的，会尽量避免辱女词，但不接受故意挑刺/严重影响正常阅读的建议（非要让把公平改母平），我真是呵呵，我只见过自用的，没见过逼人这么用，让人要这么用的只见过反串，这么整以为是让改辱女词的要她把公平改母平犯神经，还有封面长发一直在膈应我","匿名：封面是个雷（长发），简介又一个雷"]},{"body":"🍅评论区读者还会有“哇塞”、“牛逼”的用词，读者催更时会舞夫人少爷的梗，作者没有制止。但作者受到改词的建议，自己会及时修文。","color":"rgb(255, 229, 143)","id":"42d4612b-2795-4eed-a93c-45da2c4feb7c","meta":"匿名 · 2026/7/18 18:25:52","orphan":false,"quote":"氛围落体，如爱男自由、嗑cp自由、爱美自由等，扣1分。","replies":[]},{"body":"关于教育是体现了什么人/组织的意识形态应该也有区分吧，是高度一致的思想还是鼓励独立思考","color":"rgb(145, 213, 255)","id":"73f4f897-f4b8-4ae9-bf11-9c5b76089ee4","meta":"匿名 · 2026/7/18 18:43:11","orphan":false,"quote":"教育","replies":["匿名：有道理，不过其实现实就是高度统一思想吧，沿用此类教育且不加批判，就算扣分行列。","匿名：1.教育制度、升学考核方式是少数人决定or公开征求意见，少数人只做整合工作","匿名：2.学生对于教育制度、升学考核、授课内容等方面有没有发言权？到了能明辨是非的年龄在这方面应该有投票权。学生代表（如果有的话）也不能成绩论，而是各方面能代表众人的意愿。","匿名：学生自治会能否罢免老师（这又到不平等关系上面去了），实习待遇（经济），学术界上升渠道","匿名：要体现对教权的限制，所有天然具有上位色彩的权力位都是如此，应该有限制措施"]},{"body":"抚养方式是否有单女出钱/力/情感支持，社会抚养还是家庭抚养，个人责任还是集体分担","color":"rgb(145, 213, 255)","id":"369361b0-615a-4be4-b582-f6cc6f667574","meta":"匿名 · 2026/7/18 18:46:09","orphan":false,"quote":"抚养","replies":[]},{"body":"题外话，中文里有很多佛教词汇，如“因果”“原因”“业报”“刹那”“须臾”“弹指”“一瞬”等等，如果能清除并用别的词替代就好了","color":"rgb(145, 213, 255)","id":"d1f44ee0-3ca1-4599-a5db-d658524d35cd","meta":"匿名 · 2026/7/18 18:54:04","orphan":false,"quote":"有关宗教的背景设定或剧情","replies":[]},{"body":"全AS文里是必须不能含性缘。半AS文要求主角团不能有性缘。那世界观全女，配角或者路人有性缘就应该放在半AS文里面。既然全AS和半AS出始分一致，半AS文配角/路人有性缘应该减分，要不然不是没区别了","color":"rgb(255, 229, 143)","id":"2d385cc9-8a2d-4b91-9106-6cb3a711ba01","meta":"匿名 · 2026/7/18 19:01:53","orphan":false,"quote":"昏","replies":["匿名：现在这个分类就是直接把含性缘这一部分算非as文里，as和半as主角团都不能有性缘。","匿名：有性缘不批判减分吧","匿名：不减，性缘as有，半as不批就直接排雷"]},{"body":"书封面和内容有长发、化粧等美役描写应该扣分","color":"rgb(255, 229, 143)","id":"7d98c777-f1a4-46d1-aa10-580b62dc6440","meta":"匿名 · 2026/7/18 19:04:32","orphan":false,"quote":"美/帅/弱役描写","replies":["匿名：书外美役图算在下面的作品衍生周边里了","匿名：直接的小说软件里能看到的书封并不算衍生周边吧，支持小说封面有问题也该扣分，不止美役，封面女性呈现不正面的形象，像被链子锁着被殴打的面部状态等都应当扣分","匿名：支持扣分封面服弱役的","匿名：统一算在下面作品衍生产品落体里了","匿名：下面衍生产品要说清楚，一般认知封面都不是衍生周边","匿名：可以了，在下面看到之后会详细说明一下"]},{"body":"晋江作者但在腐蟑螂举报女无事件中没有表明态度的直接禁推或者扣分","color":"rgb(255, 229, 143)","id":"560367b3-87b2-4d14-8c03-8eea1c8b8f31","meta":"匿名 · 2026/7/18 19:09:26","orphan":false,"quote":"宣传方式","replies":[]},{"body":"读者也不能推荐或者读者推荐后（不知道的情况下）需要删除推荐帖子","color":"rgb(255, 229, 143)","id":"d1270fef-497d-4e50-8b87-ed060c2fe406","meta":"匿名 · 2026/7/18 19:12:38","orphan":false,"quote":"自荐","replies":["匿名：读者打评本就应如此，此条主要是为了给自荐板块加上限制，还有作者自荐也要自评分。","匿名：删除会不会导致后续没有看到相关帖子的人重复踩坑？可以改为避雷贴吗？","匿名：禁止推荐ai写作，或者有明显ai语句的文","匿名：我感觉需要改成避雷帖，不改避雷的移除帖子并踢出，前人之鉴+记录思想变化","匿名：有些能不能踢出组呢，那本著名yxrq我还能看到有人推，有人有正面评价","匿名：yxrq是大雷，从作者到作品到粉丝","匿名：不建议删除，应该保留版本方便比对。","匿名：楼主不能私自删除楼内评论，楼内评论跟贴人不能私删自己发的评论。防止带节奏又删评。","匿名：突然又想起来一个问题，要不要倒查，看到了有人在之前的帖子或帖子的评论区对yxrq有正面评价，看到了要不要提出来","匿名：支持倒查，用现在的思想审视过往言行也是一种进步，别人提出来是一种帮助","匿名：是向管理员提，还是向对有问题言论的人提，我倾向像管理员提"]},{"body":"有基于科学依据（论文）的双雌/单雌生殖详细描写是否可以加分。因为目前对于这方面大多数作者好像一笔带过，看论文确实不容易。","color":"rgb(255, 229, 143)","id":"e0843bdb-96b5-4f3f-8b8b-2e4251c8dd6d","meta":"匿名 · 2026/7/18 19:15:43","orphan":false,"quote":"殖","replies":[]},{"body":"看错了，这里是提到就要减分。半As文，但是路人有性缘减分已经包含进去了","color":"rgb(255, 229, 143)","id":"df3c72fb-0c04-45ea-be31-76d8d58510ef","meta":"匿名 · 2026/7/18 19:21:15","orphan":false,"quote":"性缘","replies":[]},{"body":"有人认为有很多女权流派，这里要不要注明是RF","color":"rgb(255, 229, 143)","id":"94b7bbcd-5936-41d8-8c72-f333ca04bb21","meta":"匿名 · 2026/7/18 20:08:35","orphan":false,"quote":"女权观点","replies":["匿名：以14bt为基础的rf？有的人甚至能rf自定义…","匿名：真是没完没了"]},{"body":"非批判地引用/化用y➗作品如文章、语录用是否可以扣分","color":"rgb(145, 213, 255)","id":"d0bc4d63-89f5-46ea-9b70-7db28c25da4a","meta":"匿名 · 2026/7/18 20:22:13","orphan":false,"quote":"英雄","replies":["匿名：“公共”“公开”这类的词算吗？","匿名：这类词不算吧，“公”这个词是牠们抢过去的，原本没有点子的意思","匿名：突然想到像弟子、师叔、师伯，有些人会在小说里当中性词用，但现在这情况有可能吗，就很不得劲，这些如果看到了要不要扣分，希望和大家一起讨论，不包括公，点子可以用厷用以区分","匿名：要扣吧，这些词和“师父”“大丈夫”一样含明显的性别指向，不算中性词","匿名：好，明白了","匿名：今天看到了一个作者很神经，想起来有一堆这样的作者，作者们自己写辱女词骂妈词，在读者提出来用他爹的之后倒是知道改成中性词或者去掉，不辱女也不辱点了，这种情况下是扣两分吧，感觉现在还没有这种意识真是情理之外意料之中，明明很多地方都有改变，有的人就是装瞎要别人提醒"]},{"body":"这个女男比会不会太宽松了","color":"rgb(255, 229, 143)","id":"861322ec-12df-4759-9d0a-4ac7f259d6e4","meta":"匿名 · 2026/7/18 20:47:03","orphan":false,"quote":"▪️ 女男比低于2:1","replies":["匿名：赞同楼上","匿名：那改成5：1？","匿名：建议改成9：1","匿名：看文时，感官上男的太跳的，就直接扣分","匿名：同意楼上，哪怕100:1，当那个1占的戏份让读者感觉不适了就可以扣","匿名：同意楼上"]},{"body":"半AS不随男姓吧，半AS也可以无姓","color":"rgb(145, 213, 255)","id":"f954ebe0-e5fd-4d2b-b8c6-e6c605ae1351","meta":"匿名 · 2026/7/18 21:57:09","orphan":false,"quote":"针对AS）强调姓氏存在和作用有姓氏存在（针对半AS）无随母姓意识 随男姓","replies":["匿名：合理"]},{"body":"比如宠物塑，已经在好几篇里看到人物性格塑造时，把主角比做小狗了","color":"rgb(255, 229, 143)","id":"4d26126b-9226-475e-901e-030e7ee7555d","meta":"匿名 · 2026/7/18 22:35:03","orphan":false,"quote":"精神弱役","replies":["匿名：宠物塑的话在上面的“物化/非人化”那里扣了分","匿名：好的","匿名：养宠算吗","匿名：因为养宠比较特殊，也能算是不平等阶级，所以在上面单独列了"]},{"body":"防止有人钻空子，A卵B生，也叫代孕。","color":"rgb(255, 229, 143)","id":"f12031b8-a78e-4300-985a-b0a412407945","meta":"匿名 · 2026/7/18 22:47:10","orphan":false,"quote":"代孕","replies":["匿名：试管也算，和代孕流程一样"]},{"body":"是否要强调下包含漫展","color":"rgb(255, 229, 143)","id":"622405d7-37fb-476c-b291-4387e6277390","meta":"匿名 · 2026/7/18 22:51:45","orphan":false,"quote":"传播环境","replies":["匿名：本来就是因为这个事才特意强调传播环境的，加","匿名：如果作者态度暧昧，表示不支持，但也不让批评这样做的人，该放哪里","匿名：真的有中立吗？又不是不上网了，有这个心的自然会制止，严格点就该扣上","匿名：那明确表示不支持的加分，中立态度不扣分，支持的扣分？（或者有大热的落体二创直接扣，有些周边很有热度，在作品超话里点赞评论都很多，作者很难不知道吧）","匿名：漫展这个事闹成这样，作者绝对是有责任的，不如闲那个声明也删了漫展吧？本来热门有二创也没几本，到这个地步如果不能像鹊知林那样发声明不赞同，默认和鼓励都应该扣分","匿名：“明确鼓励支持”应该改成“没有明牌反对”。分享下今天看到的一句话，说得很对：有权力制止却不制止的就是在搞纵容","匿名：反对了，又不让别人拉踩没做到的，不让别人正当批评做了不合适行为的，很意味深长啊，有些人很摇摆啊，被拽回去了，不是很坚定","匿名：支持漫展的在狠狠骂媎妹们，还让咱紫砂，要我说这就直接进到排雷里","匿名：2分太少了","匿名：这种应该算作者立场有问题，女权明确反商业化和脱宅","匿名：中立的本质就是不想改变现状，直接进排雷"]},{"body":"赡养，有必要单列一项吗？","color":"rgb(255, 229, 143)","id":"497caa0d-aba7-4114-9d38-09d706781f9e","meta":"匿名 · 2026/7/18 23:27:13","orphan":false,"quote":"生殖和抚养设定","replies":["匿名：赡养可以扣在孝道那里吧，算作母子不平等关系","匿名：扣分是如此，不过这一板块是在讲立新，是否在一块有新的构思，那可以和抚养放一块"]},{"body":"特别是在性别战争中，对于死去角色的叙述很值得斟酌，看过为了煽情而悲壮化女人的死亡的性战文。","color":"rgb(255, 229, 143)","id":"87e77c61-9ef9-4d4e-a9bf-9025618827fe","meta":"匿名 · 2026/7/18 23:39:38","orphan":false,"quote":"为某事献出生命的正面叙述","replies":["匿名：慕死情结的话，详细描写女性角色死亡的话算吗？有些AS文或半AS文也会出现景观化女性角色死亡的剧情。（无论正负面叙述）","匿名：我觉得算，详细描写=注视。但我有疑问就是，死了但其实没死的那种怎么算，意思就是在某世界死了在某某世界又是活的身份，我觉得应该同属这一类，死亡同样变成一种浪漫代价","匿名：正面叙述应该也包括，活着的人是怎么看待死亡，和以前有什么变化。旧社会对死亡有个很搞笑的认知，死者做的一切事都能被原谅，特别是牺牲者。"]},{"body":"建议增加“非主角性缘在文中呈批判态度”","color":"rgb(255, 229, 143)","id":"7b0a40d7-7790-4082-96ec-2ec4fc5984a7","meta":"匿名 · 2026/7/19 03:46:21","orphan":false,"quote":"无性缘","replies":["匿名：可加排雷里"]},{"body":"还有身份职位称号类词汇，律师，画家，也不能包含或专指男","color":"rgb(255, 229, 143)","id":"fbba8557-b87c-4fbc-9ac4-25a34cb15918","meta":"匿名 · 2026/7/19 03:53:52","orphan":false,"quote":"使用少年、学长等使用中性代词如少年、学长等或身份职位如司机、领导等称呼包含男性扣1分；专指男性扣2分。","replies":[]},{"body":"反串的要不要也扣一点分，比如♂要美美的，争取男服弱役权利，♂的或者太危险了要保护之类的话\n看着很恶心啊为啥不直接全杀了","color":"rgb(255, 229, 143)","id":"78048906-64ac-4b6e-8386-a8e765cda330","meta":"匿名 · 2026/7/19 10:53:40","orphan":false,"quote":"呼吁男性权益","replies":["匿名：又不提倡女.平等，反串争取.弱役权也是给牠们争取权益，争强争弱权，只要是给.眼神，就是呼吁男性权益，要排雷。"]},{"body":"世界观全女，主角团不沾xy，但背景里有女女xy关系的 是不是就不算as","color":"rgb(255, 229, 143)","id":"088e62d8-288b-4022-a5a5-1ff9dc0b1678","meta":"匿名 · 2026/7/19 15:03:11","orphan":false,"quote":"无性缘观念","replies":["匿名：不算，在排雷里","匿名：xy禁红不禁黑"]},{"body":"感觉与其是教权，不如说是，是否破除了教和学的上下等级阶层，教权听着像某种power。已知教和学只是短暂状态，知识没有壁垒，不应该有服从和被服从关系。具体来说，就是教的人是否被赋予支配权，其地位是否被推崇；学的人是否盲从有无自主思考。\n我想象中是全社会都会投入到教和学的环节中来，每个人教和学的状态不断流转，学校是一个流动机构，不再涉及管理教和学的人。学习像游戏里的任务模式一样，有技能的人根据自我意愿提供教的服务，想学的人向这些人学。","color":"rgb(211, 173, 247)","id":"2291c033-0c85-4450-8498-9cef49aef328","meta":"匿名 · 2026/7/19 16:49:41","orphan":false,"quote":"教权","replies":["匿名：教育，我觉得更应该关注对于幼崽的指引与养育。不可能因为她们对世界充满好奇，就只让她们自己探索，而不告诉她们哪里存在危险，什么东西是不可以的。"]},{"body":"这里有不理解的地方，为什么需要“承认xx是母”呢，是否过于强调母权。可以理解for the record的那种承认，但as社会是否需要强调/知晓母是何人，是否代表一种子是母的附属意味，所有人都由女分娩而来，家庭单位消除，我认为as社会中，母也是会被消解的。","color":"rgb(211, 173, 247)","id":"fbf30344-bc2c-41f7-8184-13480ab61293","meta":"匿名 · 2026/7/19 16:58:43","orphan":false,"quote":"仅承认分娩方为母","replies":["匿名：仅为记录而言。承认xx是母我也不理解了，因为可以记录为由xx分娩，没必要带个母","匿名：此条强调的是不能认可另一方为母的身份，不过这样看，下面扣分点已足以阐述，这里的确没有必要再强调母","匿名：是否承认“母”的存在就是认同母权还有待商榷吧，感觉默认母子关系是附属关系也是一种男社遗蠹，不过反过来是承认母的存在有啥作用","匿名：如果完全否认母的存在，会造成养育责任全归于社会吧，那社会又有什么责任完全承担孩子的教养呢，一点责任不让母担，容易滥生","匿名：因为是基于as世界，所以下意识默认滥生不存在，养育由社会共同完成了，实际这样是可行的吗感觉大家可以再讨论下","匿名：想生就生，但共同抚养还是太推卸责任了吧，这样不是很利好繁殖焦虑？","匿名：想生就生这点很可怕了，自己不用负一点责任，我的态度同上，繁殖狂很高兴了，里面有好几个值得讨论的点，健康问题，不利生殖对生殖者对被生者不好的，的也可以想生就生吗，即使普遍健康，偶发性的基因问题其它问题还是存在的吧，社会共同抚养推卸生殖者责任的问题，滥生的问题，观现在和过去我认为有的人还是挺爱生的，这点确实是需要仔细考虑的问题，我思考过的比较理想的方式就是母亲要为生的孩子负责，承担一定的责任，使其不至于滥生，社会承担一部分养育，并且监督母亲的养育，使其不能因自己生了孩子，自视为上位者控制孩子，如果纯母亲养或者社会都会有问题，社会有时候会不会不受控的通过技术滥生","匿名：女社会不会出现另讲，母系怎么没有？猪为会成为母系的一个意象就是因为猪多子。生育极度神化情况下，多生是被颂扬的。没有.子她们就会放弃滥生？不可能。"]},{"body":"取名abb和名字含娇软甜应该是各扣一分，取名abb扣一分，名字含娇软甜等扣一分，两者都有扣两分","color":"rgb(255, 229, 143)","id":"857b6480-24b6-4212-b3d4-517b96c83a52","meta":"匿名 · 2026/7/19 17:03:41","orphan":false,"quote":"女性角色取名ABB扣1分，含柔、软、甜等弱役字扣1分。","replies":["匿名：娇字应该单独讨论。因为这个字在女义词中是高大优秀的词汇。","匿名：实际文看得出来作者取这个字到底什么用意，以及无论如何娇都不是弱役字。举例中并没有娇","匿名：如果这个作者笔下的大多数女角色都有女字旁的字，用这个字自然没有问题，但如果别的都是其他的字，而只有这一个是“娇”的呢，如果作者本人打着消除刻板印象的名义呢"]},{"body":"音乐剧等各种衍生演出存在大量美役演员也要扣分","color":"rgb(211, 173, 247)","id":"efa72112-1197-46e9-bf19-0387f4360513","meta":"匿名 · 2026/7/19 17:05:23","orphan":false,"quote":"衍生周边","replies":["匿名：所以讲得是周边，围绕文衍生出来的所有东西","匿名：就是可以写具体一点，一开始我以为这个周边是那种“二次元文化饭圈文化周边”，那些铁皮纸片什么的","匿名：那就修改","匿名：我在上面美帅役那边看到说小说封面弱役算到衍生周边这边了，但是按照我的认知来说，和查到的说法，小说封面不算衍生周边，如果要算到里面，希望能写的更清楚","匿名：现在是衍生出来的所有产物，包括音乐剧、封面图等等。","匿名：那就在后面再详细解释包括一下上述产物"]},{"body":"评论区有大量反串这种可以扣分吗，比如🍅mlxb的评论区里很多人反串小懦夫，虽然是在贬低男的，但我现在觉得这种反串和小懦夫本身没区别了","color":"rgb(211, 173, 247)","id":"03303e67-2ef9-4f57-b41f-dfa9f347f5d2","meta":"匿名 · 2026/7/19 17:12:50","orphan":false,"quote":"评论区氛围状况","replies":["匿名：那种文在排雷，as和半as没有需要反串的情况","匿名：咱们组不推反讽文，也就基本盘看"]},{"body":"关于这一块，理应由女权内部讨论出统一范本，指望一群写网文的体现出来，未免强人所难","color":"rgb(255, 229, 143)","id":"ee11d2b9-ca8f-4f93-bab9-3d034d933c89","meta":"匿名 · 2026/7/19 17:23:29","orphan":false,"quote":"立新","replies":["匿名：很多写文的稍微上去一点都会有自己的想法，自己不做思考要范本，很能耐，每个人同一个世界观写文好了，立新是体现个人的思考，又不是让作者真去建立","匿名：为啥要搞八股文呢，给出一个不能写的标准不就行了吗，只能写啥，那不就纯纯限制创作自由了吗？女权文应在不反女权的前提下百花齐放","匿名：上面是不是fzl，又来自由了。","匿名：上面是fzl吧，“在不反女权的前提下”几个大字让你吃了？","匿名：我可不会把大家友好讨论写作标准当成制作八股文规范。你真不是的话，也改改你自由来自由去的想法吧。","匿名：上来就fzl，给媎妹们扣帽子这方面😂只能写什么不是八股文是什么？打分细则只是“不能写什么”“可以写什么”，而且友好讨论是“指望一群写网文的体现出来，未免强人所难”？这挺高高在上啊","匿名：你不是fzl我道歉，是fzl的话今晚死爹（因为你说话真的和腐蟑螂很像啊，动不动就阻碍你创作自由了。我认为打分细则就是在讨论不能写什么和可以写什么啊，不知道你有什么疑问。最后那句话又不是我说的，如果是我说的也死爹好吧）","匿名：范本是什么意思，小说世界基于不同的世界观理应有不同的形态和畅享，不是指望小说探讨，而是小说理应也有这样的女权思考","匿名：我说了打分细则是“不能写什么”和“可以写什么”，范本就是“只能写什么”，八股文不就是“只能写什么”吗？八股文本身就是弊大于利，下限高但上限低；创作自由是下限低且上限高；打分细则就已经避免了创作自由下限低（反fem）的弊端了，再限制就是没必要","匿名：这不是抛开讨女社框架、基本共识吗？不细化就是什么人造女宫、生育泛滥三六九等都来了","匿名：如果是讨论基本共识，大家不正在讨论吗，而这些细节，也有很多是在有细则之前就有人写的，就有人认识到的，作者也是其中一块，很多作者也在小说中展现自己的设想，这并不少，说指望一群写网文的体现出来，这真是一种傲慢的想法，我们和作者难道是不同构造的人，而立新我们并没有指望作者把所有的都考虑清楚，如果能把符合要求的世界观构造完善，各方面都能立新，这当然令人惊喜，但是只在一两个方面有自己的想法，有何不可，这是很多人在此前都有所体现的"]},{"body":"这条感觉和亲缘关系那条是不是表示的是重复的意思，母权可否更改为母的概念？","color":"rgb(211, 173, 247)","id":"92da4477-8326-4bd7-a26c-1d241a644e36","meta":"匿名 · 2026/7/19 17:38:23","orphan":false,"quote":"是否有限制母权的意识","replies":["匿名：上面革旧里的吗？立新板块是主要讲文中有没有给出对于母的限制的新方法新理念，改，那就去掉权字。"]},{"body":"关于AI这一块，建议禁止AI生文，即仅写大纲由AI细化，使得AI味明显、句式固定的文","color":"rgb(255, 229, 143)","id":"39ed1354-1267-4f3e-9c87-c58f842b1910","meta":"匿名 · 2026/7/19 17:45:31","orphan":false,"quote":"使用ai","replies":["匿名：如果仅是使用ai纠错的话倒是没啥毛病（比如改病句啥的）"]},{"body":"非全女文只能排雷的规则可以保留吧","color":"rgb(255, 229, 143)","id":"9606ee6c-b9c8-405c-8442-6a34ae35362f","meta":"匿名 · 2026/7/19 21:31:16","orphan":false,"quote":"非AS文","replies":["匿名：没删，这算是分类导航，但能归为此类的，都是排雷"]},{"body":"有些作品的设定是女生子，但男代为承担痛苦，这种是否可划为男生子一类直接避雷，我觉得本质还是在给男的找存在理由","color":"rgb(211, 173, 247)","id":"d9054554-de9e-4833-8546-af5a92af38ef","meta":"匿名 · 2026/7/19 23:04:05","orphan":false,"quote":"男生子","replies":["匿名：算模糊吧，承担这个设定不能细想，疼是承担了，女性身体因生育造成的改变呢？甚至设定因痛苦可转移而女多生的，就很滥生。","匿名：我觉得痛苦转移给男也是提高参与度了，本身生育就是女自己选的由自己承担责任，男的这部分接近于无","匿名：而且说白了原本配子不重要，无需知道供配者，父系血缘就是笑话，但这个设定就能明确父的地位了，明确这个孩子是这个父的了。","匿名：这算是不正视生育损伤吧，而且生育有男参与说明角色没有脱性缘，可以直接排雷的。","匿名：就是在给男的找理由存在，都设定这么离谱了，直接把生育损伤设定到最低不行吗"]},{"body":"是否应当关注一下作者的书架以及评论书评，我看到过作者本身的文还可以，但是评论时发表了不合适的评论，尤其是近期的，以及书架内有不合适的小说书籍，比如 yxrq ，比较极端的我看到过的例子作者书架只有自己写的书以及一本yxrq，这似乎并不符合平台可能的塞书行为，评价过多看多少条的评论或者其它这点有待商榷，书架的书怎么划定范围哪种可以接受也有待商量","color":"rgb(255, 229, 143)","id":"b1d89e61-3c3c-4eb1-9322-99cd097ce877","meta":"匿名 · 2026/7/20 01:47:24","orphan":false,"quote":"作者专栏","replies":["匿名：yxrq是什么","匿名：yxrq是游戏入侵的意思","匿名：游戏入侵是一类文，但我特指那本宗教文zjxg，因为腿毛很能举报，当时到现在把它的吐槽避雷都举报光了，后面避雷吐槽都用游戏入侵或游戏降临，也没能避免，这算是不符合我组标准的很有代表性的一本小说，书粉很狂热，很有宗教氛围，排雷组里有，豆瓣我之前没玩过多久，不知道有多少排雷，不是本组的我也看到了一个，不经历那段看到吐槽避雷一个个被炸可能不能只管感受到那股疯狂，也只能看一下避雷贴了","匿名：关于书架，yx这本的确特殊点，一时间也想不到怎么针对此类文，下方排雷中已经包含了作者看性缘和.子文，也有发表反女权言论的排雷，不当评论那个是指什么样的？","匿名：就是对我们来说不符合标准，作者自己小说里没提到，但是在其它小说的评论暴露出来问题了，比如作者自己写的小说蛮正常的，但是到其它小说暴露了美役思想，嗯，我不太擅长说明，就是我们会扣分的项目，作者写的小说里没有，但是评论其它书时有，我想想好像也是诶，不过那不是排雷的，那就当把扣分项目拓宽场景了","匿名：那就在排雷增加作者看忤女文吧，反14bt支持性缘的言论就是不符合组标准的言论吧？如何还有超出没想到的那就在排雷中补充。作者言论都不正确，书就不可能正，只能说没写到，或者装得还行，而且言行不一致的，书内容再好，又如何让人信服？直接排雷"]},{"body":"我觉得还需要定义统一一下“女本位”概念","color":"rgb(255, 229, 143)","id":"92e9707b-f11e-4aa3-99c9-b87e44a410b6","meta":"匿名 · 2026/7/21 09:13:21","orphan":false,"quote":"定义","replies":["匿名：是要定义女本位还是女本位文？统一这个是为了正肃现有女本位的泛滥还是其她什么目的？目的决定怎么写这个定义","匿名：①女本位的使用过于泛滥，比爱女更甚；②有一个和女本位很相似的“女性本位观”；③女本位，私以为是非常严肃的，不应泛化"]},{"body":"什么表/堂姐妹、女亲戚等互助算吗","color":"rgb(211, 173, 247)","id":"1d849cc0-3ff8-4751-aa60-81d86f47b933","meta":"匿名 · 2026/7/21 13:38:53","orphan":false,"quote":"宗族正面形象展现","replies":["匿名：重点是有没有强调宗族血缘关系，就是互助是因为对方是女性是同伴，那可以。但如果说是因为是堂姐是亲戚就不行。","匿名：宗族会有一个现象，就是家庭吃人，然后离家出走的阿姨或者姐姐回来帮助了我。这种属于正面描写吗？","匿名：要看作者具体描述，侧重救助人为了救助的付出和牺牲就不行，此类其实并不算宗族相关，而是与上述的虏社道德，白骑士情结相关，就和拐卖出逃的妈回来救子一样，有道德绑架的傔疑","匿名：写此类情节不如写如何自救，而不是期待本就好不容易逃出泥潭的人回来救"]},{"body":"我想到了性别战争存在有无灭点思想，发展双雌/单雌灭点，是否达成AS。有些虽然性战了但是其实只是女性掌权了颠倒地位，并没有认为点子该全灭，可能并没有具体提小懦夫，但如果没提灭点只写到女性掌权就没了，其实基本上搞的地位调转。世界不会发展到as，或者说这算性战吗，感觉两类可以进行区分？","color":"rgb(255, 229, 143)","id":"8ee99462-c9e0-4780-aa81-6384da65f462","meta":"匿名 · 2026/7/22 02:43:53","orphan":false,"quote":"战争","replies":["匿名：加排雷"]},{"body":"作品的发布平台是不是应该也纳入扣分范围。虽然现在没有完美的平台，但是像晋江这样的必须得扣分吧。","color":"rgb(255, 229, 143)","id":"c8981210-1285-4ac3-9d66-8609eabd2efb","meta":"匿名 · 2026/7/22 16:17:56","orphan":false,"quote":"作品载体","replies":["匿名：认同楼上，晋江管理就有问题2026年2月之前就算，之后就直接进排雷"]},{"body":"高压环境会导致饮食偏好重油重盐重辣是对的，但是这点反推还成立吗？角色爱吃重油重盐重辣的东西就要扣分吗？","color":"rgb(255, 229, 143)","id":"f0f493e7-95b6-4efc-a03b-b0fe47173962","meta":"匿名 · 2026/7/27 16:06:14","orphan":false,"quote":"饮食习惯：是否认识到长期大量摄入重油脂调味、感官刺激的食物是在压力模式下的不健康行为？","replies":[]}];
+  const article = document.querySelector("article.page");
+  const list = document.querySelector("#annotationList");
+  const count = document.querySelector("#annotationCount");
+  const expanded = new Set();
+
+  function layout() {
+    const cards = [...list.querySelectorAll(".annotation-card")];
+    const anchored = [];
+    const orphaned = [];
+    for (const card of cards) {
+      const marker = article.querySelector('[data-note-id="' + CSS.escape(card.dataset.noteId) + '"]');
+      if (marker) anchored.push({ card, marker });
+      else orphaned.push(card);
+    }
+    anchored.sort((a, b) => a.marker.getBoundingClientRect().top - b.marker.getBoundingClientRect().top);
+    let bottom = article.getBoundingClientRect().top + scrollY;
+    for (const item of anchored) {
+      item.card.classList.remove("annotation-orphan");
+      const top = Math.max(item.marker.getBoundingClientRect().top + scrollY, bottom);
+      item.card.style.top = top + "px";
+      bottom = top + item.card.offsetHeight + 10;
+    }
+    bottom = Math.max(bottom, article.getBoundingClientRect().bottom + scrollY + 12);
+    for (const card of orphaned) {
+      card.classList.add("annotation-orphan");
+      const note = annotations.find((item) => item.id === card.dataset.noteId);
+      const label = card.querySelector(".annotation-selected");
+      if (label) label.textContent = "⚠ 原文已修改：" + (note?.quote || "");
+      card.style.top = bottom + "px";
+      bottom += card.offsetHeight + 10;
+    }
+  }
+
+  function render() {
+    count.textContent = annotations.length;
+    list.innerHTML = "";
+    for (const note of annotations) {
+      const replies = Array.isArray(note.replies) ? note.replies : [];
+      const card = document.createElement("div");
+      card.className = "annotation-card is-collapsed";
+      card.dataset.noteId = note.id;
+      card.style.borderLeftColor = note.color || "#e5bd45";
+      card.innerHTML = '<div class="annotation-quote"><span class="annotation-selected"></span><span class="annotation-preview"></span></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div>';
+      const quote = card.children[0];
+      quote.dataset.replyCount = replies.length;
+      quote.querySelector(".annotation-selected").textContent = note.quote || "";
+      quote.querySelector(".annotation-preview").textContent = note.body || "（旧批注未保存内容）";
+      quote.onclick = () => {
+        card.classList.toggle("is-collapsed");
+        card.classList.contains("is-collapsed") ? expanded.delete(note.id) : expanded.add(note.id);
+        requestAnimationFrame(layout);
+      };
+      card.children[1].textContent = note.body || "（旧批注未保存内容）";
+      card.children[2].textContent = note.meta || "";
+      for (const reply of replies) {
+        const item = document.createElement("div");
+        item.className = "annotation-reply-item";
+        const content = document.createElement("div");
+        content.className = "annotation-reply-content";
+        content.textContent = reply;
+        item.append(content);
+        card.children[3].append(item);
+      }
+      list.append(card);
+    }
+    requestAnimationFrame(layout);
+  }
+
+  article.addEventListener("click", (event) => {
+    const mark = event.target.closest(".annotation-mark");
+    if (!mark) return;
+    const id = mark.dataset.noteId;
+    const card = list.querySelector('[data-note-id="' + CSS.escape(id) + '"]');
+    if (card) {
+      expanded.add(id);
+      card.classList.remove("is-collapsed");
+      requestAnimationFrame(layout);
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest?.(".annotation-card,.annotation-mark")) return;
+    if (!expanded.size) return;
+    expanded.clear();
+    list.querySelectorAll(".annotation-card").forEach((card) => card.classList.add("is-collapsed"));
+    requestAnimationFrame(layout);
+  });
+
+  addEventListener("resize", layout);
+  render();
+})();
+</script>
+</body>
+</html>

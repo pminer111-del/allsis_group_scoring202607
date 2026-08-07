@@ -1,1486 +1,929 @@
-<html>
+<!doctype html>
+<html lang="zh-CN">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-/* 统一所有评分表的列比例，覆盖导出文件中的零散内联宽度。 */
-.page-body > table.simple-table {
-  width: 100% !important;
-  table-layout: fixed;
-}
-.page-body > table.simple-table th:nth-child(1),
-.page-body > table.simple-table td:nth-child(1) { width: 20% !important; }
-.page-body > table.simple-table th:nth-child(2),
-.page-body > table.simple-table td:nth-child(2) { width: 18% !important; }
-.page-body > table.simple-table th:nth-child(3),
-.page-body > table.simple-table td:nth-child(3) { width: 50% !important; }
-.page-body > table.simple-table th:nth-child(4),
-.page-body > table.simple-table td:nth-child(4) { width: 6% !important; }
-.page-body > table.simple-table th:nth-child(5),
-.page-body > table.simple-table td:nth-child(5) { width: 6% !important; }
-.page-body > table.simple-table th,
-.page-body > table.simple-table td { overflow-wrap: anywhere; }
-.table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1rem 0; }
-.table-scroll > table { margin: 0; }
-@media (max-width: 720px) {
-  body { margin: 0; max-width: none; font-size: 16px; line-height: 1.65; }
-  article.page { padding: 20px 16px 72px; }
-  .page-title { font-size: 2rem; }
-  h1 { font-size: 1.55rem; } h2 { font-size: 1.25rem; } h3 { font-size: 1.1rem; }
-  .page-body > .table-scroll > table.simple-table { min-width: 720px; font-size: 14px; }
-  .page-body > .table-scroll > table.simple-table th,
-  .page-body > .table-scroll > table.simple-table td { padding: .55em .65em; }
-  .annotation-panel { left: auto; right: 8px; width: min(270px, calc(100vw - 24px)); }
-  .annotation-list, .annotation-card { width: 260px; }
-}
-</style>
-
-<style>.annotation-mark{background:#ffe58f;border-bottom:2px solid #d4a017;cursor:pointer}.annotation-add{position:fixed;z-index:10002;display:none;border:0;border-radius:99px;background:#222;color:#fff;padding:9px 14px}.annotation-panel{position:absolute;z-index:10000;left:calc(50% + 470px);top:0;width:280px;height:100%;overflow:visible;border:0;background:transparent;font:14px/1.5 sans-serif;white-space:normal}.annotation-panel summary{display:none}.annotation-list{position:relative;width:280px;height:100%}.annotation-card{position:absolute;left:0;width:280px;padding:11px 12px;background:#fff;border:1px solid #ddd;border-left:3px solid #e5bd45;border-radius:8px;box-shadow:0 3px 12px #0002;transition:top .18s ease}.annotation-quote,.annotation-meta{color:#777;font-size:12px}.annotation-dialog{border:0;border-radius:14px;width:min(440px,calc(100vw - 32px));padding:20px;box-shadow:0 18px 60px #0004;font:14px sans-serif}.annotation-dialog::backdrop{background:#0005}.annotation-dialog label{display:block;margin-top:10px}.annotation-dialog input,.annotation-dialog textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccc;border-radius:8px}.annotation-dialog textarea{min-height:100px}.annotation-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.annotation-actions button{padding:8px 13px}.annotation-actions .primary{background:#222;color:#fff}@media(max-width:1250px){.annotation-panel{position:absolute;left:auto;right:12px}.annotation-card{width:260px;background:#fffffff2}.annotation-list{width:260px}}@media print{.annotation-panel,.annotation-add,.annotation-dialog{display:none!important}}</style>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>AS打分细则1.1</title><style>
-/* cspell:disable-file */
-/* webkit printing magic: print all background colors */
-html {
-	-webkit-print-color-adjust: exact;
-}
-* {
-	box-sizing: border-box;
-	-webkit-print-color-adjust: exact;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-@media only screen {
-	body {
-		margin: 2em auto;
-		max-width: 900px;
-		color: rgb(55, 53, 47);
-	}
-}
-
-body {
-	line-height: 1.5;
-	white-space: pre-wrap;
-}
-
-a,
-a.visited {
-	color: inherit;
-	text-decoration: underline;
-}
-
-.pdf-relative-link-path {
-	font-size: 80%;
-	color: #444;
-}
-
-h1,
-h2,
-h3 {
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	font-weight: 600;
-	margin-bottom: 0;
-}
-
-/* Override strong tags inside headings to maintain consistent weight */
-h1 strong,
-h2 strong,
-h3 strong {
-	font-weight: 600;
-}
-
-.page-title {
-	font-size: 2.5rem;
-	font-weight: 700;
-	margin-top: 0;
-	margin-bottom: 0.75em;
-}
-
-h1 {
-	font-size: 1.875rem;
-	margin-top: 1.875rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-	margin-top: 1.5rem;
-}
-
-h3 {
-	font-size: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.source {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	padding: 1.5em;
-	word-break: break-all;
-}
-
-.callout {
-	border-radius: 10px;
-	padding: 1rem;
-}
-
-/* For default-background callouts, render the border outline. */
-.callout.block-color-default_background {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-figure,
-aside,
-details {
-	margin: 1.25em 0;
-	page-break-inside: avoid;
-}
-
-figcaption {
-	opacity: 0.5;
-	font-size: 85%;
-	margin-top: 0.5em;
-}
-
-mark {
-	background-color: transparent;
-}
-
-.indented {
-	padding-left: 1.5em;
-}
-
-hr {
-	background: transparent;
-	display: block;
-	width: 100%;
-	height: 1px;
-	visibility: visible;
-	border: none;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-img {
-	max-width: 100%;
-}
-
-@media only print {
-	img {
-		max-height: 100vh;
-		object-fit: contain;
-	}
-
-	table.collection-content {
-		width: 100%;
-		table-layout: fixed;
-	}
-
-	table.collection-content th,
-	table.collection-content td {
-		overflow-wrap: anywhere;
-	}
-
-	table.collection-content td > .user,
-	table.collection-content td > time {
-		white-space: pre-wrap;
-	}
-}
-
-@page {
-	margin: 1in;
-}
-
-.collection-content-wrapper {
-	overflow-x: auto;
-}
-
-@media only print {
-	.collection-content-wrapper {
-		overflow-x: visible;
-	}
-}
-
-.collection-content {
-	font-size: 0.875rem;
-}
-
-.collection-content td {
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-.column-list {
-	display: flex;
-	gap: 46px;
-}
-
-.column {
-	min-width: 0;
-	overflow: hidden;
-}
-
-.column > *:first-child {
-	margin-top: 0;
-}
-
-.table_of_contents-item {
-	display: block;
-	font-size: 0.875rem;
-	line-height: 1.3;
-	padding-inline: 0.125rem;
-	padding-block: 0.375rem;
-}
-
-.table_of_contents-indent-1 {
-	margin-left: 1.5rem;
-}
-
-.table_of_contents-indent-2 {
-	margin-left: 3rem;
-}
-
-.table_of_contents-indent-3 {
-	margin-left: 4.5rem;
-}
-
-.table_of_contents-link {
-	text-decoration: none;
-	opacity: 0.7;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-}
-
-table,
-th,
-td {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-table {
-	border-collapse: collapse;
-	border-left: none;
-	border-right: none;
-}
-
-th,
-td {
-	font-weight: normal;
-	padding: 0.25em 0.5em;
-	line-height: 1.5;
-	min-height: 1.5em;
-	text-align: left;
-}
-
-th {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-block-start: 0.6em;
-	margin-block-end: 0.6em;
-}
-
-li > ol:first-child,
-li > ul:first-child {
-	margin-block-start: 0.6em;
-}
-
-ul > li {
-	list-style: disc;
-}
-
-ul.to-do-list {
-	padding-inline-start: 0;
-}
-
-ul.to-do-list > li {
-	list-style: none;
-}
-
-.to-do-children-checked {
-	text-decoration: line-through;
-	opacity: 0.375;
-}
-
-ul.toggle > li {
-	list-style: none;
-}
-
-ul {
-	padding-inline-start: 1.7em;
-}
-
-ul > li {
-	padding-left: 0.1em;
-}
-
-ol {
-	padding-inline-start: 1.6em;
-}
-
-ol.numbered-list.numbered-list-digits-2 {
-	padding-inline-start: 2em;
-}
-
-ol.numbered-list.numbered-list-digits-3plus {
-	padding-inline-start: 2.4em;
-}
-
-ol > li {
-	padding-left: 0.2em;
-}
-
-.mono ol {
-	padding-inline-start: 2em;
-}
-
-.mono ol > li {
-	text-indent: -0.4em;
-}
-
-.toggle {
-	padding-inline-start: 0em;
-	list-style-type: none;
-}
-
-/* Indent toggle children */
-.toggle > li > details {
-	padding-left: 1.7em;
-}
-
-.toggle > li > details > summary {
-	margin-left: -1.1em;
-}
-
-.selected-value {
-	display: inline-block;
-	padding: 0 0.5em;
-	background: rgba(206, 205, 202, 0.5);
-	border-radius: 3px;
-	margin-right: 0.5em;
-	margin-top: 0.3em;
-	margin-bottom: 0.3em;
-	white-space: nowrap;
-}
-
-.collection-title {
-	display: inline-block;
-	margin-right: 1em;
-}
-
-.page-description {
-	margin-bottom: 2em;
-}
-
-.simple-table {
-	margin-top: 1em;
-	font-size: 0.875rem;
-	empty-cells: show;
-}
-.simple-table td {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table th {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table-header-color {
-	background: rgb(247, 246, 243);
-	color: black;
-}
-.simple-table-header {
-	font-weight: 500;
-}
-
-time {
-	opacity: 0.5;
-}
-
-.icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	max-width: 1.2em;
-	max-height: 1.2em;
-	text-decoration: none;
-	vertical-align: text-bottom;
-	margin-right: 0.5em;
-}
-
-/*
- * Render emoji icons using a ::before pseudo-element to keep the glyph
- * out of the DOM textContent traversal. This avoids double-rendering icons
- * in callouts and page titles.
- * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
- * flag as a duplicate tag after codegen.
- */
-.icon[data-emoji]::before {
-	content: attr(data-emoji);
-}
-
-img.icon {
-	border-radius: 3px;
-}
-
-.callout img.notion-static-icon {
-	width: 1em;
-	height: 1em;
-}
-
-.callout p {
-	margin: 0;
-}
-
-.callout h1,
-.callout h2,
-.callout h3 {
-	margin: 0 0 0.6rem;
-}
-
-.user-icon {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	margin-right: 0.5rem;
-}
-
-.user-icon-inner {
-	font-size: 0.8em;
-}
-
-.text-icon {
-	border: 1px solid #000;
-	text-align: center;
-}
-
-.page-cover-image {
-	display: block;
-	object-fit: cover;
-	width: 100%;
-	max-height: 30vh;
-}
-
-.page-header-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
-}
-
-.page-header-icon-with-cover {
-	margin-top: -0.72em;
-	margin-left: 0.07em;
-}
-
-.page-header-icon img {
-	border-radius: 3px;
-}
-
-.link-to-page {
-	margin: 1em 0;
-	padding: 0;
-	border: none;
-	font-weight: 500;
-}
-
-p > .user {
-	opacity: 0.5;
-}
-
-td > .user,
-td > time {
-	white-space: nowrap;
-}
-
-input[type="checkbox"] {
-	margin-right: 0.4em;
-	vertical-align: middle;
-}
-
-p {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-.image {
-	border: none;
-	margin: 1.5em 0;
-	padding: 0;
-	border-radius: 0;
-	text-align: center;
-}
-
-.code,
-code {
-	background: rgba(135, 131, 120, 0.15);
-	border-radius: 3px;
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
-	tab-size: 2;
-}
-
-code {
-	color: #eb5757;
-}
-
-.code {
-	padding: 1.5em 1em;
-}
-
-.code-wrap {
-	white-space: pre-wrap;
-	word-break: break-all;
-}
-
-.code > code {
-	background: none;
-	padding: 0;
-	font-size: 100%;
-	color: inherit;
-}
-
-blockquote {
-	font-size: 1em;
-	margin: 1em 0;
-	padding-left: 1em;
-	border-left: 3px solid rgb(55, 53, 47);
-}
-
-blockquote.quote-large {
-	font-size: 1.25em;
-}
-
-.bookmark {
-	text-decoration: none;
-	max-height: 8em;
-	padding: 0;
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-}
-
-.bookmark-title {
-	font-size: 0.85em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 1.75em;
-	white-space: nowrap;
-}
-
-.bookmark-text {
-	display: flex;
-	flex-direction: column;
-}
-
-.bookmark-info {
-	flex: 4 1 180px;
-	padding: 12px 14px 14px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.bookmark-image {
-	width: 33%;
-	flex: 1 1 180px;
-	display: block;
-	position: relative;
-	object-fit: cover;
-	border-radius: 1px;
-}
-
-.bookmark-description {
-	color: rgba(55, 53, 47, 0.6);
-	font-size: 0.75em;
-	overflow: hidden;
-	max-height: 4.5em;
-	word-break: break-word;
-}
-
-.bookmark-href {
-	font-size: 0.75em;
-	margin-top: 0.25em;
-}
-
-.tab {
-	margin: 1.25em 0;
-	padding-inline: 1rem;
-	border: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
-.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
-.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
-.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
-.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
-.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
-.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
-.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
-.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
-.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
-.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
-.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
-.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.highlight-default {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.highlight-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.highlight-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.highlight-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.highlight-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.highlight-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.highlight-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.highlight-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.highlight-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.highlight-default_background {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray_background {
-	background: rgba(42, 28, 0, 0.07);
-}
-.highlight-brown_background {
-	background: rgba(139, 46, 0, 0.086);
-}
-.highlight-orange_background {
-	background: rgba(224, 101, 1, 0.129);
-}
-.highlight-yellow_background {
-	background: rgba(211, 168, 0, 0.137);
-}
-.highlight-teal_background {
-	background: rgba(0, 100, 45, 0.09);
-}
-.highlight-blue_background {
-	background: rgba(0, 124, 215, 0.094);
-}
-.highlight-purple_background {
-	background: rgba(102, 0, 178, 0.078);
-}
-.highlight-pink_background {
-	background: rgba(197, 0, 93, 0.086);
-}
-.highlight-red_background {
-	background: rgba(223, 22, 0, 0.094);
-}
-.block-color-default {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray {
-	color: rgba(125, 122, 117, 1);
-	fill: rgba(125, 122, 117, 1);
-}
-.block-color-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.block-color-orange {
-	color: rgba(210, 123, 45, 1);
-	fill: rgba(210, 123, 45, 1);
-}
-.block-color-yellow {
-	color: rgba(203, 148, 52, 1);
-	fill: rgba(203, 148, 52, 1);
-}
-.block-color-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.block-color-blue {
-	color: rgba(56, 125, 201, 1);
-	fill: rgba(56, 125, 201, 1);
-}
-.block-color-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.block-color-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.block-color-red {
-	color: rgba(207, 81, 72, 1);
-	fill: rgba(207, 81, 72, 1);
-}
-.block-color-default_background {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray_background {
-	background: rgba(240, 239, 237, 1);
-}
-.block-color-brown_background {
-	background: rgba(245, 237, 233, 1);
-}
-.block-color-orange_background {
-	background: rgba(251, 235, 222, 1);
-}
-.block-color-yellow_background {
-	background: rgba(249, 243, 220, 1);
-}
-.block-color-teal_background {
-	background: rgba(232, 241, 236, 1);
-}
-.block-color-blue_background {
-	background: rgba(229, 242, 252, 1);
-}
-.block-color-purple_background {
-	background: rgba(243, 235, 249, 1);
-}
-.block-color-pink_background {
-	background: rgba(250, 233, 241, 1);
-}
-.block-color-red_background {
-	background: rgba(252, 233, 231, 1);
-}
-.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
-.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
-.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
-.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
-.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
-.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
-.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
-.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
-.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
-.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
-
-.checkbox {
-	display: inline-flex;
-	vertical-align: text-bottom;
-	width: 16;
-	height: 16;
-	background-size: 16px;
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-.checkbox-on {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-
-.checkbox-off {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-	
-</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style>
-<style id="responsive-table-widths">
-.table-scroll {
-  width: 100%;
-  overflow: hidden;
-}
-.table-scroll > table.simple-table {
-  width: 100% !important;
-  max-width: 100% !important;
-  table-layout: fixed;
-}
-.table-scroll > table.simple-table th:nth-child(1),
-.table-scroll > table.simple-table td:nth-child(1) { width: 20% !important; }
-.table-scroll > table.simple-table th:nth-child(2),
-.table-scroll > table.simple-table td:nth-child(2) { width: 20% !important; }
-.table-scroll > table.simple-table th:nth-child(3),
-.table-scroll > table.simple-table td:nth-child(3) { width: 50% !important; }
-.table-scroll > table.simple-table th:nth-child(4),
-.table-scroll > table.simple-table td:nth-child(4) { width: 5% !important; }
-.table-scroll > table.simple-table th:nth-child(5),
-.table-scroll > table.simple-table td:nth-child(5) { width: 5% !important; }
-
-@media (max-width: 720px) {
-  .table-scroll > table.simple-table {
-    width: 100% !important;
-    min-width: 0 !important;
-    font-size: 10.5px;
-  }
-  .table-scroll > table.simple-table th,
-  .table-scroll > table.simple-table td {
-    min-width: 0 !important;
-    padding: 4px 3px;
-    line-height: 1.4;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-  .table-scroll > table.simple-table th:nth-child(1),
-  .table-scroll > table.simple-table td:nth-child(1) { width: 14% !important; }
-  .table-scroll > table.simple-table th:nth-child(2),
-  .table-scroll > table.simple-table td:nth-child(2) { width: 26% !important; }
-  .table-scroll > table.simple-table th:nth-child(3),
-  .table-scroll > table.simple-table td:nth-child(3) { width: 44% !important; }
-  .table-scroll > table.simple-table th:nth-child(4),
-  .table-scroll > table.simple-table td:nth-child(4) { width: 8% !important; }
-  .table-scroll > table.simple-table th:nth-child(5),
-  .table-scroll > table.simple-table td:nth-child(5) { width: 8% !important; }
-}
-<style id="revision-styles">
-.revision-delete {
-  color: #777777;
-  background-color: #f1f1f1;
-  text-decoration-line: line-through;
-  text-decoration-color: #555555;
-  text-decoration-thickness: 1.5px;
-}
-
-.revision-add {
-  color: #5F5EC2;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  font-style: inherit;
-  line-height: inherit;
-  text-decoration: none;
-  border: none;
-}
-
-/* 被批注高亮后仍保留修订颜色 */
-.revision-delete .annotation-mark {
-  color: #777777 !important;
-}
-
-.revision-add .annotation-mark {
-  color: #5F5EC2 !important;
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="依据打分细则逐项选择、自动计分并导出评分图片。">
+  <title>世界开妬者联盟打分表</title>
+  <style>
+    :root{
+      color-scheme:light;
+      --bg:#f2f7f5;
+      --ink:#1e2924;
+      --muted:#5a6e65;
+      --panel:#ffffff;
+      --line:#d1ded8;
+      --accent:#2e8b67;
+      --accent-dark:#19533c;
+      --accent-soft:#e5f3ed;
+      --warn:#c05638;
+      --warn-dark:#87341f;
+      --warn-soft:#fbeee9;
+      --note:#fef5e7;
+      --shadow:0 12px 34px rgba(25,83,60,.09);
+      --card-shadow:0 4px 16px rgba(25,83,60,.045);
+      --radius-lg:16px;
+      --radius-md:11px;
+      --paper:var(--bg);
+      --white:var(--panel);
+      --deep:var(--accent-soft);
+      --red:var(--warn);
+      --red-dark:var(--warn-dark);
+      --green:var(--accent);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        linear-gradient(135deg,rgba(46,139,103,.08),transparent 46%),
+        linear-gradient(315deg,rgba(192,86,56,.035),transparent 38%),
+        var(--bg);
+      color:var(--ink);
+      font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    button,input,textarea{font:inherit}
+    button{color:inherit}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
+      outline:3px solid rgba(46,139,103,.24);
+      outline-offset:3px;
+    }
+    .shell{width:min(1280px,calc(100% - 56px));margin:auto}
+    .topbar{
+      position:sticky;
+      z-index:30;
+      top:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height:70px;
+      padding:10px max(28px,calc((100vw - 1280px)/2));
+      border-bottom:1px solid rgba(209,222,216,.92);
+      background:rgba(255,255,255,.9);
+      box-shadow:0 4px 18px rgba(25,83,60,.035);
+      backdrop-filter:blur(14px);
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color:var(--accent-dark);
+      text-decoration:none;
+      font-weight:850;
+      letter-spacing:.02em;
+    }
+    .brand-mark{
+      display:grid;
+      width:40px;
+      height:40px;
+      place-items:center;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--accent-dark),var(--accent));
+      color:#fff;
+      box-shadow:0 6px 16px rgba(25,83,60,.2);
+    }
+    .actions{display:flex;gap:10px}
+    .btn{
+      min-height:42px;
+      padding:0 18px;
+      border:1px solid transparent;
+      border-radius:9px;
+      cursor:pointer;
+      font-weight:800;
+      transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(25,83,60,.12)}
+    .btn-dark{background:var(--accent-dark);color:#fff}
+    .btn-red{background:var(--accent);color:#fff}
+    .btn-quiet{border-color:var(--line);background:#fff;color:var(--accent-dark)}
+    .btn-quiet:hover{border-color:var(--accent);background:var(--accent-soft)}
+    .legacy-link{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap}
+    .text-btn{
+      padding:5px 0;
+      border:0;
+      border-bottom:1px solid currentColor;
+      background:none;
+      color:var(--muted);
+      cursor:pointer;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 250px;
+      gap:48px;
+      align-items:center;
+      width:min(1280px,calc(100% - 56px));
+      min-height:280px;
+      margin:auto;
+      padding:58px 0 42px;
+      border-bottom:1px solid var(--line);
+      color:var(--ink);
+    }
+    .kicker{
+      margin:0 0 14px;
+      color:var(--accent-dark);
+      font:800 12px/1.2 Arial,sans-serif;
+      letter-spacing:.12em;
+    }
+    .hero .kicker{color:var(--accent)}
+    .hero h1{
+      max-width:900px;
+      margin:0;
+      color:var(--accent-dark);
+      font-size:clamp(44px,6vw,72px);
+      line-height:1.04;
+      letter-spacing:-.045em;
+    }
+    .hero-score{
+      display:grid;
+      min-height:180px;
+      align-content:center;
+      padding:24px;
+      border-radius:var(--radius-lg);
+      background:linear-gradient(135deg,var(--accent-dark),var(--accent));
+      color:#fff;
+      text-align:center;
+      box-shadow:0 14px 34px rgba(25,83,60,.2);
+    }
+    .hero-score span{color:rgba(255,255,255,.78);font:800 12px Arial,sans-serif;letter-spacing:.13em}
+    .hero-score strong{margin:6px 0;font:900 78px/.95 Arial,sans-serif;letter-spacing:-.06em}
+    .hero-score small{color:rgba(255,255,255,.66)}
+    .meta-section{
+      margin-top:28px;
+      padding:28px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:var(--panel);
+      box-shadow:var(--card-shadow);
+    }
+    .heading{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:30px;
+      margin-bottom:26px;
+    }
+    .heading h2{
+      max-width:800px;
+      margin:0;
+      color:var(--accent-dark);
+      font-size:clamp(30px,4vw,46px);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+    .compact-actions{margin-bottom:18px}
+    .fields{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px}
+    .field{display:grid;gap:9px}
+    .field>span{font-size:13px;font-weight:800}
+    .field b{margin-left:7px;color:var(--warn);font-size:11px}
+    .field em{margin-left:7px;color:var(--muted);font-size:11px;font-style:normal;font-weight:500}
+    .field input{
+      width:100%;
+      height:52px;
+      padding:0 15px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      background:#fff;
+      color:var(--ink);
+      font-size:15px;
+      transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    }
+    .field input:focus,.remark textarea:focus{
+      border-color:var(--accent);
+      outline:0;
+      box-shadow:0 0 0 4px rgba(46,139,103,.13);
+      background:#fff;
+    }
+    .sub-label{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px}
+    .sub-label strong{color:var(--accent-dark);font-size:16px}
+    .definition-note{
+      margin:0 0 14px;
+      padding:14px 16px;
+      border:1px solid #bdd3c9;
+      border-radius:10px;
+      background:var(--accent-soft);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .definition-note strong{color:var(--accent-dark)}
+    .categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+    .category{
+      display:grid;
+      grid-template-rows:auto 1fr;
+      align-content:start;
+      height:100%;
+      min-height:170px;
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-md);
+      background:#fff;
+      color:var(--ink);
+      text-align:left;
+      cursor:pointer;
+      box-shadow:0 2px 8px rgba(25,83,60,.025);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+    }
+    .category:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 7px 18px rgba(25,83,60,.07)}
+    .category.active{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 -4px 0 var(--accent)}
+    .category-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+    .category-head strong{color:var(--accent-dark);font-size:22px;line-height:1.2}
+    .category-head b{min-width:72px;padding:6px 9px;border-radius:7px;background:#edf3f0;color:var(--muted);font-size:12px;text-align:center}
+    .category.active .category-head b{background:var(--accent);color:#fff}
+    .category small{display:block;margin-top:16px;color:var(--muted);line-height:1.65}
+    .status{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
+      margin-top:16px;
+      padding:18px 20px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-md);
+      background:#fafdfc;
+    }
+    .status-copy{display:grid;gap:5px}
+    .status-copy span{color:var(--muted);font-size:13px}
+    .switch{display:flex;padding:4px;border-radius:9px;background:var(--accent-soft)}
+    .switch button{min-width:90px;height:38px;border:0;border-radius:7px;background:transparent;cursor:pointer;font-weight:750}
+    .switch button.active{background:var(--accent-dark);color:#fff;box-shadow:0 3px 10px rgba(25,83,60,.15)}
+    .fixed input,.multi-option input{position:absolute;opacity:0;pointer-events:none}
+    .box{
+      display:grid;
+      flex:0 0 auto;
+      width:25px;
+      height:25px;
+      place-items:center;
+      border:1px solid #9eb1a8;
+      border-radius:6px;
+      background:#fff;
+      font-weight:900;
+    }
+    .scoring{padding:52px 0 120px}
+    .heading-score{margin:0;color:var(--muted)}
+    .heading-score strong{margin-left:8px;color:var(--accent-dark);font-size:24px}
+    .major-tabs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px;
+      margin-bottom:12px;
+      padding:6px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:#fff;
+      box-shadow:var(--card-shadow);
+    }
+    .major-tab{
+      min-height:64px;
+      padding:0 20px;
+      border:0;
+      border-radius:11px;
+      background:#f5faf8;
+      color:var(--accent-dark);
+      text-align:left;
+      cursor:pointer;
+      font-size:19px;
+      font-weight:850;
+      transition:background .18s ease,color .18s ease,box-shadow .18s ease;
+    }
+    .major-tab.active{background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;box-shadow:0 7px 18px rgba(25,83,60,.17)}
+    .major-tab small{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:600}
+    .major-tab.active small{color:rgba(255,255,255,.72)}
+    .tabs{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:#fff;
+      box-shadow:var(--card-shadow);
+      scroll-margin-top:88px;
+    }
+    .tabs.single{grid-template-columns:1fr}
+    .tab{
+      position:relative;
+      display:grid;
+      min-height:104px;
+      padding:18px;
+      border:0;
+      border-right:1px solid var(--line);
+      background:transparent;
+      text-align:left;
+      cursor:pointer;
+    }
+    .tab:last-child{border-right:0}
+    .tab:after{position:absolute;right:0;bottom:0;left:0;height:0;background:var(--accent);content:""}
+    .tab.active{background:var(--accent-soft)}
+    .tab.active:after{height:4px}
+    .tab>strong{align-self:center;color:var(--accent-dark);font-size:15px;line-height:1.4}
+    .tab>b{justify-self:end;font:800 19px Arial,sans-serif}
+    .positive{color:var(--accent)!important}
+    .negative{color:var(--warn)!important}
+    .score-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start;margin-top:28px}
+    .group{margin-top:28px}
+    #rules>.group:first-child{margin-top:0}
+    .section-summary{
+      margin:0 0 18px;
+      padding:14px 16px;
+      border:1px solid #bdd3c9;
+      border-radius:10px;
+      background:var(--accent-soft);
+      color:var(--accent-dark);
+      font-size:13px;
+      font-weight:700;
+      line-height:1.7;
+    }
+    .section-summary+.group{margin-top:0}
+    .group>h4{margin:0 0 12px;color:var(--accent-dark);font-size:14px;letter-spacing:.02em}
+    .rule-list{display:grid;gap:12px}
+    .rule{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 250px;
+      gap:24px;
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:#fff;
+      box-shadow:var(--card-shadow);
+      transition:border-color .18s ease,box-shadow .18s ease,background .18s ease,transform .18s ease;
+    }
+    .rule:hover{transform:translateY(-1px);border-color:#b1c7bd;box-shadow:0 7px 20px rgba(25,83,60,.07)}
+    .rule.scored{padding-left:20px}
+    .rule.score-positive{border-left:4px solid var(--accent);background:var(--accent-soft)}
+    .rule.score-negative{border-left:4px solid var(--warn);background:var(--warn-soft)}
+    .attached-scores{
+      display:grid;
+      gap:8px;
+      margin-top:18px;
+      padding:0 0 0 20px;
+    }
+    .attached-item{
+      display:grid;
+      gap:10px;
+      padding:13px 14px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:#f7fbf9;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .attached-item[data-attached-fixed]{cursor:pointer}
+    .attached-item.attached-positive{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 3px 10px rgba(46,139,103,.08)}
+    .attached-item.attached-negative{border-color:var(--warn);background:var(--warn-soft);box-shadow:0 3px 10px rgba(192,86,56,.07)}
+    .attached-copy{display:grid;gap:5px}
+    .attached-copy strong{font-size:13px;line-height:1.6}
+    .attached-copy small{color:var(--muted);font-size:12px;line-height:1.55;white-space:pre-line}
+    .attached-control .choices,.attached-control .multi-options,.attached-control .fixed{margin-top:0}
+    .attached-note{color:var(--muted)}
+    .rule.supplement-clickable{cursor:pointer}
+    .rule.supplement-clickable:hover{border-color:var(--accent)}
+    .rule-title{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .rule h5{margin:0;color:var(--ink);font-size:17px;line-height:1.5}
+    .rule-copy>p{max-width:680px;margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.7;white-space:pre-line}
+    .pill{padding:5px 8px;border:0;border-radius:7px;background:#edf3f0;font:800 11px Arial,sans-serif}
+    .pill.positive{background:var(--accent-soft)}
+    .pill.negative{background:var(--warn-soft)}
+    .pill.neutral{color:var(--muted)}
+    .choices,.multi-options{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+    .choices button,.multi-option{
+      display:flex;
+      min-height:39px;
+      gap:9px;
+      align-items:center;
+      padding:0 12px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#fff;
+      cursor:pointer;
+      font-size:12px;
+      transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease;
+    }
+    .choices button:hover,.multi-option:hover{border-color:var(--accent)}
+    .choices button.active{border-color:var(--accent-dark);background:var(--accent-dark);color:#fff;box-shadow:0 4px 12px rgba(25,83,60,.14)}
+    .choices button.active.is-positive{border-color:var(--accent);background:var(--accent)}
+    .choices button.active.is-negative{border-color:var(--warn);background:var(--warn)}
+    .choices button.active.is-neutral{border-color:#6d8178;background:#6d8178}
+    .choices button.active b{color:#fff!important}
+    .fixed,.multi-option{display:inline-flex}
+    .fixed{gap:9px;align-items:center;margin-top:16px;cursor:pointer;font-size:13px;font-weight:750}
+    .fixed input:checked+.box,.multi-option input:checked+.box{border-color:var(--accent);background:var(--accent);color:#fff}
+    .fixed.fixed-negative input:checked+.box,.multi-option.option-negative input:checked+.box{border-color:var(--warn);background:var(--warn)}
+    .remark{display:grid;align-content:start;gap:8px}
+    .remark span{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.07em}
+    .remark textarea{
+      width:100%;
+      min-height:82px;
+      resize:vertical;
+      padding:11px 12px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#fafdfc;
+      color:var(--ink);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .next-row{display:flex;justify-content:flex-end;padding-top:26px}
+    .summary{
+      position:sticky;
+      top:94px;
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:#fff;
+      color:var(--ink);
+      box-shadow:var(--shadow);
+    }
+    .summary .kicker{color:var(--accent-dark)}
+    .summary-total{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      margin-bottom:14px;
+      padding:18px;
+      border:0;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent-dark),var(--accent));
+      color:#fff;
+    }
+    .summary-total strong{font:900 64px/.86 Arial,sans-serif;letter-spacing:-.07em}
+    .summary-total span{color:rgba(255,255,255,.76);font-size:12px}
+    .summary dl{display:grid;gap:7px;margin:0 0 16px}
+    .summary dl div{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:9px 12px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#fafdfc;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .summary dl .subrow{margin-left:10px;padding-left:14px;font-size:11px}
+    .summary dd{margin:0;color:var(--ink);font-weight:800}
+    .summary .raw{margin-top:2px;border-color:#abc3b8;background:var(--accent-soft)}
+    .cap-note{padding:11px 12px;border-radius:8px;background:var(--note);color:#90651d;font-size:12px;line-height:1.6}
+    .summary .btn{width:100%}
+    .summary .text-btn{display:block;margin:16px auto 0;color:var(--accent-dark)}
+    footer{padding:30px max(28px,calc((100vw - 1280px)/2));background:var(--accent-dark);color:#fff}
+    .modal-bg{
+      position:fixed;
+      z-index:100;
+      inset:0;
+      display:none;
+      place-items:center;
+      padding:24px;
+      background:rgba(30,41,36,.65);
+      backdrop-filter:blur(7px);
+    }
+    .modal-bg.open{display:grid}
+    .modal{
+      display:grid;
+      grid-template-rows:minmax(0,1fr) auto;
+      width:min(1020px,100%);
+      max-height:min(860px,calc(100vh - 48px));
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.55);
+      border-radius:var(--radius-lg);
+      background:#fff;
+      box-shadow:0 26px 80px rgba(20,43,33,.28);
+    }
+    .modal-scroll{display:grid;grid-template-columns:1.15fr .85fr;min-height:0;overflow:auto}
+    .ban-panel,.recommend{padding:30px}
+    .ban-panel{border-right:1px solid var(--line)}
+    .modal-title{margin-bottom:22px}
+    .modal-title strong{color:var(--accent-dark);font-size:19px}
+    .modal-title p{margin:7px 0 0;color:var(--muted);font-size:12px}
+    .ban-group+.ban-group{margin-top:26px}
+    .ban-group h3{margin:0 0 12px;color:var(--ink);font-size:15px}
+    .ban-group ul,.recommend ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+    .ban-group li,.recommend li{position:relative;padding-left:17px;color:#405149;font-size:13px;line-height:1.58}
+    .ban-group li:before,.recommend li:before{position:absolute;top:.64em;left:0;width:6px;height:6px;border-radius:50%;content:""}
+    .ban-group li:before{background:var(--warn)}
+    .recommend li:before{background:var(--accent)}
+    .modal-foot{display:flex;justify-content:flex-end;padding:16px 22px;border-top:1px solid var(--line);background:#fafdfc}
+    .mobile-bar{display:none}
+    @media(max-width:980px){
+      .topbar .actions .btn-dark,#rulesButton{display:none}
+      .hero{grid-template-columns:minmax(0,1fr) 220px;gap:30px}
+      .fields{grid-template-columns:1fr 1fr}
+      .field-wide{grid-column:1/-1}
+      .categories{grid-template-columns:1fr}
+      .category{min-height:0}
+      .tabs{grid-template-columns:1fr 1fr}
+      .score-layout{grid-template-columns:1fr}
+      .summary{position:static}
+      .summary .btn{width:auto}
+      .modal-scroll{grid-template-columns:1fr}
+      .ban-panel{border-right:0;border-bottom:1px solid var(--line)}
+    }
+    @media(max-width:680px){
+      .shell{width:calc(100% - 28px)}
+      .topbar{min-height:62px;padding:9px 14px}
+      .brand>span:last-child{display:none}
+      .actions .btn-dark{display:none}
+      #rulesButton{display:none}
+      .btn{padding:0 13px;font-size:13px}
+      .hero{grid-template-columns:1fr;width:calc(100% - 28px);min-height:auto;padding:42px 0 28px}
+      .hero h1{font-size:clamp(38px,12vw,54px)}
+      .hero-score{min-height:132px;padding:18px}
+      .hero-score strong{font-size:62px}
+      .meta-section{margin-top:18px;padding:20px 16px}
+      .scoring{padding:42px 0 82px}
+      .heading{align-items:flex-start;margin-bottom:20px}
+      .heading h2{font-size:32px}
+      .heading-score{display:none}
+      .fields{grid-template-columns:1fr}
+      .field-wide{grid-column:auto}
+      .sub-label{align-items:flex-start;flex-direction:column;gap:5px}
+      .status{align-items:stretch;flex-direction:column}
+      .switch button{flex:1}
+      .major-tab{min-height:58px;padding:0 14px;font-size:16px}
+      .tabs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}
+      .tab{min-width:205px;min-height:92px;scroll-snap-align:start}
+      .rule{grid-template-columns:1fr;gap:17px;padding:18px 16px}
+      .attached-scores{padding:0 0 0 10px}
+      .choices{display:grid;grid-template-columns:1fr}
+      .choices button{justify-content:space-between;min-height:42px}
+      .summary{padding:18px}
+      .modal-bg{padding:0}
+      .modal{width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0}
+      .ban-panel,.recommend{padding:22px 20px}
+      .modal-foot{align-items:stretch;flex-direction:column;padding:14px 18px}
+      .modal-foot .btn{width:100%}
+      footer{padding-bottom:104px}
+      .mobile-bar{
+        position:fixed;
+        z-index:40;
+        right:0;
+        bottom:0;
+        left:0;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:10px 14px max(10px,env(safe-area-inset-bottom));
+        border-top:1px solid rgba(255,255,255,.18);
+        background:rgba(25,83,60,.97);
+        color:#fff;
+        box-shadow:0 -4px 18px rgba(20,43,33,.16);
+        backdrop-filter:blur(8px);
+      }
+      .mobile-bar div{display:flex;gap:9px;align-items:baseline}
+      .mobile-bar span{color:rgba(255,255,255,.76);font-size:11px}
+      .mobile-bar strong{font:900 30px Arial,sans-serif}
+      .mobile-bar button{height:38px;padding:0 16px;border:0;border-radius:8px;background:#fff;color:var(--accent-dark);font-weight:800}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*:before,*:after{transition-duration:.01ms!important}
+    }
+  </style>
 </head>
 <body>
-<article id="39f74ef2-df17-803f-9e38-eee75c4c29b6" class="page serif"><header><h1 class="page-title" dir="auto" data-comment-block-id="body-0001">世界开妬者联盟 打分细则1.1</h1><p class="page-description" dir="auto" data-comment-block-id="body-0002"></p></header><div class="page-body"><h1 id="39f74ef2-df17-8040-a18b-dedf574b29c4" class="" dir="auto" data-comment-block-id="body-0003">定义</h1><p id="39f74ef2-df17-80ab-9687-e6a9b9cdfc89" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0004"><strong>女性定义：</strong>生理为女、自我认知为女。女穿男、男穿女、女有男性器官的、男有女性器官皆不为女性。 </p><p id="39f74ef2-df17-8062-a002-e931a1258f7d" class="" dir="auto" data-comment-block-id="body-0005"><strong>AS文</strong></p><p id="39f74ef2-df17-809d-b289-ec31b4c0ce7f" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0006">初始10分。故事剧情围绕女展开且无性缘观念，世界观不含男、不含拟男（如男机器人）、不含无性别人和拟人，其它物种的无性别和雄性个体不参与积极叙事。 </p><p id="39f74ef2-df17-8042-a815-e737484f837f" class="" dir="auto" data-comment-block-id="body-0007"><strong>半AS文</strong></p><p id="39f74ef2-df17-8045-8137-efd836b23a2b" class="" dir="auto" data-comment-block-id="body-0008">初始10分。主角团全体为女且无性缘，世界观不存在正面男性角色。 </p><p id="39f74ef2-df17-80c1-b9ce-c6260fe88826" class="" dir="auto" data-comment-block-id="body-0009"><strong>非AS文</strong></p><p id="39f74ef2-df17-8020-8c67-e77e8c5ab464" class="" dir="auto" data-comment-block-id="body-0010">初始0分。主角团内存在男性，或主角团有性缘，或世界观存在正面男性角色。反派为重要配角且为男时按作者情感倾向判断，倾向积极多高光则判定主角团含男，批判为主则判定主角团不含男。</p><h1 id="39f74ef2-df17-80bb-8918-f1405f178358" class="" dir="auto" data-comment-block-id="body-0011">总则</h1><h2 id="39f74ef2-df17-80df-979d-f57bc2371dad" class="" dir="auto" data-comment-block-id="body-0012">⭕️革旧 </h2><h4 id="39f74ef2-df17-8007-bb6a-eefdc821480b" class="block-color-teal" data-notion-highlight="teal" dir="auto" data-comment-block-id="body-0013"><mark class="highlight-red" data-notion-highlight="red">（提及且批判态度+1分；未提及0分；提及且非批判态度-1分 ）</mark></h4><table id="39f74ef2-df17-8028-bb1f-d0afc36fa448" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-809d-a64b-c3d2339906f3" dir="ltr"><th id="U^kC" class="simple-table-header-color simple-table-header" style="width:119.75px" data-comment-block-id="body-0014">核心维度</th><th id="S&lt;VM" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0015">细分二级标签</th><th id="^rGK" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0016">具体表现 / 设定释义</th><th id="MtC[" class="simple-table-header-color simple-table-header" style="width:48.98011016845703px" data-comment-block-id="body-0017">分数</th><th id="cfFh" class="simple-table-header-color simple-table-header" style="width:51.014198303222656px" data-comment-block-id="body-0018">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80c2-b25f-ecce9d72da6f" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0019">🔻 阶级和物化</td><td id="S&lt;VM" class="" data-comment-block-id="body-0020">▪️ 社会阶级设定</td><td id="^rGK" class="" data-comment-block-id="body-0021"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0022"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0023"></td></tr><tr id="39f74ef2-df17-8023-bea7-c309c9a25b71" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0024">▪️ 角色不平等关系</td><td id="^rGK" class="" data-comment-block-id="body-0025">塑造不平等关系且强调上位者权威，如师生、工作上下级、不平等友缘</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0026"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0027"></td></tr><tr id="39f74ef2-df17-80b8-92a6-c989fd4f2a89" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0028">▪️ 物化/非人化</td><td id="^rGK" class="" data-comment-block-id="body-0029">有意加强角色与物品的联系，如“xx塑”，削弱人物本身个性，突出与某一塑的联系。</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0030"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0031"></td></tr><tr id="39f74ef2-df17-80a1-bf82-e3e0ae8bfd7a" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0032">▪️ 养宠</td><td id="^rGK" class="" data-comment-block-id="body-0033">人与动物的不平等关系；角色耗费精力照顾宠物</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0034"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0035"></td></tr><tr id="39f74ef2-df17-80a7-a2fd-f57bdc90f41d" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px" data-comment-block-id="body-0036">🔻 偶像和宗教</td><td id="S&lt;VM" class="" data-comment-block-id="body-0037">▪️ 角色互动中的明显偶像化行为</td><td id="^rGK" class="" data-comment-block-id="body-0038">如个人伟力的夸张化塑造；被普遍崇拜的角色；</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0039"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0040"></td></tr><tr id="39f74ef2-df17-804d-ac46-d90a4344f204" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0041">▪️ 世界观含有关于真人偶像或虚拟偶像的流行文化</td><td id="^rGK" class="" data-comment-block-id="body-0042"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0043"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0044"></td></tr><tr id="39f74ef2-df17-80e0-84b6-eef8e5f1bb5f" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0045">▪️ 有关宗教的背景设定或剧情</td><td id="^rGK" class="" data-comment-block-id="body-0046">包括造母神；繁育能力神化<del class="revision-delete">。</del><ins class="revision-add">；宗教相关词汇的正面宣传</ins></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0047"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0048"></td></tr><tr id="39f74ef2-df17-809e-94b7-c719ba5e10f1" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0049">🔻 弱役和束身衣</td><td id="S&lt;VM" class="" data-comment-block-id="body-0050">▪️ 性缘和昏因设定</td><td id="^rGK" class="" data-comment-block-id="body-0051"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0052"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0053"></td></tr><tr id="39f74ef2-df17-80be-a6df-e6513c70f17c" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0054">▪️ 美/帅/弱役描写</td><td id="^rGK" class="" data-comment-block-id="body-0055"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0056"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0057"></td></tr><tr id="39f74ef2-df17-8094-a693-e7aaa6da813c" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0058">▪️ 刻板弱役偏好</td><td id="^rGK" class="" data-comment-block-id="body-0059">明显甜食远大于肉蛋乳的饮食偏好，装饰性大于实用性的物品偏好等</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0060"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0061"></td></tr><tr id="39f74ef2-df17-80c8-9784-d9469f7d67d7" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0062">▪️ 精神弱役</td><td id="^rGK" class="" data-comment-block-id="body-0063">角色对人或物的强依赖；强绑定的双向关系</td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0064"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0065"></td></tr><tr id="39f74ef2-df17-80a0-9336-d76791da6129" dir="ltr"><td id="U^kC" rowspan="4" class="" style="width:119.75px" data-comment-block-id="body-0066">🔻 宏大叙事、虏社道德和慕死情结</td><td id="S&lt;VM" class="" data-comment-block-id="body-0067">▪️ 单纯争夺资源或权力、无改善社会模式的组织争霸主题</td><td id="^rGK" class="" data-comment-block-id="body-0068"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0069"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0070"></td></tr><tr id="39f74ef2-df17-8053-abfb-eeda5fdedd76" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0071">▪️ 将种族、阶级等立场置于性别立场之上</td><td id="^rGK" class="" data-comment-block-id="body-0072"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0073"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0074"></td></tr><tr id="39f74ef2-df17-800f-98b4-fb0f441d9fb8" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0075">▪️ 带有无私奉献、舍己为人等特质的角色</td><td id="^rGK" class="" data-comment-block-id="body-0076"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0077"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0078"></td></tr><tr id="39f74ef2-df17-8025-ad31-ccc36d10a8ce" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0079">▪️ <del class="revision-delete">为某事献出生命的正面叙述</del><ins class="revision-add">慕死情节</ins></td><td id="^rGK" class="" data-comment-block-id="body-0080"><ins class="revision-add">详描角色死亡场面；煽情、浪漫化死亡叙述</ins></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0081"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0082"></td></tr><tr id="39f74ef2-df17-80c0-af3e-c3157e3f01c4" dir="ltr"><td id="U^kC" rowspan="3" class="" style="width:119.75px" data-comment-block-id="body-0083">🔻 孝道和血缘</td><td id="S&lt;VM" class="" data-comment-block-id="body-0084">▪️ 母子等亲属之间的不平等关系</td><td id="^rGK" class="" data-comment-block-id="body-0085"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0086"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0087"></td></tr><tr id="39f74ef2-df17-80a8-832f-cb811ec701bc" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0088">▪️ 宗族正面形象展现</td><td id="^rGK" class="" data-comment-block-id="body-0089"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0090"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0091"></td></tr><tr id="39f74ef2-df17-8007-8c13-faa2d8c8e908" dir="ltr"><td id="S&lt;VM" class="" data-comment-block-id="body-0092">▪️ （针对AS）<del class="revision-delete">强调姓氏存在和作用</del><ins class="revision-add">有姓氏存在</ins><br/>（针对半AS）<del class="revision-delete">无随母姓意识</del> <ins class="revision-add">随男姓</ins></td><td id="^rGK" class="" data-comment-block-id="body-0093"></td><td id="MtC[" class="" style="width:48.98011016845703px" data-comment-block-id="body-0094"></td><td id="cfFh" class="" style="width:51.014198303222656px" data-comment-block-id="body-0095"></td></tr></tbody></table><h2 id="39f74ef2-df17-802d-b508-cf910870807b" class="" dir="auto" data-comment-block-id="body-0096">⭕️立新 </h2><h4 id="39f74ef2-df17-804f-99f9-f33561e109e8" class="block-color-red" data-notion-highlight="red" dir="auto" data-comment-block-id="body-0097">（提及且有创新+1分；未提及0分；明显不加批判沿用旧制度-1分）</h4><table id="39f74ef2-df17-8096-9d84-cc3d15355274" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-80c8-a159-ecc54cbb2ae4" dir="ltr"><th id="}QqQ" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0098">核心维度</th><th id="twXV" class="simple-table-header-color simple-table-header" style="width:116.390625px" data-comment-block-id="body-0099">细分二级标签</th><th id="|aY^" class="simple-table-header-color simple-table-header" style="width:308.99998474121094px" data-comment-block-id="body-0100">具体表现 / 设定释义</th><th id="Ig~O" class="simple-table-header-color simple-table-header" style="width:49.98863220214844px" data-comment-block-id="body-0101">分数</th><th id="\d{]" class="simple-table-header-color simple-table-header" style="width:51.01988220214844px" data-comment-block-id="body-0102">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8058-b3ac-f6cbff325abc" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0103">🔺 政治和经济设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0104">▪️ 政治</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0105">执政方式如何？政府形式如何，或有无政府？是否削弱或尽可能消除阶级？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0106"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0107"></td></tr><tr id="39f74ef2-df17-809d-860a-eaa4a9173f67" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0108">▪️ 经济</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0109">货币形式如何，或有无货币？劳动模式、消费模式如何？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0110"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0111"></td></tr><tr id="39f74ef2-df17-80c1-845e-e40d86219e03" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0112">🔺 文化和教育设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0113">▪️ 文化</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0114">关于死亡、离别、交友、节庆等话题，是否有不同于现社的认识和模式？</td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0115"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0116"></td></tr><tr id="39f74ef2-df17-80fe-b245-d3af4dd9ea5b" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0117">▪️ 教育</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0118">是否革新教育形式？<del class="revision-delete">是否有限制教权的意识？</del><ins class="revision-add">是否有消除或限制教导方权力的意识？</ins></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0119"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0120"></td></tr><tr id="39f74ef2-df17-800a-81c3-e7b134de7369" dir="ltr"><td id="}QqQ" rowspan="2" class="" data-comment-block-id="body-0121">🔺 生殖和抚养设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0122">▪️ 生殖</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0123">生殖方式如何？<del class="revision-delete">是否有限制母权的意识？</del><ins class="revision-add">是否有淡化母存在的意识？</ins><br/>如为双雌生殖，应仅承认分娩方为母。<ins class="revision-add">有详细探讨单雌或双雌生殖，起到科普宣扬作用加1分</ins><br><mark class="highlight-red" data-notion-highlight="red">如承认非分娩方与子的亲缘关系，扣1分。<br/>如由人之外的物体分娩，且叙述态度为积极，如树木、石头、人造子宫等，扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0124"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0125"></td></tr><tr id="39f74ef2-df17-8045-9c2c-cc484e149e4c" dir="ltr"><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0126">▪️ 抚养</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0127"><del class="revision-delete">抚养模式如何？</del><ins class="revision-add">抚养、赡养模式如何？是否有一味强调个体对长幼养育责任，而忽略社会机构责任？或反之？</ins></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0128"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0129"></td></tr><tr id="39f74ef2-df17-80e6-88c7-f51581ed2bfc" dir="ltr"><td id="}QqQ" class="" data-comment-block-id="body-0130">🔺 健康和医疗设定</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0131">▪️ 医学健康知识和医疗设定</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0132">是否提及破除现社伪共识的女本位生理知识，如平均睡眠时长、健康体脂率范围、月经周期和月经用品等？<br/><mark class="highlight-red" data-notion-highlight="red">长篇作品（10万字及以上）完全不提及月经相关扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0133"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0134"></td></tr><tr id="39f74ef2-df17-80e8-a2ad-ca368ae52aca" dir="ltr"><td id="}QqQ" class="" data-comment-block-id="body-0135">🔺 衣食住行及其它</td><td id="twXV" class="" style="width:116.390625px" data-comment-block-id="body-0136">▪️ 衣食住行及其它思考</td><td id="|aY^" class="" style="width:308.99998474121094px" data-comment-block-id="body-0137">在衣食住行等生活方面有无不同于现社的思考？<br/>饮食习惯：是否认识到长期大量摄入重油脂调味、感官刺激的食物是在压力模式下的不健康行为？<br/>衣物模式：是否摒弃针对非人生理结构制造的衣物形式？是否减少只具有装饰性的设计，如领带、皮鞋？<br/><mark class="highlight-red" data-notion-highlight="red">非批判态度提及裙装扣1分。</mark></td><td id="Ig~O" class="" style="width:49.98863220214844px" data-comment-block-id="body-0138"></td><td id="\d{]" class="" style="width:51.01988220214844px" data-comment-block-id="body-0139"></td></tr></tbody></table><h2 id="39f74ef2-df17-8034-a8b0-c65000ee45dd" class="" dir="auto" data-comment-block-id="body-0140">⭕️创作者、作品载体、作品传播 </h2><table id="39f74ef2-df17-808e-9995-c607f70ca9f7" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802a-a375-ca5d1490885d" dir="ltr"><th id="rye&lt;" class="simple-table-header-color simple-table-header" style="width:182.64488220214844px" data-comment-block-id="body-0141">核心维度</th><th id="&gt;U&lt;E" class="simple-table-header-color simple-table-header" style="width:118.46875px" data-comment-block-id="body-0142">细分二级标签</th><th id="XiP&lt;" class="simple-table-header-color simple-table-header" style="width:276.0113525390625px" data-comment-block-id="body-0143">具体表现 / 设定释义 / 评分规则</th><th id="\&gt;b~" class="simple-table-header-color simple-table-header" style="width:49.99714660644531px" data-comment-block-id="body-0144">分数</th><th id="ZLsQ" class="simple-table-header-color simple-table-header" style="width:51.0113525390625px" data-comment-block-id="body-0145">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-80de-b262-d9dc084ca7b9" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0146">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0147">▪️ 女义和忤女字词</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0148">褒义使用女义字词（婋、嫖、英雌等）、使用辱男词（骟、劁等）加1分。<br/>褒义使用英雄等词<ins class="revision-add">或非批判性化用男诗词、典故等</ins>扣1分，使用忤女词扣2分。<br/>在未使用忤女脏话前提下，作者及时听取意见改进文本可不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0149"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0150"></td></tr><tr id="39f74ef2-df17-8066-aab0-cef14788b42e" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0151">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0152">▪️ 中性代词使用</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0153"><del class="revision-delete">使用少年、学长等</del><ins class="revision-add">使用中性代词如少年、学长等或身份职位如司机、领导等称呼</ins>包含男性扣1分；专指男性扣2分。<br/>使用以上词汇专指女性，男性只使用少男、学哥等不扣分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0154"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0155"></td></tr><tr id="39f74ef2-df17-8036-9375-c6c7bfa6c6c6" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0156">🔻 文本字词和创作立场</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0157">▪️ 创作态度和立场</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0158">女性角色取名ABB<ins class="revision-add">扣1分</ins>，含柔、软、甜等<ins class="revision-add">弱役</ins>字扣1分。<br/>塑造脸谱化、扁平化女性角色或个人英雌主义的角色扣1分</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0159"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0160"></td></tr><tr id="39f74ef2-df17-80d5-b0a4-fe072a0fd2ae" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0161">🔻 评论区氛围</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0162">▪️ 评论区氛围状况</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0163">氛围落体，如爱男自由、嗑cp自由、爱美自由等，扣1分。<br/> 氛围较好：作者及读者不包容以上落体行为，且观点碰撞和剧情讨论居多可加1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0164"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0165"></td></tr><tr id="39f74ef2-df17-8081-bc1a-de7f22d3b94e" dir="ltr"><td id="rye&lt;" rowspan="2" class="" style="width:182.64488220214844px" data-comment-block-id="body-0166">🔻 作者作品外态度和作品传播</td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0167">▪️ 作者专栏</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0168">前作含美化和肯定男、含正面性缘剧情，扣1分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0169"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0170"></td></tr><tr id="39f74ef2-df17-805d-b9b2-d487aa8ac49d" dir="ltr"><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0171">▪️ 作者态度及宣传方式</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0172"><del class="revision-delete">作品衍生周边落体</del><ins class="revision-add">围绕作品衍生出来的所有产物如封面图、音乐剧，人设图等有落体傔疑</ins>、作者<del class="revision-delete">明确鼓励支持</del><ins class="revision-add">不明牌反对</ins>落体二创和传播环境<ins class="revision-add">如漫展等</ins>，扣<del class="revision-delete">1</del><ins class="revision-add">2</ins>分。</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0173"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0174"></td></tr><tr id="3a074ef2-df17-804f-a183-d542685663f0" dir="ltr"><td id="rye&lt;" class="" style="width:182.64488220214844px" data-comment-block-id="body-0175"></td><td id="&gt;U&lt;E" class="" style="width:118.46875px" data-comment-block-id="body-0176">▪️ 作品质量问题</td><td id="XiP&lt;" class="" style="width:276.0113525390625px" data-comment-block-id="body-0177">▪️ <del class="revision-delete">文笔、人物塑造，更文频率等</del><ins class="revision-add">文笔差、使用ai、人物塑造扁平，更文频率拖等</ins>。（此类有问题可备注，不参与评分）</td><td id="\&gt;b~" class="" style="width:49.99714660644531px" data-comment-block-id="body-0178"></td><td id="ZLsQ" class="" style="width:51.0113525390625px" data-comment-block-id="body-0179"></td></tr></tbody></table><h1 id="39f74ef2-df17-806f-b73c-d87929bf6a18" class="" dir="auto" data-comment-block-id="body-0180">加则：性别战争 </h1><p id="39f74ef2-df17-80ca-899d-d9fbcb09d2d6" class="" dir="auto" data-comment-block-id="body-0181">虏定义：沾男、生男，帮助和美化男；仇女、害女，阻止女伤害男。</p><table id="39f74ef2-df17-806e-8a18-eced8c4fb0b5" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="39f74ef2-df17-802e-8ddb-c2a049933a75" dir="ltr"><th id="EABJ" class="simple-table-header-color simple-table-header" style="width:139.25851440429688px" data-comment-block-id="body-0182">核心维度</th><th id="R\_c" class="simple-table-header-color simple-table-header" data-comment-block-id="body-0183">细分二级标签</th><th id="hoRM" class="simple-table-header-color simple-table-header" style="width:216.21022033691406px" data-comment-block-id="body-0184">具体表现 / 设定释义 / 评分规则</th><th id="s__}" class="simple-table-header-color simple-table-header" style="width:49.98295593261719px" data-comment-block-id="body-0185">分数</th><th id="oQ=J" class="simple-table-header-color simple-table-header" style="width:51.09089660644531px" data-comment-block-id="body-0186">备注</th></tr></thead><tbody><tr id="39f74ef2-df17-8032-b6a2-c73428498d66" dir="ltr"><td id="EABJ" class="" style="width:139.25851440429688px" data-comment-block-id="body-0187">性别战争</td><td id="R\_c" class="" data-comment-block-id="body-0188"></td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0189">加2分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0190"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0191"></td></tr><tr id="39f74ef2-df17-80bd-a3fe-fac4a5f5efba" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px" data-comment-block-id="body-0192">🔻 自我认知和行为立场</td><td id="R\_c" class="" data-comment-block-id="body-0193">▪️ 自我认知不为女权</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0194">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0195"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0196"></td></tr><tr id="39f74ef2-df17-8019-a5b3-fc9a55c4c66f" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0197">▪️ 女扮男</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0198">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0199"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0200"></td></tr><tr id="39f74ef2-df17-804a-8ede-c962f284cc02" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0201">▪️ 虏/男掌权环境下生育</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0202">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0203"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0204"></td></tr><tr id="39f74ef2-df17-8052-80c8-f14bde4fcb71" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0205">▪️ 违背女权同盟</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0206">扶持和帮助虏，与虏合作扣1分；未体现同立场正面角色合作互助扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0207"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0208"></td></tr><tr id="39f74ef2-df17-8053-995b-f01bc57bb8d3" dir="ltr"><td id="EABJ" rowspan="5" class="" style="width:139.25851440429688px" data-comment-block-id="body-0209">🔻 关注和美化虏</td><td id="R\_c" class="" data-comment-block-id="body-0210">▪️ 女虏比低于2:1（由虏变女的可视为女，但需评估虏中心条例）</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0211">扣1分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0212"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0213"></td></tr><tr id="39f74ef2-df17-8095-9093-c4814cd4ceaa" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0214">▪️ 承认与虏的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0215">正面角色不与虏亲/虏友断绝关系，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0216"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0217"></td></tr><tr id="39f74ef2-df17-801e-b936-d011c71773a1" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0218">▪️ 强虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0219">参与重要剧情，有重大迫害主角团行为却无相应惩罚，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0220"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0221"></td></tr><tr id="39f74ef2-df17-8030-8c7b-e6c3a767c014" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0222">▪️ 弱虏时刻</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0223">美化虏的沾男、助男行为，大篇幅描写虏身不由己剧情、哭丧卖惨，扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0224"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0225"></td></tr><tr id="39f74ef2-df17-8063-b9f9-fa64cf134c05" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0226">▪️ 以虏为中心的的丑恶情节多于惩罚/反抗情节（或没有）</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0227">扣1分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0228"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0229"></td></tr><tr id="39f74ef2-df17-80ea-badb-e396e0e1e794" dir="ltr"><td id="EABJ" rowspan="4" class="" style="width:139.25851440429688px" data-comment-block-id="body-0230">🔻 关注和美化男</td><td id="R\_c" class="" data-comment-block-id="body-0231">▪️ 女男比低于<del class="revision-delete">2:1</del><ins class="revision-add">9:1</ins></td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0232"><ins class="revision-add">感官上男性角色存在感过强的都可</ins>扣2分</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0233"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0234"></td></tr><tr id="39f74ef2-df17-80c8-af29-c9cbe09d1426" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0235">▪️ 承认与男性的正向关系</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0236">承认亲情，如随父姓，扣2分；承认其它正向关系，如朋友、师生、同事间正向感情，扣2分。<br/>扶持和帮助男性扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0237"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0238"></td></tr><tr id="39f74ef2-df17-808b-8dae-dd62f2e5f783" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0239">▪️ 美化和观赏男性</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0240">赋予男性才华、能力、品德等，扣2分。<br/> 女凝男、小糯夫等非批判描写，扣2分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0241"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0242"></td></tr><tr id="39f74ef2-df17-80f7-aa0d-d4a0c463f50c" dir="ltr"><td id="R\_c" class="" data-comment-block-id="body-0243">▪️ 男性高光</td><td id="hoRM" class="" style="width:216.21022033691406px" data-comment-block-id="body-0244">取名用心/完整成长线、立体性格、参与重要剧情等，酌情扣2-3分。</td><td id="s__}" class="" style="width:49.98295593261719px" data-comment-block-id="body-0245"></td><td id="oQ=J" class="" style="width:51.09089660644531px" data-comment-block-id="body-0246"></td></tr></tbody></table><h1 id="39f74ef2-df17-806e-8bb0-c1697fceeeb6" class="" dir="auto" data-comment-block-id="body-0247">禁红不禁黑（只能负分排雷）:</h1><p id="39f74ef2-df17-805c-b6d3-fa7256d7bec2" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0248">有以下行为禁止组内自荐<ins class="revision-add">，读者打评需改排雷或删除</ins></p><h3 id="39f74ef2-df17-8047-b425-e20e1167f6cd" class="" dir="auto" data-comment-block-id="body-0249">1.作品忤女和反女权行为</h3><p id="39f74ef2-df17-8024-a245-c413610c1092" class="" dir="auto" data-comment-block-id="body-0250">自我认知不为女性、女身厌恶等忤女行为</p><p id="39f74ef2-df17-80d3-ab64-fa60dd20072a" class="" dir="auto" data-comment-block-id="body-0251">代孕、以性惩罚女性等严重物化情节</p><p id="39f74ef2-df17-8053-ab00-c6cbba039868" class="" dir="auto" data-comment-block-id="body-0252">忽视或美化女性困境</p><p id="39f74ef2-df17-8034-93dc-daf337f88365" class="" dir="auto" data-comment-block-id="body-0253">模糊和剽窃女性能力，如男生子</p><p id="39f74ef2-df17-80a3-a7fa-e48d0d62284f" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0254">主角团参与性缘/参与昏因（as世界观存在性缘<ins class="revision-add">，半as对性缘关系的非批判性描述</ins>）</p><p id="39f74ef2-df17-80c8-ae0b-fe07a00f4c75" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0255">打男拳，如生男宝/呼吁男性权益</p><p data-comment-block-id="body-0262"><ins class="revision-add">性战结局不排男</ins></p><h3 id="39f74ef2-df17-80b7-a373-d9bc02c80208" class="" dir="auto" data-comment-block-id="body-0256">2.作品外作者问题</h3><p id="39f74ef2-df17-80bd-8632-fa49e75e0be2" class="" dir="auto" data-comment-block-id="body-0257">作者沾男/生男/自我认知不为女性</p><p id="39f74ef2-df17-807e-a61a-d096dc2802b9" class="" dir="auto" data-comment-block-id="body-0258">连载同时阅读/写作/预收（准备写作）<ins class="revision-add">忤女文、</ins>主角团含男/主角团含性缘文</p><p id="39f74ef2-df17-8070-a826-d2f0655f118e" class="block-color-default" data-notion-highlight="default" dir="auto" data-comment-block-id="body-0259">支持反爱女/反女权观点<ins class="revision-add">（反rf反14bt）</ins>、宣扬女男无差、平权论（文中同理）</p><p id="39f74ef2-df17-80ce-ac47-fb99f37a1d65" class="" dir="auto" data-comment-block-id="body-0260">男性作者</p><p id="39f74ef2-df17-80db-962f-e43697671da6" class="" dir="auto" data-comment-block-id="body-0261">
-</p><h1 id="recommendation-rules" class="" dir="auto" data-comment-block-id="body-0263">推荐规则</h1><p class="" dir="auto" data-comment-block-id="body-0264">1，组内自荐需要作者自评分，如评论区提出扣分建议，需及时修正评分。</p><p class="" dir="auto" data-comment-block-id="body-0265">2，有禁红不禁黑内行为的文禁止组内推荐，读者打评需改为排雷或删除帖子。</p><p class="" dir="auto" data-comment-block-id="body-0266">3，推荐楼发帖者和评论者禁止自行删评，禁止带节奏。</p><p class="" dir="auto" data-comment-block-id="body-0267">4，鼓励多人多帖对同一作品打分，鼓励用新细则对旧推文重新评估。</p><p class="" dir="auto" data-comment-block-id="body-0268">5，推荐者所推文章或作者后面出现问题，推荐者需及时修改原帖。如原推荐者无法及时修正，可由她人发新帖重评，旧贴禁回。</p><p class="" dir="auto" data-comment-block-id="body-0269"></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span>
-<button id="annotationAdd" class="annotation-add">＋ 添加批注</button><details class="annotation-panel" open><summary>共享批注 <span id="annotationCount">0</span></summary><div id="annotationList" class="annotation-list"></div></details><dialog id="annotationDialog" class="annotation-dialog"><form id="annotationForm"><h3>添加共享批注</h3><div id="annotationSelection" class="annotation-quote"></div>
-<label>你的昵称（可选）<input id="annotationAuthor" maxlength="30" placeholder="留空则显示为匿名"></label><label>批注颜色<select id="annotationColor"><option value="#ffe58f">黄色</option><option value="#b7eb8f">绿色</option><option value="#91d5ff">蓝色</option><option value="#d3adf7">紫色</option><option value="#ffadd2">粉色</option></select></label>
-<label>批注内容<textarea id="annotationText" maxlength="1000" required></textarea></label><div class="annotation-actions"><button type="button" onclick="this.closest('dialog').close()">取消</button><button class="primary" type="submit">发布批注</button></div></form></dialog><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-(()=>{
-  const article=document.querySelector('article');
-  const add=document.querySelector('#annotationAdd');
-  const dialog=document.querySelector('#annotationDialog');
-  const form=document.querySelector('#annotationForm');
-  const list=document.querySelector('#annotationList');
-  const count=document.querySelector('#annotationCount');
-  const author=document.querySelector('#annotationAuthor');
-  const color=document.querySelector('#annotationColor');
-  const text=document.querySelector('#annotationText');
-  const selected=document.querySelector('#annotationSelection');
-  const sb=window.supabase.createClient('https://nsgiklzuwvfquobkqqsy.supabase.co','sb_publishable_4qHXQE8ZQiMAv7hkod8eIw_AFEvjZjH');
-  const showAdmin=new URLSearchParams(location.search).get('admin')==='1';
-  let pending=null,me=null,isAdmin=false,notes=new Map(),replies=new Map(),expanded=new Set();
-  author.value=localStorage.getItem('annotation-author')||'';
-
-  const admin=document.createElement('button');
-  admin.type='button';
-  admin.textContent='\u7ba1\u7406\u5458\u767b\u5f55';
-  admin.className='annotation-add';
-  Object.assign(admin.style,{display:showAdmin?'block':'none',right:'18px',left:'auto',top:'18px'});
-  document.body.append(admin);
-
-  const migrate=document.createElement('button');
-  migrate.type='button';
-  migrate.className='annotation-add';
-  Object.assign(migrate.style,{display:'none',right:'18px',left:'auto',top:'58px',background:'#555'});
-  document.body.append(migrate);
-
-  const anchorStyle=document.createElement('style');
-  anchorStyle.textContent='.annotation-card.annotation-orphan{border-left-color:#999!important;background:#fafafa}.annotation-card.annotation-orphan .annotation-selected{color:#a34b00}';
-  document.head.append(anchorStyle);
-
-  function textNodes(root){
-    const result=[],walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-    let node;
-    while(node=walker.nextNode())result.push(node);
-    return result;
-  }
-
-  function offsetWithin(root,node,pos){
-    if(node&&node.nodeType===Node.TEXT_NODE){
-      let total=0;
-      for(const current of textNodes(root)){
-        if(current===node)return total+Math.min(pos,current.data.length);
-        total+=current.data.length;
-      }
-    }
-    const range=document.createRange();
-    range.selectNodeContents(root);
-    range.setEnd(node,pos);
-    return range.toString().length;
-  }
-
-  function globalOffset(node,pos){return offsetWithin(article,node,pos)}
-
-  function locate(root,value){
-    let total=0;
-    for(const node of textNodes(root)){
-      const next=total+node.data.length;
-      if(value<=next)return[node,Math.max(0,value-total)];
-      total=next;
-    }
-    return null;
-  }
-
-  function blockFor(node){
-    const element=node?.nodeType===Node.TEXT_NODE?node.parentElement:node;
-    return element?.closest?.('[data-comment-block-id]')||null;
-  }
-
-  function commonSuffix(a,b){
-    let score=0;
-    while(score<a.length&&score<b.length&&a[a.length-1-score]===b[b.length-1-score])score++;
-    return score;
-  }
-
-  function commonPrefix(a,b){
-    let score=0;
-    while(score<a.length&&score<b.length&&a[score]===b[score])score++;
-    return score;
-  }
-
-  function bestMatch(value,quote,savedStart,prefix='',suffix=''){
-    if(!quote)return null;
-    const start=Number(savedStart);
-    if(Number.isFinite(start)&&value.slice(start,start+quote.length)===quote)return{index:start,score:100000};
-    let from=0,best=null;
-    while(from<=value.length){
-      const index=value.indexOf(quote,from);
-      if(index<0)break;
-      const before=value.slice(Math.max(0,index-prefix.length),index);
-      const after=value.slice(index+quote.length,index+quote.length+suffix.length);
-      const proximity=Number.isFinite(start)?Math.max(0,30-Math.abs(index-start)/10):0;
-      const score=commonSuffix(before,prefix)*3+commonPrefix(after,suffix)*3+proximity;
-      if(!best||score>best.score)best={index,score};
-      from=index+Math.max(1,quote.length);
-    }
-    return best;
-  }
-
-  function contextBoundaries(value,context,after){
-    if(!context)return[];
-    const result=[];
-    let from=0;
-    while(from<=value.length&&result.length<100){
-      const index=value.indexOf(context,from);
-      if(index<0)break;
-      result.push(index+(after?context.length:0));
-      from=index+Math.max(1,context.length);
-    }
-    return result;
-  }
-
-  function recoverEditedRange(value,note){
-    const rawStart=Number(note.start_offset),rawEnd=Number(note.end_offset);
-    const savedStart=Math.max(0,Math.min(value.length,Number.isFinite(rawStart)?rawStart:0));
-    const savedEnd=Math.max(savedStart,Math.min(value.length,Number.isFinite(rawEnd)?rawEnd:savedStart));
-    const oldLength=Math.max(1,Number.isFinite(rawEnd-rawStart)?rawEnd-rawStart:0,(note.quote||'').length);
-    const prefix=note.prefix||'',suffix=note.suffix||'';
-    let starts=contextBoundaries(value,prefix,true);
-    let ends=contextBoundaries(value,suffix,false);
-    let prefixMatched=starts.length>0,suffixMatched=ends.length>0;
-
-    // An empty context means that side originally touched the block boundary.
-    if(!prefix){starts=[0];prefixMatched=savedStart===0}
-    if(!suffix){ends=[value.length];suffixMatched=true}
-    if(!starts.length&&!ends.length)return null;
-
-    const candidates=[];
-    if(starts.length&&ends.length){
-      for(const start of starts)for(const end of ends)if(end>start)candidates.push({start,end});
-    }else if(starts.length){
-      for(const start of starts){
-        const end=Math.min(value.length,start+oldLength);
-        if(end>start)candidates.push({start,end});
-      }
-    }else{
-      for(const end of ends){
-        const start=Math.max(0,end-oldLength);
-        if(end>start)candidates.push({start,end});
-      }
-    }
-    if(!candidates.length)return null;
-
-    const confidence=Number(prefixMatched)+Number(suffixMatched);
-    let best=null;
-    for(const candidate of candidates){
-      const length=candidate.end-candidate.start;
-      const penalty=Math.abs(candidate.start-savedStart)*2+Math.abs(candidate.end-savedEnd)+Math.abs(length-oldLength)/4;
-      const score=confidence*100000-penalty;
-      if(!best||score>best.score)best={...candidate,score,confidence};
-    }
-    return best;
-  }
-
-  function boundaryFromContext(value,saved,prefix,suffix,isStart){
-    const numeric=Math.max(0,Math.min(value.length,Number(saved)||0));
-    if(isStart){
-      if(prefix&&value.slice(Math.max(0,numeric-prefix.length),numeric)===prefix)return numeric;
-      if(prefix){const index=value.lastIndexOf(prefix);if(index>=0)return index+prefix.length}
-    }else{
-      if(suffix&&value.slice(numeric,numeric+suffix.length)===suffix)return numeric;
-      if(suffix){const index=value.indexOf(suffix);if(index>=0)return index}
-    }
-    return numeric;
-  }
-
-  function resolveMultiBlock(note){
-    const ids=String(note.block_id||'').split('|');
-    if(ids.length<2)return null;
-    const blocks=[...article.querySelectorAll('[data-comment-block-id]')];
-    const startBlock=article.querySelector('[data-comment-block-id="'+CSS.escape(ids[0])+'"]');
-    const endBlock=article.querySelector('[data-comment-block-id="'+CSS.escape(ids[1])+'"]');
-    const startIndex=blocks.indexOf(startBlock),endIndex=blocks.indexOf(endBlock);
-    if(startIndex<0||endIndex<startIndex)return null;
-    const startValue=startBlock.textContent||'',endValue=endBlock.textContent||'';
-    const startLength=Number(ids[2])||0,endLength=Number(ids[3])||0;
-    let start=boundaryFromContext(startValue,note.start_offset,note.prefix||'','',true);
-    let end=boundaryFromContext(endValue,note.end_offset,'',note.suffix||'',false);
-    const firstPart=startLength?(note.quote||'').slice(0,startLength):'';
-    const lastPart=endLength?(note.quote||'').slice(-endLength):'';
-    if(firstPart&&startValue.slice(start,start+firstPart.length)!==firstPart){
-      const match=bestMatch(startValue,firstPart,start,note.prefix||'','');
-      if(match)start=match.index;
-    }
-    if(lastPart&&endValue.slice(Math.max(0,end-lastPart.length),end)!==lastPart){
-      const match=bestMatch(endValue,lastPart,Math.max(0,end-lastPart.length),'',note.suffix||'');
-      if(match)end=match.index+lastPart.length;
-    }
-    const selectedBlocks=blocks.slice(startIndex,endIndex+1);
-    const parts=selectedBlocks.map((block,index)=>({
-      root:block,
-      start:index===0?start:0,
-      end:index===selectedBlocks.length-1?end:(block.textContent||'').length
-    })).filter(part=>part.end>part.start);
-    const currentQuote=parts.map(part=>(part.root.textContent||'').slice(part.start,part.end)).join('');
-    return parts.length?{parts,currentQuote,recovered:currentQuote!==(note.quote||'')}:null;
-  }
-
-  function resolveAnchor(note){
-    if(Number(note.anchor_version)>=3)return resolveMultiBlock(note);
-    if(Number(note.anchor_version)>=2&&note.block_id){
-      const selector='[data-comment-block-id="'+CSS.escape(note.block_id)+'"]';
-      const original=article.querySelector(selector);
-      if(original){
-        const value=original.textContent||'';
-        const exact=bestMatch(value,note.quote||'',note.start_offset,note.prefix||'',note.suffix||'');
-        if(exact?.score>=100000){
-          const end=exact.index+(note.quote||'').length;
-          return{root:original,start:exact.index,end,score:exact.score+1000,currentQuote:value.slice(exact.index,end),recovered:false};
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">妬</span><span>世界开妬者联盟打分表</span></a>
+    <div class="actions"><button class="btn btn-quiet" id="rulesButton" type="button">禁红不禁黑 / 推荐规则</button><a class="btn btn-quiet legacy-link" href="./打分细则共示版.html" target="_blank" rel="noopener">1.1共示存档</a><a class="btn btn-quiet legacy-link" href="./打分细则文字版.html" target="_blank" rel="noopener">打分细则文字版</a><button class="btn btn-dark save-button" type="button">保存评分图片</button></div>
+  </header>
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-copy"><p class="kicker">本打分细则文艺作品通用</p><h1>世界开妬者联盟打分表</h1></div>
+      <div class="hero-score"><span>FINAL SCORE</span><strong id="heroScore">10</strong><small id="heroScoreNote">原始总分 10</small></div>
+    </section>
+    <section class="meta-section shell">
+      <div class="heading compact-actions"><span></span><button class="text-btn" id="resetButton" type="button">清空重填</button></div>
+      <div class="fields">
+        <label class="field field-wide"><span>书名 <b>必填</b></span><input id="book" required placeholder="输入作品名称"></label>
+        <label class="field"><span>作者 <em>选填</em></span><input id="author" placeholder="输入作者名"></label>
+        <label class="field"><span>平台 <em>选填</em></span><input id="platform" placeholder="如：番茄、长佩、豆瓣阅读等"></label>
+      </div>
+      <div class="sub-label"><strong>作品分类</strong></div>
+      <p class="definition-note"><strong>女性定义：</strong>生理为女、自我认知为女。女穿男、男穿女、女有男性器官的、男有女性器官皆不为女性。</p>
+      <div class="categories" id="categories" role="radiogroup" aria-label="作品分类"></div>
+      <div class="status"><div class="status-copy"><strong>作品状态</strong><span>所有未完结文的分数上限为8分。</span></div><div class="switch" role="radiogroup" aria-label="作品状态"><button id="finished" class="active" type="button">已完结</button><button id="unfinished" type="button">未完结</button></div></div>
+    </section>
+    <section class="scoring shell" aria-labelledby="scoreTitle">
+      <div class="heading"><div><h2 id="scoreTitle">总则</h2></div><p class="heading-score">分数 <strong id="itemTotal">0</strong></p></div>
+      <nav class="major-tabs" id="majorTabs" aria-label="总则与加则"></nav>
+      <nav class="tabs" id="tabs" aria-label="评分维度"></nav>
+      <div class="score-layout">
+        <div><p class="section-summary" id="warDefinition" hidden>虏定义：沾男、生男，帮助和美化男；仇女、害女，阻止女伤害男。</p><div id="rules"></div><div class="next-row"><button class="btn btn-dark" id="nextButton" type="button">下一部分</button></div></div>
+        <aside class="summary" aria-label="分数汇总">
+          <p class="kicker">分数</p><div class="summary-total"><strong id="summaryScore">10</strong><span>最终得分</span></div><dl id="summaryRows"></dl><p class="cap-note" id="capNote" hidden></p><button class="btn btn-red save-button" type="button">保存评分图片</button><button class="text-btn open-rules" type="button">禁红不禁黑 / 推荐规则</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer><strong>世界开妬者联盟打分表</strong></footer>
+  <div class="mobile-bar"><div><span>最终得分</span><strong id="mobileScore">10</strong></div><button class="save-button" type="button">保存图片</button></div>
+  <div class="modal-bg open" id="ruleModal">
+    <section class="modal" role="dialog" aria-modal="true" aria-label="禁红不禁黑（只能负分排雷）及推荐规则">
+      <div class="modal-scroll">
+        <div class="ban-panel"><div class="modal-title"><strong>禁红不禁黑（只能负分排雷）:</strong><p>有以下行为禁止组内自荐，读者打评需改排雷或删除</p></div><div class="ban-group"><h3>1.作品忤女和反女权行为</h3><ul><li>自我认知不为女性、女身厌恶等忤女行为</li><li>代孕、以性惩罚女性等严重物化情节</li><li>忽视或美化女性困境</li><li>模糊和剽窃女性能力，如男生子</li><li>主角团参与性缘/参与昏因（as世界观存在性缘，半as对性缘关系的非批判性描述）</li><li>打男拳，如生男宝/呼吁男性权益</li><li>性战结局不排男</li></ul></div><div class="ban-group"><h3>2.作品外作者问题</h3><ul><li>作者沾男/生男/自我认知不为女性</li><li>连载同时阅读/写作/预收（准备写作）忤女文、主角团含男/主角团含性缘文</li><li>支持反爱女/反女权（反rf反14bt）观点、宣扬女男无差、平权论（文中同理）</li><li>男性作者</li></ul></div></div>
+        <div class="recommend"><div class="modal-title"><strong>推荐规则</strong></div><ul><li>1，组内自荐需要作者自评分，如评论区提出扣分建议，需及时修正评分。</li><li>2，有禁红不禁黑内行为的文禁止组内推荐，读者打评需改为排雷或删除帖子。</li><li>3，推荐楼发帖者和评论者禁止自行删评，禁止带节奏。</li><li>4，鼓励多人多贴对同一作品打分，鼓励用新细则对旧推文重新评估。</li><li>5，推荐者所推文章或作者后面出现问题，推荐者需及时修改原帖。如原推者无法及时修正，可由她人发新帖重评，旧贴禁回。</li><li>6，纯ai生成文禁止推荐。（利用ai修改错字，作为搜索工具的文不在此列。）</li></ul></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-red" id="acknowledge" type="button">我已阅读</button></div>
+    </section>
+  </div>
+  <script>
+    (()=>{
+      "use strict";
+      const categories=[
+        {id:"as",name:"AS文",base:10,initial:"初始10分",description:"故事剧情围绕女展开且无性缘观念，世界观不含男、不含拟男（如男机器人）、不含无性别人和拟人，其它物种的无性别和雄性个体不参与积极叙事。"},
+        {id:"half-as",name:"半AS文",base:10,initial:"初始10分",description:"主角团全体为女且无性缘，世界观不存在正面男性角色。"},
+        {id:"non-as",name:"非AS文",base:0,initial:"初始0分",description:"主角团内存在男性，或主角团有性缘，或世界观存在正面男性角色。反派为重要配角且为男时按作者情感倾向判断，倾向积极多高光则判定主角团含男，批判为主则判定主角团不含男。"}
+      ];
+      const reformChoices=[{label:"提及且批判态度",score:1},{label:"未提及",score:0},{label:"提及且非批判态度",score:-1}];
+      const buildChoices=[{label:"提及且有创新",score:1},{label:"未提及",score:0},{label:"明显不加批判沿用旧制度",score:-1}];
+      const C=(id,group,title,description,choices=reformChoices,applies)=>({id,group,title,description,type:"choice",choices,applies});
+      const F=(id,group,title,score,description)=>({id,group,title,description,type:"fixed",score});
+      const N=(id,group,title,description)=>({id,group,title,description,type:"note"});
+      const M=(id,group,title,description,options)=>({id,group,title,description,type:"multi",options});
+      const sections=[
+        {id:"reform",major:"general",eyebrow:"革旧",title:"革旧",summary:"（提及且批判态度+1分；未提及0分；提及且非批判态度-1分 ）",rules:[
+          C("class-system","阶级和物化","社会阶级设定"),C("unequal-roles","阶级和物化","角色不平等关系","塑造不平等关系且强调上位者权威，如师生、工作上下级、不平等友缘"),C("objectification","阶级和物化","物化/非人化","有意加强角色与物品的联系，如“xx塑”，削弱人物本身个性，突出与某一塑的联系。"),C("pets","阶级和物化","养宠","人与动物的不平等关系；角色耗费精力照顾宠物"),C("idolization","偶像和宗教","角色互动中的明显偶像化行为","如个人伟力的夸张化塑造；被普遍崇拜的角色；"),C("idol-culture","偶像和宗教","世界观含有关于真人偶像或虚拟偶像的流行文化"),C("religion","偶像和宗教","有关宗教的背景设定或剧情","造母神；繁育能力神化；宗教相关词汇的正面宣扬"),C("romance-marriage","弱役和束身衣","性缘和昏因设定"),C("beauty-service","弱役和束身衣","美/帅/弱役描写"),C("stereotype","弱役和束身衣","刻板弱役偏好","明显甜食远大于肉蛋乳的饮食偏好，装饰性大于实用性的物品偏好等"),C("dependency","弱役和束身衣","精神弱役","角色对人或物的强依赖；强绑定的双向关系"),C("power-struggle","宏大叙事、虏社道德和慕死情结","单纯争夺资源或权力、无改善社会模式的组织争霸主题"),C("other-before-sex","宏大叙事、虏社道德和慕死情结","将种族、阶级等立场置于性别立场之上"),C("self-sacrifice","宏大叙事、虏社道德和慕死情结","带有无私奉献、舍己为人等特质的角色；为某事献出生命的正面叙述"),C("death-romance","宏大叙事、虏社道德和慕死情结","慕死情节","详描角色死亡场面；煽情、浪漫化死亡叙述"),C("kin-inequality","孝道和血缘","母子等亲属之间的不平等关系"),C("clan","孝道和血缘","宗族正面形象展现"),C("surname-as","孝道和血缘","（针对AS）有姓氏存在<br>（针对半AS）随男姓",undefined,reformChoices,["as"])
+        ]},
+        {id:"build",major:"general",eyebrow:"立新",title:"立新",summary:"（提及且有创新+1分；未提及0分；明显不加批判沿用旧制度-1分）",rules:[
+          C("politics","政治和经济设定","政治","执政方式如何？政府形式如何，或有无政府？是否削弱或尽可能消除阶级？",buildChoices),C("economy","政治和经济设定","经济","货币形式如何，或有无货币？劳动模式、消费模式如何？",buildChoices),C("culture","文化和教育设定","文化","关于死亡、离别、交友、节庆等话题，是否有不同于现社的认识和模式？",buildChoices),C("education","文化和教育设定","教育","是否革新教育形式？是否有消除或限制教导方权力的意识？",buildChoices),C("reproduction","生殖和抚养设定","生殖","生殖方式如何？是否有淡化母存在的意识？",buildChoices),F("two-female-science","生殖和抚养设定","有详细探讨单雌或双雌生殖，起到科普宣扬作用加1分",1),F("non-birth-kin","生殖和抚养设定","如为双雌生殖，应仅承认分娩方为母。若承认非分娩方与子的亲缘关系，扣1分。",-1),F("artificial-birth","生殖和抚养设定","若由人之外的物体分娩，且叙述态度为积极，如树木、石头、人造子宫等，扣1分。",-1),C("care","生殖和抚养设定","抚养","抚养、赡养模式如何？是否有一味强调个体对长幼养育责任，而忽略社会机构责任？或反之？",buildChoices),C("healthcare","健康和医疗设定","医学健康知识和医疗设定","是否提及破除现社伪共识的女本位生理知识，如平均睡眠时长、健康体脂率范围、月经周期和月经用品等？",buildChoices),F("no-period-long","健康和医疗设定","长篇作品（10万字及以上）完全不提及月经相关扣1分。",-1),C("daily-life","衣食住行及其它","衣食住行及其它思考","在衣食住行等生活方面有无不同于现社的思考？<br>饮食习惯：是否认识到长期大量摄入重油脂调味、感官刺激的食物是在压力模式下的不健康行为？<br>衣物模式：是否摒弃针对非人生理结构制造的衣物形式？是否减少只具有装饰性的设计，如领带、皮鞋？",buildChoices),F("skirt","衣食住行及其它","非批判态度提及裙装扣1分。",-1)
+        ]},
+        {id:"text",major:"general",eyebrow:"创作者、作品载体、作品传播",title:"创作者、作品载体、作品传播",summary:"",rules:[
+          M("female-words","文本字词和创作立场","女义和忤女字词","在未使用忤女脏话前提下，作者及时听取意见改进文本可不扣分。",[{id:"female-words",label:"褒义使用女义字词（婋、嫖、英雌等）、使用辱男词（骟、劁等）加1分",score:+1},{id:"male-canon-1",label:"褒义使用英雄等词或非批判性化用男诗词、典故等扣1分",score:-1},{id:"anti-female-words",label:"使用忤女词扣2分",score:-2}]),M("neutral-pronoun","文本字词和创作立场","中性代词使用","使用中性代词如少年、学长等或身份职位如司机、领导等称呼专指女性，男性只使用少男、学哥等不扣分。",[{id:"neutral-pronoun-involve-male",label:"使用中性代词或身份职位<strong>包含</strong>男性扣1分",score:-1},{id:"neutral-pronoun-for-male",label:"使用中性代词或身份职位<strong>专指</strong>男性扣2分",score:-2}]),M("creative-position","文本字词和创作立场","创作态度和立场","",[{id:"abb-name",label:"女性角色取名ABB扣1分",score:-1},{id:"weak-name",label:"含柔、软、甜等弱役字扣1分",score:-1},{id:"flat-character",label:"塑造脸谱化、扁平化女性角色或个人英雌主义的角色扣1分",score:-1}]),C("comments","评论区氛围","评论区氛围状况","氛围落体，如爱男自由、嗑cp自由、爱美自由等，扣1分。\n氛围较好：作者及读者不包容以上落体行为，且观点碰撞和剧情讨论居多可加1分。",[{label:"未选择",score:0},{label:"氛围落体",score:-1},{label:"氛围较好",score:1}]),M("previous-work","作者作品外态度和作品传播","作者专栏","",[{id:"previous-work",label:"前作含美化和肯定男、含正面性缘剧情，扣1分",score:-1}]),M("promotion","作者作品外态度和作品传播","作者态度及宣传方式","",[{id:"derivatives",label:"围绕作品衍生出来的所有产物如封面图、音乐剧，人设图等有落体傔疑扣1分",score:-1},{id:"no-opposition",label:"作者不明牌反对落体二创和传播环境如漫展等扣2分",score:-2}]),N("quality","作品","作品质量问题","文笔差、人物塑造扁平，更文频率拖等。（此类有问题可备注，不参与评分）")
+        ]},
+        {id:"war",major:"supplement",eyebrow:"加则：性别战争",title:"性别战争",summary:"虏定义：沾男、生男，帮助和美化男；仇女、害女，阻止女伤害男。",rules:[
+          F("gender-war","性别战争","性别战争",2,""),F("not-feminist","自我认知和行为立场","自我认知不为女权",-1,""),F("woman-as-man","自我认知和行为立场","女扮男",-1,""),F("birth-under-men","自我认知和行为立场","虏/男掌权环境下生育",-1,""),M("alliance","自我认知和行为立场","违背女权同盟","",[{id:"help-captive",label:"扶持和帮助虏，与虏合作扣1分",score:-1},{id:"no-alliance",label:"未体现同立场正面角色合作互助扣1分",score:-1}]),F("captive-ratio","关注和美化虏","女虏比低于2:1",-1,"由虏变女的可视为女，但需评估以虏为中心条例。"),F("captive-relation","关注和美化虏","承认与虏的正向关系",-1,"正面角色不与虏亲/虏友断绝关系，扣1分。"),F("strong-captive","关注和美化虏","强虏时刻",-1,"参与重要剧情，有重大迫害主角团行为却无相应惩罚，扣1分。"),F("weak-captive","关注和美化虏","弱虏时刻",-1,"美化虏的沾男、助男行为，大篇幅描写虏身不由己剧情、哭丧卖惨，扣1分。"),F("captive-centered","关注和美化虏","以虏为中心的的丑恶情节多于惩罚/反抗情节（或没有）",-1,""),F("male-ratio","关注和美化男","女男比低于9:1",-2,"感官上男性角色存在感过强的都可扣2分。"),M("male-relation","关注和美化男","承认与男性的正向关系","",[{id:"male-family",label:"承认亲情，如随父姓，扣2分",score:-2},{id:"male-positive-relation",label:"承认其它正向关系，如朋友、师生、同事间正向感情，扣2分",score:-2},{id:"help-men",label:"扶持和帮助男性扣2分",score:-2}]),M("beautify-men","关注和美化男","美化和观赏男性","",[{id:"beautify-men",label:"赋予男性才华、能力、品德等扣2分",score:-2},{id:"female-gaze",label:"女凝男、小糯夫等非批判描写扣2分",score:-2}]),C("male-highlight","关注和美化男","男性高光","取名用心/完整成长线、立体性格、参与重要剧情等，酌情扣2-3分。",[{label:"",score:0},{label:"",score:-2},{label:"",score:-3}])
+        ]}
+      ];
+      const attachedTo={"two-female-science":"reproduction","non-birth-kin":"reproduction","artificial-birth":"reproduction","no-period-long":"healthcare","diet":"daily-life","clothes":"daily-life","skirt":"daily-life","male-canon":"female-words","timely-revision":"female-words","female-specific-terms":"neutral-pronoun","neutral-pronoun-involve-male":"neutral-pronoun-for-male","flat-character":"creative-position","help-men":"male-relation","female-gaze":"beautify-men"};
+      for(const section of sections)for(const rule of section.rules)if(attachedTo[rule.id])rule.parent=attachedTo[rule.id];
+      const state={category:"as",finished:true,active:"reform",scores:{},remarks:{}};
+      const $=selector=>document.querySelector(selector);
+      const $$=selector=>[...document.querySelectorAll(selector)];
+      const esc=value=>String(value??"").replace(/[&<>\"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
+      const plainText=value=>String(value??"").replace(/<[^>]*>/g,"");
+      const scoreText=score=>score>0?`+${score}`:`${score}`;
+      const currentCategory=()=>categories.find(item=>item.id===state.category);
+      const rulePoints=rule=>rule.type==="multi"?rule.options.reduce((sum,option)=>sum+(state.scores[option.id]||0),0):(state.scores[rule.id]||0);
+      const sectionScore=section=>section.rules.reduce((sum,rule)=>sum+((!rule.applies||rule.applies.includes(state.category))?rulePoints(rule):0),0);
+      const totals=()=>{const base=currentCategory().base;const items=sections.reduce((sum,section)=>sum+sectionScore(section),0);const raw=base+items;return{base,items,raw,final:state.finished?raw:Math.min(raw,8),capped:!state.finished&&raw>8}};
+      function renderCategories(){$("#categories").innerHTML=categories.map(item=>`<button class="category ${item.id===state.category?"active":""}" type="button" role="radio" aria-checked="${item.id===state.category}" data-category="${item.id}"><span class="category-head"><strong>${item.name}</strong><b>${item.initial}</b></span><small>${item.description}</small></button>`).join("");$$('[data-category]').forEach(button=>button.addEventListener("click",()=>{state.category=button.dataset.category;renderCategories();renderRules();updateTotals()}))}
+      function renderTabs(){const current=sections.find(section=>section.id===state.active),major=current.major,general=sections.filter(section=>section.major==="general"),supplement=sections.find(section=>section.major==="supplement"),generalScore=general.reduce((sum,section)=>sum+sectionScore(section),0),supplementScore=sectionScore(supplement);$("#majorTabs").innerHTML=`<button class="major-tab ${major==="general"?"active":""}" type="button" data-major="general">总则<small>${scoreText(generalScore)}</small></button><button class="major-tab ${major==="supplement"?"active":""}" type="button" data-major="supplement">加则<small>${scoreText(supplementScore)}</small></button>`;$("#scoreTitle").textContent=major==="general"?"总则":"加则：性别战争";const visible=major==="general"?general:[supplement],tabs=$("#tabs");tabs.classList.toggle("single",major==="supplement");tabs.innerHTML=visible.map(section=>{const subtotal=sectionScore(section);return`<button class="tab ${section.id===state.active?"active":""}" type="button" data-section="${section.id}"><strong>${section.title}</strong><b class="${subtotal>0?"positive":subtotal<0?"negative":""}">${scoreText(subtotal)}</b></button>`}).join("");$$('[data-major]').forEach(button=>button.addEventListener("click",()=>{state.active=button.dataset.major==="general"?(state.active==="war"?"reform":state.active):"war";renderTabs();renderRules()}));$$('[data-section]').forEach(button=>button.addEventListener("click",()=>{state.active=button.dataset.section;renderTabs();renderRules()}))}
+      function ruleControl(rule,value){if(rule.type==="choice")return`<div class="choices" role="radiogroup" aria-label="${esc(rule.title)}评分">${rule.choices.map(choice=>`<button type="button" class="${value===choice.score?"active":""} ${choice.score>0?"is-positive":choice.score<0?"is-negative":"is-neutral"}" data-rule="${rule.id}" data-score="${choice.score}"><b class="${choice.score>0?"positive":choice.score<0?"negative":""}">${scoreText(choice.score)}</b><span>${choice.label}</span></button>`).join("")}</div>`;if(rule.type==="fixed")return`<label class="fixed ${rule.score>0?"fixed-positive":"fixed-negative"}"><input type="checkbox" data-fixed="${rule.id}" ${value===rule.score?"checked":""}><span class="box" aria-hidden="true">${value===rule.score?"✓":""}</span><b class="${rule.score>0?"positive":"negative"}">${scoreText(rule.score)}</b></label>`;if(rule.type==="multi")return`<div class="multi-options">${rule.options.map(option=>`<label class="multi-option ${option.score>0?"option-positive":"option-negative"}"><input type="checkbox" data-multi="${option.id}" ${state.scores[option.id]===option.score?"checked":""}><span class="box" aria-hidden="true">${state.scores[option.id]===option.score?"✓":""}</span><b class="${option.score>0?"positive":"negative"}">${scoreText(option.score)}</b><span>${option.label}</span></label>`).join("")}</div>`;return""}
+      function attachedRule(rule){const value=rulePoints(rule),fixed=rule.type==="fixed";return`<div class="attached-item ${value!==0?"selected":""} ${value>0?"attached-positive":value<0?"attached-negative":""}"${fixed?` data-attached-fixed="${rule.id}"`:""}><div class="attached-copy"><strong>${rule.title}</strong>${rule.description?`<small>${rule.description}</small>`:""}</div>${rule.type==="note"?"":`<div class="attached-control">${ruleControl(rule,value)}</div>`}</div>`}
+      function renderRules(){const section=sections.find(item=>item.id===state.active),visible=section.rules.filter(rule=>!rule.applies||rule.applies.includes(state.category)),roots=visible.filter(rule=>!rule.parent),groups=[...new Set(roots.map(rule=>rule.group))];$("#rules").innerHTML=groups.map(group=>`<section class="group"><h4>${group}</h4><div class="rule-list">${roots.filter(rule=>rule.group===group).map(rule=>{const value=rulePoints(rule),children=visible.filter(item=>item.parent===rule.id),rowClickable=section.major==="supplement"&&rule.type==="fixed";return`<article class="rule ${value!==0?"scored":""} ${value>0?"score-positive":value<0?"score-negative":""} ${rowClickable?"supplement-clickable":""}"${rowClickable?` data-row-fixed="${rule.id}"`:""}><div class="rule-copy"><div class="rule-title"><h5>${rule.title}</h5>${rule.type==="note"?'<span class="pill neutral">备注</span>':""}</div>${rule.description?`<p>${rule.description}</p>`:""}${ruleControl(rule,value)}${children.length?`<div class="attached-scores">${children.map(attachedRule).join("")}</div>`:""}</div><label class="remark"><span>备注</span><textarea data-remark="${rule.id}" rows="2">${esc(state.remarks[rule.id]||"")}</textarea></label></article>`}).join("")}</div></section>`).join("");$$('[data-rule]').forEach(button=>button.addEventListener("click",()=>{state.scores[button.dataset.rule]=Number(button.dataset.score);renderRules();updateTotals()}));$$('[data-fixed]').forEach(input=>input.addEventListener("change",()=>{const rule=visible.find(item=>item.id===input.dataset.fixed);state.scores[rule.id]=input.checked?rule.score:0;renderRules();updateTotals()}));$$('[data-row-fixed]').forEach(row=>row.addEventListener("click",event=>{if(event.target.closest("input,textarea,label,button"))return;const rule=visible.find(item=>item.id===row.dataset.rowFixed);state.scores[rule.id]=(state.scores[rule.id]||0)===rule.score?0:rule.score;renderRules();updateTotals()}));$$('[data-attached-fixed]').forEach(row=>row.addEventListener("click",event=>{if(event.target.closest("input,label,button"))return;const rule=visible.find(item=>item.id===row.dataset.attachedFixed);state.scores[rule.id]=(state.scores[rule.id]||0)===rule.score?0:rule.score;renderRules();updateTotals()}));$$('[data-multi]').forEach(input=>input.addEventListener("change",()=>{const option=visible.flatMap(rule=>rule.options||[]).find(item=>item.id===input.dataset.multi);state.scores[option.id]=input.checked?option.score:0;renderRules();updateTotals()}));$$('[data-remark]').forEach(area=>area.addEventListener("input",()=>{state.remarks[area.dataset.remark]=area.value}));const index=sections.findIndex(item=>item.id===state.active);$("#nextButton").textContent=index===sections.length-1?"保存最终评分图片":"下一部分";renderTabs()}
+      function updateTotals(){const t=totals(),general=sections.filter(section=>section.major==="general"),supplement=sections.find(section=>section.major==="supplement"),generalScore=general.reduce((sum,section)=>sum+sectionScore(section),0);$("#heroScore").textContent=t.final;$("#summaryScore").textContent=t.final;$("#mobileScore").textContent=t.final;$("#itemTotal").textContent=scoreText(t.items);$("#heroScoreNote").textContent=t.capped?"所有未完结文的分数上限为8分。":`分数 ${t.raw}`;$("#summaryRows").innerHTML=`<div><dt>${currentCategory().name}</dt><dd>${t.base}</dd></div><div><dt>总则</dt><dd>${scoreText(generalScore)}</dd></div>${general.map(section=>`<div class="subrow"><dt>${section.title}</dt><dd>${scoreText(sectionScore(section))}</dd></div>`).join("")}<div><dt>加则：性别战争</dt><dd>${scoreText(sectionScore(supplement))}</dd></div><div class="raw"><dt>分数</dt><dd>${t.raw}</dd></div>`;const cap=$("#capNote");cap.hidden=state.finished;cap.textContent="所有未完结文的分数上限为8分。";renderTabs()}
+      function openRules(){const modal=$("#ruleModal");modal.classList.add("open");modal.setAttribute("aria-hidden","false");setTimeout(()=>$("#acknowledge").focus(),0)}
+      function closeRules(){try{localStorage.setItem("kaituo-static-rules-read-v1","true")}catch(error){}const modal=$("#ruleModal");modal.classList.remove("open");modal.setAttribute("aria-hidden","true");$("#book").focus()}
+      function wrapText(ctx,text,maxWidth){
+        const lines=[];
+        const paragraphs=String(text??"").split(/\r?\n/);
+        for(const paragraph of paragraphs){
+          if(!paragraph){lines.push("");continue}
+          let current="";
+          for(const char of paragraph){
+            const next=current+char;
+            if(current&&ctx.measureText(next).width>maxWidth){lines.push(current);current=char}
+            else current=next;
+          }
+          if(current)lines.push(current);
         }
-        const recovered=recoverEditedRange(value,note);
-        if(recovered){
-          const currentQuote=value.slice(recovered.start,recovered.end);
-          return{root:original,start:recovered.start,end:recovered.end,score:recovered.score+1000,currentQuote,recovered:currentQuote!==(note.quote||'')};
-        }
+        return lines.length?lines:[""];
       }
-      const candidates=[];
-      for(const block of article.querySelectorAll('[data-comment-block-id]'))candidates.push(block);
-      let best=null;
-      for(const block of candidates){
-        const value=block.textContent||'';
-        const match=bestMatch(value,note.quote||'',note.start_offset,note.prefix||'',note.suffix||'');
-        if(!match)continue;
-        const score=match.score+(block===original?1000:0);
-        const end=match.index+(note.quote||'').length;
-        if(!best||score>best.score)best={root:block,start:match.index,end,score,currentQuote:value.slice(match.index,end),recovered:false};
-        if(score>=101000)break;
-      }
-      return best;
-    }
-    const start=Number(note.start_offset),end=Number(note.end_offset);
-    if(Number.isFinite(start)&&Number.isFinite(end)&&end>start)return{root:article,start,end,score:0};
-    return null;
-  }
-
-  function clearMarks(){
-    const old=[...article.querySelectorAll('.annotation-mark')];
-    for(let index=old.length-1;index>=0;index--)old[index].replaceWith(...old[index].childNodes);
-    article.normalize();
-  }
-
-  function wrapOffsets(root,start,end,id,note){
-    const segments=[];
-    let position=0;
-    for(const node of textNodes(root)){
-      const from=Math.max(0,start-position);
-      const to=Math.min(node.data.length,end-position);
-      if(from<to)segments.push([node,from,to]);
-      position+=node.data.length;
-    }
-    for(let index=segments.length-1;index>=0;index--){
-      let[node,from,to]=segments[index],part=node;
-      if(to<part.data.length)part.splitText(to);
-      if(from>0)part=part.splitText(from);
-      const mark=document.createElement('mark');
-      mark.className='annotation-mark';
-      mark.dataset.noteId=id;
-      mark.style.backgroundColor=note.color||'#ffe58f';
-      mark.title=(note.author_name||'\u533f\u540d')+'\uff1a'+(note.body||note.quote||'');
-      part.replaceWith(mark);
-      mark.append(part);
-    }
-    return segments.length>0;
-  }
-
-  function paint(){
-    clearMarks();
-    const ordered=[...notes.entries()].sort((a,b)=>Number(b[1].start_offset)-Number(a[1].start_offset));
-    for(const[id,note]of ordered){
-      try{
-        const anchor=resolveAnchor(note);
-        const label=list.querySelector('.annotation-card[data-note-id="'+CSS.escape(id)+'"] .annotation-selected');
-        if(label&&anchor?.currentQuote)label.textContent=anchor.currentQuote;
-        if(anchor?.parts){
-          for(const part of anchor.parts)wrapOffsets(part.root,part.start,part.end,id,note);
-        }else if(anchor){
-          wrapOffsets(anchor.root,anchor.start,anchor.end,id,note);
+      async function saveImage(){
+        const book=$("#book").value.trim();
+        if(!book){alert("请先填写书名，再保存评分图片。");$("#book").focus();return}
+        const bookDisplay=book.startsWith("《")&&book.endsWith("》")?book:`《${book}》`;
+        if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+        const chosen=[];
+        for(const section of sections){
+          for(const rule of section.rules){
+            if(rule.applies&&!rule.applies.includes(state.category))continue;
+            const note=(state.remarks[rule.id]||"").trim();
+            const parentRule=rule.parent?section.rules.find(item=>item.id===rule.parent):null;
+            if(rule.type==="multi"){
+              const selectedOptions=rule.options.map(option=>({option,score:state.scores[option.id]||0})).filter(item=>item.score!==0);
+              if(selectedOptions.length||note){
+                chosen.push({section:section.title,ruleKey:rule.id,parentKey:"",parentTitle:"",title:plainText(rule.title),score:0,note});
+                for(const {option,score} of selectedOptions){
+                  chosen.push({section:section.title,ruleKey:option.id,parentKey:rule.id,parentTitle:plainText(rule.title),title:plainText(option.label),score,note:""});
+                }
+              }
+            }else{
+              const score=state.scores[rule.id]||0;
+              if(score!==0||note)chosen.push({section:section.title,ruleKey:rule.id,parentKey:parentRule?.id||"",parentTitle:plainText(parentRule?.title||""),title:plainText(rule.title),score,note});
+            }
+          }
         }
-      }catch(error){console.warn('annotation anchor failed',id,error)}
-    }
-  }
-
-  function layout(){
-    const cards=[...list.querySelectorAll('.annotation-card')];
-    const anchored=[],orphaned=[];
-    for(const card of cards){
-      const marker=article.querySelector('[data-note-id="'+CSS.escape(card.dataset.noteId)+'"]');
-      if(marker)anchored.push({card,marker});else orphaned.push(card);
-    }
-    anchored.sort((a,b)=>a.marker.getBoundingClientRect().top-b.marker.getBoundingClientRect().top);
-    let bottom=article.getBoundingClientRect().top+scrollY;
-    for(const item of anchored){
-      item.card.classList.remove('annotation-orphan');
-      const top=Math.max(item.marker.getBoundingClientRect().top+scrollY,bottom);
-      item.card.style.top=top+'px';
-      bottom=top+item.card.offsetHeight+10;
-    }
-    bottom=Math.max(bottom,article.getBoundingClientRect().bottom+scrollY+12);
-    for(const card of orphaned){
-      card.classList.add('annotation-orphan');
-      const note=notes.get(card.dataset.noteId);
-      const label=card.querySelector('.annotation-selected');
-      if(label)label.textContent='\u26a0 \u539f\u6587\u5df2\u4fee\u6539\uff1a'+(note?.quote||'');
-      card.style.top=bottom+'px';
-      bottom+=card.offsetHeight+10;
-    }
-  }
-
-  function button(label,handler){
-    const result=document.createElement('button');
-    result.type='button';result.textContent=label;result.onclick=handler;
-    return result;
-  }
-
-  function currentAuthor(){
-    const value=author.value.trim();
-    if(value)localStorage.setItem('annotation-author',value);
-    return value||'\u533f\u540d';
-  }
-
-  function render(){
-    const ordered=[...notes.entries()].sort((a,b)=>new Date(a[1].created_at)-new Date(b[1].created_at));
-    count.textContent=ordered.length;
-    list.innerHTML='';
-    for(const[id,note]of ordered){
-      const noteReplies=[...replies.values()].filter(reply=>reply.comment_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
-      const card=document.createElement('div');
-      card.className='annotation-card'+(expanded.has(id)?'':' is-collapsed');
-      card.dataset.noteId=id;
-      card.style.borderLeftColor=note.color||'#e5bd45';
-      card.innerHTML='<div class="annotation-quote"><span class="annotation-selected"></span><span class="annotation-preview"></span></div><div></div><div class="annotation-meta"></div><div class="annotation-replies"></div><form class="annotation-reply"><input maxlength="500" placeholder="\u56de\u590d\u2026"><button>\u56de\u590d</button></form>';
-      const quote=card.children[0];
-      quote.dataset.replyCount=noteReplies.length;
-      quote.querySelector('.annotation-selected').textContent=note.quote||'';
-      quote.querySelector('.annotation-preview').textContent=note.body||'\uff08\u65e7\u6279\u6ce8\u672a\u4fdd\u5b58\u5185\u5bb9\uff09';
-      quote.onclick=()=>{
-        card.classList.toggle('is-collapsed');
-        card.classList.contains('is-collapsed')?expanded.delete(id):expanded.add(id);
-        requestAnimationFrame(layout);
-      };
-      card.children[1].textContent=note.body||'\uff08\u65e7\u6279\u6ce8\u672a\u4fdd\u5b58\u5185\u5bb9\uff09';
-      card.children[2].textContent=(note.author_name||'\u533f\u540d')+' \u00b7 '+new Date(note.created_at).toLocaleString();
-
-      for(const reply of noteReplies){
-        const item=document.createElement('div');
-        item.className='annotation-reply-item'+(reply.status==='hidden'?' is-hidden':'');
-        const content=document.createElement('div');
-        content.className='annotation-reply-content';
-        content.textContent=(reply.author_name||'\u533f\u540d')+'\uff1a'+reply.text+(reply.status==='hidden'?'\uff08\u5df2\u9690\u85cf\uff09':'');
-        item.append(content);
-        if(isAdmin||reply.author_id===me){
-          const controls=document.createElement('div');
-          controls.className='annotation-reply-admin';
-          if(isAdmin)controls.append(button(reply.status==='hidden'?'\u6062\u590d\u56de\u590d':'\u9690\u85cf\u56de\u590d',async()=>{
-            const result=await sb.from('replies').update({status:reply.status==='hidden'?'visible':'hidden'}).eq('id',reply.id);
-            result.error?alert('\u64cd\u4f5c\u5931\u8d25\uff1a'+result.error.message):load(true);
-          }));
-          controls.append(button('\u5220\u9664\u56de\u590d',async()=>{
-            if(!confirm('\u786e\u5b9a\u6c38\u4e45\u5220\u9664\u8fd9\u6761\u56de\u590d\uff1f'))return;
-            const result=await sb.from('replies').delete().eq('id',reply.id);
-            result.error?alert('\u5220\u9664\u5931\u8d25\uff1a'+result.error.message):load(true);
-          }));
-          item.append(controls);
+        const t=totals();
+        const width=1440,padding=72,contentWidth=width-padding*2,textX=96,scoreColumn=154,textMax=width-textX-padding-scoreColumn;
+        const headerHeight=176,headerScoreWidth=214,headerScoreX=width-padding-headerScoreWidth,brandMarkSize=96,bookX=padding+brandMarkSize+28;
+        const bookTextMax=headerScoreX-bookX-32;
+        const measureCanvas=document.createElement("canvas"),measureCtx=measureCanvas.getContext("2d");
+        let bookFontSize=54,bookLines=[];
+        while(true){
+          measureCtx.font=`700 ${bookFontSize}px Microsoft YaHei, sans-serif`;
+          bookLines=wrapText(measureCtx,bookDisplay,bookTextMax);
+          if(bookLines.length<=2||bookFontSize<=34)break;
+          bookFontSize-=2;
         }
-        card.children[3].append(item);
-      }
-
-      if(isAdmin||note.author_id===me){
-        if(isAdmin)card.children[2].append(' \u00b7 ',button(note.status==='hidden'?'\u6062\u590d':'\u9690\u85cf',async()=>{
-          const result=await sb.from('comments').update({status:note.status==='hidden'?'visible':'hidden'}).eq('id',id);
-          result.error?alert('\u64cd\u4f5c\u5931\u8d25\uff1a'+result.error.message):load(true);
+        const bookLineHeight=bookFontSize+12;
+        const metadata=[
+          {text:$("#author").value.trim()?`作者：${$("#author").value.trim()}`:"作者：未填写",kind:"plain"},
+          {text:$("#platform").value.trim()?`平台：${$("#platform").value.trim()}`:"平台：未填写",kind:"plain"},
+          {text:currentCategory().name,kind:state.category},
+          {text:state.finished?"已完结":"未完结",kind:state.finished?"finished":"unfinished"}
+        ];
+        const metadataGap=18,metadataColumnWidth=(contentWidth-metadataGap)/2;
+        measureCtx.font="500 27px Microsoft YaHei, sans-serif";
+        const metadataCells=metadata.map(item=>({...item,lines:wrapText(measureCtx,item.text,metadataColumnWidth-48)}));
+        const metadataRows=[];
+        for(let index=0;index<metadataCells.length;index+=2){
+          const cells=metadataCells.slice(index,index+2),lineCount=Math.max(...cells.map(cell=>cell.lines.length));
+          metadataRows.push({cells,height:Math.max(72,lineCount*38+28)});
+        }
+        const prepared=[];
+        let lastSection="",lastRuleKey="",lastParentKey="";
+        for(const item of chosen){
+          const sectionStart=item.section!==lastSection;
+          if(sectionStart){lastRuleKey="";lastParentKey=""}
+          const isChild=Boolean(item.parentKey),parentStart=isChild&&item.parentKey!==lastRuleKey&&item.parentKey!==lastParentKey;
+          measureCtx.font=isChild?"600 26px Microsoft YaHei, sans-serif":"600 30px Microsoft YaHei, sans-serif";
+          const titleLines=wrapText(measureCtx,item.title,textMax-(isChild?72:0));
+          measureCtx.font="500 26px Microsoft YaHei, sans-serif";
+          const noteLines=item.note?wrapText(measureCtx,`备注：${item.note}`,textMax-(isChild?96:24)):[];
+          const rowHeight=isChild
+            ?Math.max(76,20+titleLines.length*36+(noteLines.length?8+noteLines.length*38:0)+18)
+            :Math.max(92,28+titleLines.length*42+(noteLines.length?12+noteLines.length*38:0)+24);
+          prepared.push({...item,titleLines,noteLines,sectionStart,isChild,parentStart,rowHeight});
+          lastSection=item.section;
+          lastRuleKey=item.ruleKey;
+          lastParentKey=isChild?item.parentKey:"";
+        }
+        let bodyHeight=0;
+        for(const row of prepared){
+          if(row.sectionStart)bodyHeight+=64;
+          if(row.parentStart)bodyHeight+=46;
+          bodyHeight+=row.rowHeight+12;
+        }
+        const contentTop=headerHeight+38;
+        const metadataHeight=metadataRows.reduce((sum,row)=>sum+row.height,0)+(metadataRows.length-1)*14;
+        const capHeight=t.capped?42:0,scoreBandHeight=130;
+        const introHeight=contentTop+metadataHeight+28+scoreBandHeight+capHeight+(prepared.length?38:0);
+        const footerHeight=76,height=Math.max(820,introHeight+bodyHeight+48+footerHeight);
+        const canvas=document.createElement("canvas");
+        canvas.width=width;
+        canvas.height=height;
+        const ctx=canvas.getContext("2d");
+        const roundedRect=(x,y,w,h,r,fill,stroke="")=>{
+          const radius=Math.min(r,w/2,h/2);
+          ctx.beginPath();
+          ctx.moveTo(x+radius,y);
+          ctx.arcTo(x+w,y,x+w,y+h,radius);
+          ctx.arcTo(x+w,y+h,x,y+h,radius);
+          ctx.arcTo(x,y+h,x,y,radius);
+          ctx.arcTo(x,y,x+w,y,radius);
+          ctx.closePath();
+          if(fill){ctx.fillStyle=fill;ctx.fill()}
+          if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}
+        };
+        ctx.fillStyle="#edf4f1";
+        ctx.fillRect(0,0,width,height);
+        ctx.fillStyle="#19533c";
+        ctx.fillRect(0,0,width,headerHeight);
+        const brandMarkY=(headerHeight-brandMarkSize)/2;
+        const brandGradient=ctx.createLinearGradient(padding,brandMarkY,padding+brandMarkSize,brandMarkY+brandMarkSize);
+        brandGradient.addColorStop(0,"#123f2e");
+        brandGradient.addColorStop(1,"#2e8b67");
+        ctx.save();
+        ctx.shadowColor="rgba(4,29,19,.28)";
+        ctx.shadowBlur=18;
+        ctx.shadowOffsetY=7;
+        roundedRect(padding,brandMarkY,brandMarkSize,brandMarkSize,24,brandGradient);
+        ctx.restore();
+        ctx.fillStyle="#ffffff";
+        ctx.font="800 56px Microsoft YaHei, sans-serif";
+        ctx.textAlign="center";
+        ctx.fillText("妬",padding+brandMarkSize/2,headerHeight/2+20);
+        ctx.textAlign="left";
+        ctx.font=`700 ${bookFontSize}px Microsoft YaHei, sans-serif`;
+        const bookBlockHeight=bookLines.length*bookLineHeight,bookTop=(headerHeight-bookBlockHeight)/2;
+        bookLines.forEach((line,index)=>ctx.fillText(line,bookX,bookTop+bookFontSize+index*bookLineHeight));
+        roundedRect(headerScoreX,28,headerScoreWidth,120,22,"rgba(255,255,255,.10)","rgba(255,255,255,.18)");
+        ctx.fillStyle="#fff";
+        ctx.font="800 74px Arial";
+        const scoreWidth=ctx.measureText(String(t.final)).width;
+        ctx.fillText(String(t.final),width-96-scoreWidth,105);
+        ctx.font="500 22px Microsoft YaHei, sans-serif";
+        const finalLabel="分数",labelWidth=ctx.measureText(finalLabel).width;
+        ctx.fillStyle="#d9ece4";
+        ctx.fillText(finalLabel,width-96-labelWidth,136);
+        let y=contentTop;
+        ctx.font="500 27px Microsoft YaHei, sans-serif";
+        for(const row of metadataRows){
+          row.cells.forEach((cell,column)=>{
+            const x=padding+column*(metadataColumnWidth+metadataGap);
+            let fill="#ffffff",stroke="#d5e2dc",ink="#40544b";
+            if(cell.kind==="as"||cell.kind==="finished"){fill="#2e8b67";stroke="#2e8b67";ink="#ffffff"}
+            if(cell.kind==="half-as"){
+              const gradient=ctx.createLinearGradient(x,y,x+metadataColumnWidth,y+row.height);
+              gradient.addColorStop(0,"#2e8b67");
+              gradient.addColorStop(1,"#84bea6");
+              fill=gradient;stroke="#65a78b";ink="#ffffff";
+            }
+            if(cell.kind==="non-as"){fill="#d8dddb";stroke="#c7cecb";ink="#34443d"}
+            if(cell.kind==="unfinished"){fill="#c05638";stroke="#c05638";ink="#ffffff"}
+            roundedRect(x,y,metadataColumnWidth,row.height,16,fill,stroke);
+            ctx.fillStyle=ink;
+            cell.lines.forEach((line,lineIndex)=>ctx.fillText(line,x+24,y+38+lineIndex*38));
+          });
+          y+=row.height+14;
+        }
+        y-=14;
+        y+=28;
+        const scoreCards=sections.map(section=>({
+          label:section.major==="supplement"?`加则：${section.title}`:section.title,
+          value:scoreText(sectionScore(section))
         }));
-        card.children[2].append(' \u00b7 ',button('\u5220\u9664',async()=>{
-          if(!confirm('\u786e\u5b9a\u6c38\u4e45\u5220\u9664\u8fd9\u6761\u6279\u6ce8\u53ca\u5176\u56de\u590d\uff1f'))return;
-          const result=await sb.from('comments').delete().eq('id',id);
-          result.error?alert('\u5220\u9664\u5931\u8d25\uff1a'+result.error.message):load(true);
-        }));
+        const scoreGap=16,scoreCardWidth=(contentWidth-scoreGap*(scoreCards.length-1))/scoreCards.length;
+        scoreCards.forEach((card,index)=>{
+          const x=padding+index*(scoreCardWidth+scoreGap);
+          roundedRect(x,y,scoreCardWidth,scoreBandHeight,18,index<3?"#ffffff":"#e0eee8","#cadbd3");
+          ctx.fillStyle="#5a6e65";
+          ctx.font="600 22px Microsoft YaHei, sans-serif";
+          const labelLines=wrapText(ctx,card.label,scoreCardWidth-48).slice(0,2);
+          labelLines.forEach((line,lineIndex)=>ctx.fillText(line,x+24,y+32+lineIndex*27));
+          ctx.fillStyle="#19533c";
+          ctx.font="800 38px Arial, Microsoft YaHei, sans-serif";
+          ctx.fillText(card.value,x+24,y+108);
+        });
+        y+=scoreBandHeight;
+        if(t.capped){
+          ctx.fillStyle="#5a6e65";
+          ctx.font="500 23px Microsoft YaHei, sans-serif";
+          ctx.fillText("所有未完结文的分数上限为8分。",padding,y+30);
+          y+=capHeight;
+        }
+        if(prepared.length)y+=38;
+        for(const row of prepared){
+          if(row.sectionStart){
+            roundedRect(padding,y,contentWidth,50,14,"#dcece5");
+            ctx.fillStyle="#246c50";
+            ctx.font="700 28px Microsoft YaHei, sans-serif";
+            ctx.fillText(row.section,padding+24,y+34);
+            y+=64;
+          }
+          if(row.parentStart){
+            roundedRect(padding+34,y,contentWidth-34,38,12,"#e7f1ec","#d2e2da");
+            ctx.fillStyle="#2d7357";
+            ctx.font="600 22px Microsoft YaHei, sans-serif";
+            ctx.fillText(row.parentTitle,padding+54,y+27);
+            y+=46;
+          }
+          const rowX=row.isChild?padding+52:padding,rowWidth=contentWidth-(row.isChild?52:0);
+          roundedRect(rowX,y,rowWidth,row.rowHeight,row.isChild?13:16,row.isChild?"#f8fbf9":"#ffffff","#d5e2dc");
+          const titleStart=y+(row.isChild?40:48),titleX=rowX+(row.isChild?22:24);
+          ctx.fillStyle="#1e2924";
+          ctx.font=row.isChild?"600 26px Microsoft YaHei, sans-serif":"600 30px Microsoft YaHei, sans-serif";
+          let textY=titleStart;
+          for(const line of row.titleLines){ctx.fillText(line,titleX,textY);textY+=row.isChild?36:42}
+          const point=row.score===0?"备注":scoreText(row.score);
+          const pointFill=row.score>0?"#e0f0e8":row.score<0?"#f7e7e1":"#eef2f0";
+          const pointInk=row.score>0?"#247150":row.score<0?"#a8462d":"#5a6e65";
+          const pointWidth=row.isChild?88:100,pointHeight=row.isChild?44:52,pointX=width-padding-24-pointWidth;
+          roundedRect(pointX,y+(row.isChild?14:20),pointWidth,pointHeight,pointHeight/2,pointFill);
+          ctx.fillStyle=pointInk;
+          ctx.font=row.isChild?"800 26px Arial, Microsoft YaHei, sans-serif":"800 30px Arial, Microsoft YaHei, sans-serif";
+          ctx.textAlign="center";
+          ctx.fillText(point,pointX+pointWidth/2,y+(row.isChild?45:56));
+          ctx.textAlign="left";
+          if(row.noteLines.length){
+            ctx.fillStyle="#40544b";
+            ctx.font="500 26px Microsoft YaHei, sans-serif";
+            textY+=2;
+            for(const line of row.noteLines){ctx.fillText(line,titleX+(row.isChild?10:16),textY);textY+=38}
+          }
+          y+=row.rowHeight+12;
+        }
+        ctx.fillStyle="#19533c";
+        ctx.fillRect(0,height-footerHeight,width,footerHeight);
+        ctx.fillStyle="#d9ece4";
+        ctx.font="400 22px Microsoft YaHei, sans-serif";
+        ctx.fillText("来自豆瓣·世界开妬者联盟",padding,height-28);
+        ctx.textAlign="right";
+        ctx.fillText(new Date().toLocaleDateString("zh-CN"),width-padding,height-28);
+        ctx.textAlign="left";
+        canvas.toBlob(blob=>{
+          if(!blob)return;
+          const url=URL.createObjectURL(blob),link=document.createElement("a");
+          link.href=url;
+          link.download=`${book.replace(/[\\/:*?"<>|]/g,"-")}-妬组AS文打分表.png`;
+          link.click();
+          setTimeout(()=>URL.revokeObjectURL(url),1000);
+        },"image/png");
       }
-
-      card.querySelector('form').onsubmit=async event=>{
-        event.preventDefault();
-        const input=event.currentTarget.querySelector('input'),value=input.value.trim();
-        if(!value)return;
-        const result=await sb.from('replies').insert({comment_id:id,author_name:currentAuthor(),text:value});
-        if(result.error){alert('\u56de\u590d\u5931\u8d25\uff1a'+result.error.message);return}
-        input.value='';load(true);
-      };
-      list.append(card);
-    }
-    paint();layout();updateMigrationButton();
-  }
-
-  function isEditing(){
-    const active=document.activeElement;
-    return dialog.open||Boolean(active?.closest?.('.annotation-reply')&&active.value);
-  }
-
-  async function load(force=false){
-    if(!force&&isEditing())return;
-    let query=sb.from('comments').select('*').eq('article_id',article.id).order('created_at');
-    if(!isAdmin)query=query.eq('status','visible');
-    const commentsResult=await query;
-    if(commentsResult.error){console.error(commentsResult.error);return}
-    const repliesResult=await sb.from('replies').select('*').order('created_at');
-    if(!force&&isEditing())return;
-    notes=new Map((commentsResult.data||[]).map(note=>[note.id,note]));
-    replies=new Map((repliesResult.data||[]).filter(reply=>notes.has(reply.comment_id)&&(isAdmin||reply.status==='visible')).map(reply=>[reply.id,reply]));
-    render();
-  }
-
-  function updateMigrationButton(){
-    const total=[...notes.values()].filter(note=>Number(note.anchor_version||1)<2).length;
-    migrate.textContent='\u8fc1\u79fb\u65e7\u6279\u6ce8 ('+total+')';
-    migrate.style.display=isAdmin&&showAdmin&&total?'block':'none';
-  }
-
-  async function migrateLegacy(){
-    if(!isAdmin)return;
-    const legacy=[...notes.values()].filter(note=>Number(note.anchor_version||1)<2);
-    if(!legacy.length){alert('\u6ca1\u6709\u9700\u8981\u8fc1\u79fb\u7684\u65e7\u6279\u6ce8\u3002');return}
-    if(!confirm('\u5c06\u5f00\u59cb\u8fc1\u79fb '+legacy.length+' \u6761\u65e7\u6279\u6ce8\uff0c\u8fc1\u79fb\u524d\u8bf7\u786e\u8ba4\u5df2\u5907\u4efd\u6570\u636e\u3002\u662f\u5426\u7ee7\u7eed\uff1f'))return;
-    clearMarks();
-    let success=0,failed=0;
-    for(const note of legacy){
-      const boundary=locate(article,Number(note.start_offset));
-      const block=boundary?blockFor(boundary[0]):null;
-      const quote=note.quote||'';
-      if(!block||!quote){failed++;continue}
-      const approximate=offsetWithin(block,boundary[0],boundary[1]);
-      const match=bestMatch(block.textContent||'',quote,approximate,'','');
-      if(!match){failed++;continue}
-      const value=block.textContent||'',start=match.index,end=start+quote.length;
-      const result=await sb.from('comments').update({
-        anchor_version:2,
-        block_id:block.dataset.commentBlockId,
-        start_offset:start,
-        end_offset:end,
-        prefix:value.slice(Math.max(0,start-30),start),
-        suffix:value.slice(end,end+30)
-      }).eq('id',note.id);
-      result.error?failed++:success++;
-    }
-    alert('\u8fc1\u79fb\u5b8c\u6210\u3002\u6210\u529f\uff1a'+success+' \u6761\uff1b\u9700\u4eba\u5de5\u68c0\u67e5\uff1a'+failed+' \u6761\u3002');
-    await load(true);
-  }
-
-  async function session(){
-    let current=(await sb.auth.getSession()).data.session;
-    if(!current)current=(await sb.auth.signInAnonymously()).data.session;
-    me=current?.user?.id;
-    const profile=me?await sb.from('profiles').select('role').eq('id',me).maybeSingle():null;
-    isAdmin=profile?.data?.role==='admin';
-    admin.textContent=isAdmin?'\u7ba1\u7406\u5458\u5df2\u767b\u5f55':'\u7ba1\u7406\u5458\u767b\u5f55';
-    await load(true);
-  }
-
-  document.addEventListener('selectionchange',()=>{
-    const selection=getSelection();
-    if(!selection.rangeCount||selection.isCollapsed||!article.contains(selection.anchorNode)||!article.contains(selection.focusNode)){add.style.display='none';return}
-    const range=selection.getRangeAt(0),raw=selection.toString();
-    if(!raw.trim()){add.style.display='none';return}
-    const globalStart=globalOffset(range.startContainer,range.startOffset);
-    const globalEnd=globalOffset(range.endContainer,range.endOffset);
-    const startBlock=blockFor(range.startContainer),endBlock=blockFor(range.endContainer);
-    pending={anchor_version:1,block_id:article.id,start:globalStart,end:globalEnd,quote:raw.trim(),prefix:'',suffix:''};
-    if(startBlock&&startBlock===endBlock){
-      const start=offsetWithin(startBlock,range.startContainer,range.startOffset);
-      const end=offsetWithin(startBlock,range.endContainer,range.endOffset);
-      const value=startBlock.textContent||'';
-      const quote=value.slice(start,end);
-      if(quote)pending={anchor_version:2,block_id:startBlock.dataset.commentBlockId,start,end,quote,prefix:value.slice(Math.max(0,start-30),start),suffix:value.slice(end,end+30)};
-    }else if(startBlock&&endBlock){
-      const blocks=[...article.querySelectorAll('[data-comment-block-id]')];
-      const startIndex=blocks.indexOf(startBlock),endIndex=blocks.indexOf(endBlock);
-      if(startIndex>=0&&endIndex>startIndex){
-        const start=offsetWithin(startBlock,range.startContainer,range.startOffset);
-        const end=offsetWithin(endBlock,range.endContainer,range.endOffset);
-        const selectedBlocks=blocks.slice(startIndex,endIndex+1);
-        const quote=selectedBlocks.map((block,index)=>{
-          const value=block.textContent||'';
-          if(index===0)return value.slice(start);
-          if(index===selectedBlocks.length-1)return value.slice(0,end);
-          return value;
-        }).join('');
-        const startLength=(startBlock.textContent||'').length-start,endLength=end;
-        if(quote)pending={anchor_version:3,block_id:[startBlock.dataset.commentBlockId,endBlock.dataset.commentBlockId,startLength,endLength].join('|'),start,end,quote,prefix:(startBlock.textContent||'').slice(Math.max(0,start-30),start),suffix:(endBlock.textContent||'').slice(end,end+30)};
-      }
-    }
-    const box=range.getBoundingClientRect();
-    add.style.left=Math.max(8,box.left+box.width/2-55)+'px';
-    add.style.top=Math.max(8,box.top-46)+'px';
-    add.style.display='block';
-  });
-
-  add.onclick=()=>{
-    if(!pending)return;
-    selected.textContent='\u201c'+pending.quote+'\u201d';
-    dialog.showModal();add.style.display='none';
-  };
-
-  form.onsubmit=async event=>{
-    event.preventDefault();
-    if(!pending)return;
-    const value=text.value.trim();
-    if(!value)return;
-    const result=await sb.from('comments').insert({
-      article_id:article.id,
-      anchor_version:pending.anchor_version,
-      block_id:pending.block_id,
-      start_offset:pending.start,
-      end_offset:pending.end,
-      quote:pending.quote,
-      body:value,
-      prefix:pending.prefix,
-      suffix:pending.suffix,
-      color:color.value,
-      author_name:currentAuthor()
-    });
-    if(result.error){alert('\u53d1\u5e03\u5931\u8d25\uff1a'+result.error.message);return}
-    dialog.close();text.value='';pending=null;getSelection().removeAllRanges();load(true);
-  };
-
-  article.addEventListener('click',event=>{
-    const mark=event.target.closest('.annotation-mark');
-    if(!mark)return;
-    const id=mark.dataset.noteId,card=list.querySelector('[data-note-id="'+CSS.escape(id)+'"]');
-    if(card){expanded.add(id);card.classList.remove('is-collapsed');requestAnimationFrame(layout)}
-  });
-
-  admin.onclick=async()=>{
-    const email=prompt('\u8f93\u5165\u7ba1\u7406\u5458\u90ae\u7bb1\uff0c\u7cfb\u7edf\u5c06\u53d1\u9001\u767b\u5f55\u94fe\u63a5\uff1a');
-    if(!email)return;
-    const result=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
-    alert(result.error?'\u53d1\u9001\u5931\u8d25\uff1a'+result.error.message:'\u767b\u5f55\u94fe\u63a5\u5df2\u53d1\u9001\u5230\u90ae\u7bb1');
-  };
-  migrate.onclick=migrateLegacy;
-
-  document.addEventListener('click',event=>{
-    if(event.target.closest?.('.annotation-card,.annotation-mark,#annotationAdd,#annotationDialog')||event.target===admin||event.target===migrate)return;
-    if(!expanded.size)return;
-    expanded.clear();list.querySelectorAll('.annotation-card').forEach(card=>card.classList.add('is-collapsed'));requestAnimationFrame(layout);
-  });
-
-  addEventListener('resize',layout);
-  session();
-  setInterval(()=>load(false),10000);
-})();
-</script>
-<script>
-(()=>{if(new URLSearchParams(location.search).get('admin')==='1')return;const buttons=[...document.querySelectorAll('button')];const adminButton=buttons.find(button=>button.textContent.trim()==='管理员登录'||button.textContent.trim()==='管理员已登录');if(adminButton)adminButton.style.display='none'})();
-</script>
-<style>.annotation-dialog select{width:100%;margin-top:5px;padding:8px;border:1px solid #ccc;border-radius:8px}.annotation-replies{margin-top:8px;border-top:1px solid #eee;padding-top:5px}.annotation-reply-item{font-size:12px;padding:5px 0;border-bottom:1px solid #eee}.annotation-reply-item.is-hidden{color:#999;background:#f5f5f5;border-radius:5px;padding:4px 6px}.annotation-reply-admin{display:flex!important;align-items:center;gap:8px;margin-top:3px}.annotation-reply-admin button{display:inline-block!important;border:0!important;background:none!important;color:#666!important;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px 0!important}.annotation-reply{display:flex;gap:5px;margin-top:8px}.annotation-reply input{min-width:0;flex:1;padding:5px;border:1px solid #ccc;border-radius:5px}.annotation-reply button,.annotation-delete{border:0;background:none;color:#666;text-decoration:underline;cursor:pointer;font-size:12px;padding:2px}</style>
-<style>.annotation-card.is-collapsed{width:auto;max-width:170px;padding:4px 8px;border-radius:999px;box-shadow:0 2px 7px #0002}.annotation-card.is-collapsed .annotation-quote{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.annotation-card.is-collapsed>div:not(.annotation-quote),.annotation-card.is-collapsed .annotation-reply{display:none}.annotation-card:not(.is-collapsed) .annotation-quote{cursor:pointer;font-size:12px;margin-bottom:5px}.annotation-card:not(.is-collapsed) .annotation-quote::before{content:'💬 ';}.annotation-card.is-collapsed .annotation-selected{display:none}.annotation-card:not(.is-collapsed) .annotation-preview{display:none}.annotation-preview{color:#555}.annotation-selected{color:#777}</style>
-<script>
-document.querySelectorAll('.page-body > table.simple-table').forEach((table) => {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'table-scroll';
-  table.parentNode.insertBefore(wrapper, table);
-  wrapper.appendChild(table);
-});
-</script>
-<style id="annotation-mobile-behavior">
-.annotation-card .annotation-quote::before {
-  content: '💬 ' attr(data-reply-count) ' · ' !important;
-}
-@media (max-width: 720px) {
-  .annotation-panel { pointer-events: none; }
-  .annotation-card { pointer-events: auto; }
-  .annotation-card.is-collapsed {
-    width: 54px !important;
-    max-width: 54px !important;
-    min-height: 34px;
-    padding: 5px 7px;
-    opacity: .35;
-    border-radius: 999px;
-  }
-  .annotation-card.is-collapsed .annotation-quote {
-    width: 40px;
-    max-width: 40px;
-    font-size: 0;
-    overflow: visible;
-    text-align: center;
-  }
-  .annotation-card.is-collapsed .annotation-quote::before {
-    content: '💬 ' attr(data-reply-count) !important;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-  .annotation-card:not(.is-collapsed) {
-    width: min(260px, calc(100vw - 28px));
-    max-width: min(260px, calc(100vw - 28px));
-    opacity: 1;
-  }
-}
-</style>
+      $("#finished").addEventListener("click",()=>{state.finished=true;$("#finished").classList.add("active");$("#unfinished").classList.remove("active");updateTotals()});$("#unfinished").addEventListener("click",()=>{state.finished=false;$("#unfinished").classList.add("active");$("#finished").classList.remove("active");updateTotals()});$("#resetButton").addEventListener("click",()=>{if(!confirm("确定要清空当前作品信息、所有选择和备注吗？"))return;$("#book").value="";$("#author").value="";$("#platform").value="";state.category="as";state.finished=true;state.active="reform";state.scores={};state.remarks={};$("#finished").classList.add("active");$("#unfinished").classList.remove("active");renderCategories();renderRules();updateTotals();scrollTo({top:0,behavior:"smooth"})});$("#rulesButton").addEventListener("click",openRules);$$(".open-rules").forEach(button=>button.addEventListener("click",openRules));$("#acknowledge").addEventListener("click",closeRules);$$(".save-button").forEach(button=>button.addEventListener("click",saveImage));$("#nextButton").addEventListener("click",()=>{const index=sections.findIndex(section=>section.id===state.active);if(index===sections.length-1){saveImage();return}state.active=sections[index+1].id;renderTabs();renderRules();$("#tabs").scrollIntoView({behavior:"smooth",block:"start"})});
+      const syncWarDefinition=()=>{$("#warDefinition").hidden=state.active!=="war"};
+      new MutationObserver(syncWarDefinition).observe($("#tabs"),{childList:true});
+      syncWarDefinition();renderCategories();renderRules();updateTotals();try{if(localStorage.getItem("kaituo-static-rules-read-v1")){$("#ruleModal").classList.remove("open");$("#ruleModal").setAttribute("aria-hidden","true")}}catch(error){}
+    })();
+  </script>
 </body>
 </html>
