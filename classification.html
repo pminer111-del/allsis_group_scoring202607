@@ -1275,7 +1275,7 @@ article.page { white-space: normal; }
 
   function showMissedAnnotations(items){
     const container=missedDialog.querySelector('.annotation-missed-list');
-    missedDialog.querySelector('.annotation-missed-summary').textContent='你离开后有 '+items.length+' 条与你相关的新内容。点击可查看对应批注。';
+    missedDialog.querySelector('.annotation-missed-summary').textContent='当前页面在你离开后新增了 '+items.length+' 条批注或回复。点击可查看对应位置。';
     container.innerHTML='';
     for(const item of items){
       const row=document.createElement('button');
@@ -1303,21 +1303,15 @@ article.page { white-space: normal; }
     const since=Date.parse(lastSeen);
     if(!Number.isFinite(since)){writeLastSeen(checkedAt);return}
     const notified=readNotifiedIds();
-    const ownedCommentIds=new Set([...notes.values()].filter(note=>note.author_id===me).map(note=>note.id));
-    const participatedCommentIds=new Set([...replies.values()].filter(reply=>reply.author_id===me).map(reply=>reply.comment_id));
-    const relatedCommentIds=new Set([...ownedCommentIds,...participatedCommentIds]);
     const items=[];
 
-    if(isAdmin){
-      for(const note of notes.values()){
-        const key='comment:'+note.id;
-        if(note.author_id!==me&&Date.parse(note.created_at)>since&&!notified.has(key))items.push({key,kind:'comment',noteId:note.id,author:note.author_name,content:note.body||note.quote||'',quote:note.quote,created_at:note.created_at});
-      }
+    for(const note of notes.values()){
+      const key='comment:'+note.id;
+      if(Date.parse(note.created_at)>since&&!notified.has(key))items.push({key,kind:'comment',noteId:note.id,author:note.author_name,content:note.body||note.quote||'',quote:note.quote,created_at:note.created_at});
     }
     for(const reply of replies.values()){
       const key='reply:'+reply.id,note=notes.get(reply.comment_id);
-      const relevant=isAdmin||relatedCommentIds.has(reply.comment_id);
-      if(relevant&&reply.author_id!==me&&Date.parse(reply.created_at)>since&&!notified.has(key)&&note)items.push({key,kind:'reply',noteId:reply.comment_id,author:reply.author_name,content:reply.text||'',quote:note.quote,created_at:reply.created_at});
+      if(Date.parse(reply.created_at)>since&&!notified.has(key)&&note)items.push({key,kind:'reply',noteId:reply.comment_id,author:reply.author_name,content:reply.text||'',quote:note.quote,created_at:reply.created_at});
     }
 
     items.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
