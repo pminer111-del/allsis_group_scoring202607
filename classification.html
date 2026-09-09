@@ -899,7 +899,7 @@ article.page { white-space: normal; }
 <p data-comment-block-id="word-added-0001"><strong>女本位作品：</strong>女本位作品即女权立场作品。要求作者立场为rf，作品以刻画女性形象，描绘女性故事为目的，由女性是作品唯一性（第一性）视角展开。角色无正反派概念，只有女角色和虜角色，（如有）男角色则只作陪衬物。</p>
 <h1 data-comment-block-id="body-0004">女权立场作品</h1>
 <p data-comment-block-id="word-added-0003"><strong>作者立场rf，其作品符合女本位作品定义且不违反下述底线可称为女权立场作品。</strong></p>
-<p class="bottom-line" data-comment-block-id="body-0015">底线要求：作者作品反性缘，反女权商业化，无忤女词，女虏比高于2：1，无印象深刻的男角色，性战结局排男排虜。</p>
+<p class="bottom-line" data-comment-block-id="body-0015">文字类底线要求：作者作品反性缘，反女权商业化，无忤女词，女虏比高于2：1，无印象深刻的男角色，性战结局排男排虜。<br>图画类底线要求：作者作品反性缘，反女权商业化，图画中女需寸头，禁服美帅役，禁弱化物化性化类姿势，图画如有男，需为尸体或溃败状姿势，禁宣扬虜男威胁性的图画，剧情类参照文字类底线要求。</p>
 <h3 data-comment-block-id="body-0005">姃宣类作品：</h3>
 <p data-comment-block-id="body-0006">以宣传、说明、记录女权理念、历史、理论为目的，故事人物服务于女权政治宣传。</p>
 <p data-comment-block-id="word-added-0004">注:此类作品不由创造者、观读者自领标签，作品分类取决于立场，理念符合女权，宣传效果。</p>
@@ -938,8 +938,14 @@ article.page { white-space: normal; }
   const selected=document.querySelector('#annotationSelection');
   const sb=window.supabase.createClient('https://nsgiklzuwvfquobkqqsy.supabase.co','sb_publishable_4qHXQE8ZQiMAv7hkod8eIw_AFEvjZjH');
   const showAdmin=new URLSearchParams(location.search).get('admin')==='1';
-  let pending=null,me=null,isAdmin=false,notes=new Map(),replies=new Map(),expanded=new Set();
+  let pending=null,me=null,isAdmin=false,notes=new Map(),replies=new Map(),expanded=new Set(),missedCheckUser=null;
   author.value=localStorage.getItem('annotation-author')||'';
+
+  const missedDialog=document.createElement('dialog');
+  missedDialog.className='annotation-dialog annotation-missed-dialog';
+  missedDialog.innerHTML='<h3>离开期间的新批注</h3><p class="annotation-missed-summary"></p><div class="annotation-missed-list"></div><div class="annotation-actions"><button type="button">知道了</button></div>';
+  document.body.append(missedDialog);
+  missedDialog.querySelector('button').onclick=()=>missedDialog.close();
 
   const admin=document.createElement('button');
   admin.type='button';
@@ -955,7 +961,7 @@ article.page { white-space: normal; }
   document.body.append(migrate);
 
   const anchorStyle=document.createElement('style');
-  anchorStyle.textContent='.annotation-card.annotation-orphan{border-left-color:#999!important;background:#fafafa}.annotation-card.annotation-orphan .annotation-selected{color:#a34b00}';
+  anchorStyle.textContent='.annotation-card.annotation-orphan{border-left-color:#999!important;background:#fafafa}.annotation-card.annotation-orphan .annotation-selected{color:#a34b00}.annotation-missed-dialog{max-height:min(620px,calc(100vh - 32px));overflow:auto}.annotation-missed-summary{color:#666;margin:.5rem 0 1rem}.annotation-missed-list{display:grid;gap:8px}.annotation-missed-item{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#37352f;text-align:left;cursor:pointer;font:14px/1.5 sans-serif}.annotation-missed-item:hover,.annotation-missed-item:focus-visible{border-color:#b89022;background:#fffbea}.annotation-missed-item strong{display:block;margin-bottom:3px}.annotation-missed-item small{display:block;color:#777;margin-top:3px}';
   document.head.append(anchorStyle);
 
   function textNodes(root){
@@ -1247,6 +1253,80 @@ article.page { white-space: normal; }
     return value||'\u533f\u540d';
   }
 
+  function missedStorageKey(type){return 'annotation-'+type+':'+article.id+':'+me}
+
+  function readNotifiedIds(){
+    try{return new Set(JSON.parse(localStorage.getItem(missedStorageKey('notified'))||'[]'))}
+    catch(error){return new Set()}
+  }
+
+  function writeLastSeen(value=new Date().toISOString()){
+    if(!me)return;
+    try{localStorage.setItem(missedStorageKey('last-seen'),value)}catch(error){console.warn('could not save annotation activity',error)}
+  }
+
+  function openAnnotationThread(noteId){
+    const card=list.querySelector('.annotation-card[data-note-id="'+CSS.escape(noteId)+'"]');
+    if(!card)return;
+    expanded.add(noteId);
+    card.classList.remove('is-collapsed');
+    requestAnimationFrame(()=>{layout();card.scrollIntoView({behavior:'smooth',block:'center'})});
+  }
+
+  function showMissedAnnotations(items){
+    const container=missedDialog.querySelector('.annotation-missed-list');
+    missedDialog.querySelector('.annotation-missed-summary').textContent='你离开后有 '+items.length+' 条与你相关的新内容。点击可查看对应批注。';
+    container.innerHTML='';
+    for(const item of items){
+      const row=document.createElement('button');
+      row.type='button';
+      row.className='annotation-missed-item';
+      const title=document.createElement('strong');
+      title.textContent=item.kind==='comment'?'新批注':'新回复';
+      const content=document.createElement('span');
+      content.textContent=(item.author||'匿名')+'：'+item.content;
+      const meta=document.createElement('small');
+      meta.textContent='原文：'+(item.quote||'')+' · '+new Date(item.created_at).toLocaleString();
+      row.append(title,content,meta);
+      row.onclick=()=>{missedDialog.close();openAnnotationThread(item.noteId)};
+      container.append(row);
+    }
+    missedDialog.showModal();
+  }
+
+  function checkMissedAnnotations(checkedAt){
+    if(!me||missedCheckUser===me)return;
+    missedCheckUser=me;
+    let lastSeen='';
+    try{lastSeen=localStorage.getItem(missedStorageKey('last-seen'))||''}catch(error){}
+    if(!lastSeen){writeLastSeen(checkedAt);return}
+    const since=Date.parse(lastSeen);
+    if(!Number.isFinite(since)){writeLastSeen(checkedAt);return}
+    const notified=readNotifiedIds();
+    const ownedCommentIds=new Set([...notes.values()].filter(note=>note.author_id===me).map(note=>note.id));
+    const participatedCommentIds=new Set([...replies.values()].filter(reply=>reply.author_id===me).map(reply=>reply.comment_id));
+    const relatedCommentIds=new Set([...ownedCommentIds,...participatedCommentIds]);
+    const items=[];
+
+    if(isAdmin){
+      for(const note of notes.values()){
+        const key='comment:'+note.id;
+        if(note.author_id!==me&&Date.parse(note.created_at)>since&&!notified.has(key))items.push({key,kind:'comment',noteId:note.id,author:note.author_name,content:note.body||note.quote||'',quote:note.quote,created_at:note.created_at});
+      }
+    }
+    for(const reply of replies.values()){
+      const key='reply:'+reply.id,note=notes.get(reply.comment_id);
+      const relevant=isAdmin||relatedCommentIds.has(reply.comment_id);
+      if(relevant&&reply.author_id!==me&&Date.parse(reply.created_at)>since&&!notified.has(key)&&note)items.push({key,kind:'reply',noteId:reply.comment_id,author:reply.author_name,content:reply.text||'',quote:note.quote,created_at:reply.created_at});
+    }
+
+    items.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    for(const item of items)notified.add(item.key);
+    try{localStorage.setItem(missedStorageKey('notified'),JSON.stringify([...notified].slice(-300)))}catch(error){}
+    writeLastSeen(checkedAt);
+    if(items.length)showMissedAnnotations(items);
+  }
+
   function render(){
     const ordered=[...notes.entries()].sort((a,b)=>new Date(a[1].created_at)-new Date(b[1].created_at));
     count.textContent=ordered.length;
@@ -1329,12 +1409,15 @@ article.page { white-space: normal; }
     let query=sb.from('comments').select('*').eq('article_id',article.id).order('created_at');
     if(!isAdmin)query=query.eq('status','visible');
     const commentsResult=await query;
-    if(commentsResult.error){console.error(commentsResult.error);return}
+    if(commentsResult.error){console.error(commentsResult.error);return false}
     const repliesResult=await sb.from('replies').select('*').order('created_at');
+    if(repliesResult.error){console.error(repliesResult.error);return false}
     if(!force&&isEditing())return;
-    notes=new Map((commentsResult.data||[]).map(note=>[note.id,note]));
+    const incoming=commentsResult.data||[];
+    notes=new Map(incoming.map(note=>[note.id,note]));
     replies=new Map((repliesResult.data||[]).filter(reply=>notes.has(reply.comment_id)&&(isAdmin||reply.status==='visible')).map(reply=>[reply.id,reply]));
     render();
+    return true;
   }
 
   function updateMigrationButton(){
@@ -1374,13 +1457,15 @@ article.page { white-space: normal; }
   }
 
   async function session(){
+    const checkedAt=new Date().toISOString();
     let current=(await sb.auth.getSession()).data.session;
     if(!current)current=(await sb.auth.signInAnonymously()).data.session;
     me=current?.user?.id;
     const profile=me?await sb.from('profiles').select('role').eq('id',me).maybeSingle():null;
     isAdmin=profile?.data?.role==='admin';
     admin.textContent=isAdmin?'\u7ba1\u7406\u5458\u5df2\u767b\u5f55':'\u7ba1\u7406\u5458\u767b\u5f55';
-    await load(true);
+    const loaded=await load(true);
+    if(loaded)checkMissedAnnotations(checkedAt);
   }
 
   document.addEventListener('selectionchange',()=>{
@@ -1465,11 +1550,13 @@ article.page { white-space: normal; }
   migrate.onclick=migrateLegacy;
 
   document.addEventListener('click',event=>{
-    if(event.target.closest?.('.annotation-card,.annotation-mark,#annotationAdd,#annotationDialog')||event.target===admin||event.target===migrate)return;
+    if(event.target.closest?.('.annotation-card,.annotation-mark,#annotationAdd,#annotationDialog,.annotation-missed-dialog')||event.target===admin||event.target===migrate)return;
     if(!expanded.size)return;
     expanded.clear();list.querySelectorAll('.annotation-card').forEach(card=>card.classList.add('is-collapsed'));requestAnimationFrame(layout);
   });
 
+  addEventListener('pagehide',()=>writeLastSeen());
+  addEventListener('pageshow',event=>{if(event.persisted){missedCheckUser=null;session()}});
   addEventListener('resize',layout);
   session();
   setInterval(()=>load(false),10000);
